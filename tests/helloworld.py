@@ -1,6 +1,6 @@
 class HelloWorld:
     def __init__(self):
-        self.message = "Hello world!"
+        self.message = "Hello world! :)"
 
     def __str__(self):
         return self.message
