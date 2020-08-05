@@ -13,8 +13,12 @@ locations = []
 coords = []
 nodes = []
 
-for i in range(int(input("Number of locations:\n "))):
-    addresses.append(input("Address " + str(i + 1) + " (ex.: 175 5th Avenue NYC):\n "))
+inputfile = open("locations.txt", "r")
+inputs = inputfile.read().split("\n")
+inputfile.close()
+
+for i in range(len(inputs)):
+    addresses.append(inputs[i])
     locations.append(geolocator.geocode(addresses[i]))
     coords.append((locations[i].longitude, locations[i].latitude))
     nodes.append(ox.get_nearest_node(G, coords[i]))
