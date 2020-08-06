@@ -20,7 +20,7 @@ inputfile.close()
 for i in range(len(inputs)):
     addresses.append(inputs[i])
     locations.append(geolocator.geocode(addresses[i]))
-    coords.append((locations[i].longitude, locations[i].latitude))
+    coords.append((locations[i].latitude, locations[i].longitude))
     nodes.append(ox.get_nearest_node(G, coords[i]))
 
 def generate_distance_matrix():
