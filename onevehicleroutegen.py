@@ -34,7 +34,7 @@ def generate_distance_matrix():
 def create_data_model():
     data = {}
     data['distance_matrix'] = generate_distance_matrix()
-    data['num_vehicles'] = 1
+    data['num_vehicles'] = int(input('How many vehicles are there?  '))
     data['depot'] = 0
     return data
 
