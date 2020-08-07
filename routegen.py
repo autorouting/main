@@ -34,26 +34,32 @@ def generate_distance_matrix():
 def create_data_model():
     data = {}
     data['distance_matrix'] = generate_distance_matrix()
-    data['num_vehicles'] = int(input('How many vehicles are there?  '))
+    data['num_vehicles'] = int(input('number of vehicles:\n '))
     data['depot'] = 0
     return data
 
 def print_solution(data, manager, routing, solution):
     max_route_distance = 0
+    file_output = ""
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id + 1)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         route_distance = 0
         while not routing.IsEnd(index):
-            plan_output += ' {} -> '.format(manager.IndexToNode(index))
+            plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+            file_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
             previous_index = index
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
-        plan_output += '{}\n'.format(manager.IndexToNode(index))
+        plan_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
+        file_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
         print(plan_output)
         max_route_distance = max(route_distance, max_route_distance)
+    outputfile = open("route.txt", "w")
+    outputfile.write(file_output)
+    outputfile.close()
     print('Maximum of the route distances: {}m'.format(max_route_distance))
 
 
