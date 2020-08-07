@@ -1,1 +1,1 @@
-cd "$(dirname "$BASH_SOURCE")"; source activate ox; python genmapslink.py; exit;
+cd "$(dirname "$BASH_SOURCE")"; source activate ox; python genmapslink.py; python routegen.py; exit;
