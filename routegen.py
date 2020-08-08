@@ -5,8 +5,8 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-geolocator = Nominatim(user_agent=input("Your app name:\n "))
-G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
+geolocator = Nominatim(user_agent=input("Enter user agent email: \n"))
+G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA): \n"), network_type='drive')
 
 addresses = []
 locations = []
@@ -18,11 +18,12 @@ inputs = inputfile.read().split("\n")
 inputfile.close()
 
 for i in range(len(inputs)):
-    addresses.append(inputs[i])
-    locations.append(geolocator.geocode(addresses[i]))
-    coords.append((locations[i].latitude, locations[i].longitude))
-    nodes.append(ox.get_nearest_node(G, coords[i]))
-
+    try:
+        addresses.append(inputs[i])
+        locations.append(geolocator.geocode(addresses[i]))
+        coords.append((locations[i].latitude, locations[i].longitude))
+        nodes.append(ox.get_nearest_node(G, coords[i]))
+    except: pass
 def generate_distance_matrix():
     output_list = []
     for i in range(len(nodes)):
