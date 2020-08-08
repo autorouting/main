@@ -1,6 +1,8 @@
+<!-- Temporary, for developers -->
 # Best Practices (READ FIRST BEFORE CHANGING ANYTHING)
-1. Always use your own branch to write and test code. Use pull requests to merge working code with master. To keep your branch up-to-date with master, merge your branch with master (<code>git merge master</code>)
+1. Always use your own branch to write and test code. Use pull requests to merge working code with master. To keep your branch up-to-date with master, merge your branch with master (<code>git merge master</code>).
 2. Don't push broken code.
+3. Try to commit single files (every time you update something). Commit often.
 
 # Usage
 Edit the addresses in <code>locations.txt</code>. Make sure there are no empty lines. Then, run <code>genmapslink.py</code> and follow the output Google Maps link.
