@@ -1,2 +1,0 @@
-use vscode 'cause it's good
-hello
