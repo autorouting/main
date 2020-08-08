@@ -1,6 +1,6 @@
 <!-- Temporary, for developers -->
 # Best Practices (READ FIRST BEFORE CHANGING ANYTHING)
-1. Always use your own branch to write and test code. Use pull requests to merge working code with master. To keep your branch up-to-date with master, merge your branch with master (<code>git merge master</code>).
+1. Always use your own branch to write and test code. To keep your branch up-to-date with master, merge your branch with master (<code>git merge master</code>). To add to master, pull request from your own branch. Be sure to merge first.
 2. Don't push broken code.
 3. Try to commit single files (every time you update something). Commit often.
 
