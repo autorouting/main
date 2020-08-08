@@ -5,8 +5,8 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-geolocator = Nominatim(user_agent="raymondnastyfodder2@gmail.com")
-G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
+geolocator = Nominatim(user_agent=input("Enter user agent email: \n"))
+G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA): \n"), network_type='drive')
 
 addresses = []
 locations = []
