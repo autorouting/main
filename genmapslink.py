@@ -1,3 +1,4 @@
+exec(open("onevehicleroutegen.py").read())
 in_file = open("route.txt", "r")
 routes = in_file.read().split("\n")
 # route is a text file in the same format as printed from the program
