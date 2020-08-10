@@ -40,7 +40,7 @@ def create_data_model():
     return data
 
 def print_solution(manager, routing, solution):
-    print('Objective: {} miles'.format(solution.ObjectiveValue()))
+    print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
     plan_output = 'Route for vehicle 0:\n'
     route_distance = 0
