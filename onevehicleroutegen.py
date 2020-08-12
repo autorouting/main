@@ -29,7 +29,8 @@ def generate_distance_matrix():
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
-    output_list[0][1] = 0.07
+    for i in range(2, len(output_list)):
+        output_list[i][1] = 10000
     return output_list
 
 def create_data_model():
