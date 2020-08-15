@@ -5,7 +5,7 @@
 3. Try to commit single files (every time you update something). Commit often.
 
 # Usage
-Edit the addresses in <code>locations.txt</code>. Make sure there are no empty lines. Then, run <code>genmapslink.py</code> and follow the output Google Maps link.
+Edit the addresses in <code>locations.txt</code>. Have the address for the depot be the first line and the address for the second stop be the second line. Make sure there are no empty lines. Then, run <code>genmapslink.py</code> and follow the output Google Maps link.
 
 # Dependencies
 * \_\_future__
