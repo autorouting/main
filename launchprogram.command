@@ -1,1 +1,0 @@
-source activate ox; python genmapslink.py; exit;
