@@ -20,6 +20,8 @@ inputfile.close()
 for i in range(len(inputs)):
     addresses.append(inputs[i])
     locations.append(geolocator.geocode(addresses[i]))
+    if locations[i] == None:
+        print("faulty input at line {} of locations.txt".format(i + 1))
     coords.append((locations[i].latitude, locations[i].longitude))
     nodes.append(ox.get_nearest_node(G, coords[i]))
 
