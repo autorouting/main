@@ -32,6 +32,12 @@ i = 0
 for i in range(len(inputs)):
     addresses.append(inputs[i])
     locations.append(geolocator.geocode(addresses[i]))
+    while i < len(locations):
+        if locations[i] == '' or locations[i] == ' ' or locations[i] == None:
+            inputs.remove(locations[i])
+            i -= 1
+        
+        i += 1
     coords.append((locations[i].latitude, locations[i].longitude))
     nodes.append(ox.get_nearest_node(G, coords[i]))
 
