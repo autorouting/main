@@ -5,7 +5,7 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-geolocator = Nominatim(user_agent=input("Your app name:\n "))
+geolocator = Nominatim(user_agent=input("Enter user agent email:\n "))
 G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
 
 addresses = []
@@ -17,11 +17,26 @@ inputfile = open("locations.txt", "r")
 inputs = inputfile.read().split("\n")
 inputfile.close()
 
+driverhomeaddressesfile = open("driver_home_addresses.txt", "r")
+driverhomes = driverhomeaddressesfile.read().split("\n")
+driverhomeaddressesfile.close()
+
+for i in range(len(driverhomes)):
+    try:
+        addresses.append(inputs[i])
+        locations.append(geolocator.geocode(addresses[i]))
+        coords.append((locations[i].latitude, locations[i].longitude))
+        nodes.append(ox.get_nearest_node(G, coords[i]))
+    except:
+        print("faulty input at line " + str(i) + " of driver_home_addresses.txt")
 for i in range(len(inputs)):
-    addresses.append(inputs[i])
-    locations.append(geolocator.geocode(addresses[i]))
-    coords.append((locations[i].latitude, locations[i].longitude))
-    nodes.append(ox.get_nearest_node(G, coords[i]))
+    try:
+        addresses.append(inputs[i])
+        locations.append(geolocator.geocode(addresses[i + len(driverhomes)]))
+        coords.append((locations[i + len(driverhomes)].latitude, locations[i + len(driverhomes)].longitude))
+        nodes.append(ox.get_nearest_node(G, coords[i + len(driverhomes)]))
+    except:
+        print("faulty input at line " + str(i + len(driverhomes)) + " of locations.txt")
 
 def generate_distance_matrix():
     output_list = []
@@ -29,13 +44,17 @@ def generate_distance_matrix():
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    for i in range(len(driverhomes) + 1, len(output_list)):
+        output_list[i][1] = 7666432.01
+    for i in range(len(driverhomes) + 1):
+        output_list[i][1] = 0.07
     return output_list
 
 def create_data_model():
     data = {}
     data['distance_matrix'] = generate_distance_matrix()
-    data['num_vehicles'] = int(input('number of vehicles:\n '))
-    data['depot'] = 0
+    data['num_vehicles'] = len(driverhomes) # the number of inputed driver home addresses
+    data['depot'] = len(driverhomes) # let restraunt address be the first item in locations.txt
     return data
 
 def print_solution(data, manager, routing, solution):

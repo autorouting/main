@@ -29,6 +29,8 @@ def generate_distance_matrix():
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    for i in range(2, len(output_list)):
+        output_list[i][1] = 7666432.01
     return output_list
 
 def create_data_model():
@@ -39,7 +41,7 @@ def create_data_model():
     return data
 
 def print_solution(manager, routing, solution):
-    print('Objective: {} miles'.format(solution.ObjectiveValue()))
+    print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
     plan_output = 'Route for vehicle 0:\n'
     route_distance = 0
