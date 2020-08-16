@@ -1,4 +1,4 @@
-exec(open("onevehicleroutegen.py").read())
+#exec(open("onevehicleroutegen.py").read())
 in_file = open("route.txt", "r")
 routes = in_file.read().split("\n")
 in_file.close()
