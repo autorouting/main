@@ -5,7 +5,7 @@
 3. Try to commit single files (every time you update something). Commit often.
 -->
 # Usage
-Edit the addresses in <code>locations.txt</code>. Have the address for the driver's home be the first line and the address for the restraunt be the second line. Make sure there are no empty lines. Then, open <code>launchprogram.command</code> and follow the output Google Maps link.
+For each address, go to <code>https://www.google.com/maps/place/whatever the address is</code>. Wait for the URL to redirect and change to a longer URL. Copy the entire final URL, from the <code>https://</code> to the end of the link. Paste into <code>locations.txt</code>. Repeat for every address Have the link for the driver's home be the first line and the link for the restraunt be the second line. Make sure there are no empty lines. Then, open <code>launchprogram.command</code> and follow the output Google Maps link.
 
 # Dependencies
 * \_\_future__
