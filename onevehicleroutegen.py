@@ -1,12 +1,10 @@
 from __future__ import print_function
-from geopy.geocoders import Nominatim
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
 def take_inputs():
-    geolocator = Nominatim(user_agent=input("Your app name:\n "))
     G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
 
     inputfile = open("locations.txt", "r")
@@ -20,11 +18,8 @@ def take_inputs():
 
     for i in range(len(inputs)):
 
-        addresses.append(inputs[i])
-        locations.append(geolocator.geocode(addresses[i]))
-        if locations[i] == None:
-            print("faulty input at line {} of locations.txt".format(i + 1))
-        coords.append((locations[i].latitude, locations[i].longitude))
+        addresses.append(inputs[i].replace("https://www.google.com/maps/place/", "").split("/")[0].replace("+", " "))
+        coords.append((float(inputs[i].replace("https://www.google.com/maps/place/", "").split("/")[1].replace("@", "").split(",")[0]), float(inputs[i].replace("https://www.google.com/maps/place/", "").split("/")[1].replace("@", "").split(",")[1])))
         nodes.append(ox.get_nearest_node(G, coords[i]))
     
     return (G, nodes, addresses)

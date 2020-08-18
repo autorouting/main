@@ -1,6 +1,6 @@
-1514 Eubanks Rd, Chapel Hill, North Carolina
-1860 Martin Luther King Jr Blvd, Chapel Hill, North Carolina
-1129 Weaver Dairy Rd, Chapel Hill, North Carolina
-120 Banks Dr, Chapel Hill, North Carolina
-1207 Eubanks Rd, Chapel Hill, North Carolina
-9201 Seawell School Rd, Chapel Hill, North Carolina
+https://www.google.com/maps/place/1514+Eubanks+Rd,+Chapel+Hill,+NC+27516/@35.9680884,-79.0849031,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdcf18440c0c5:0x4ad92a559566acc3!8m2!3d35.9680884!4d-79.0827144
+https://www.google.com/maps/place/1860+M.L.K.+Jr+Blvd,+Chapel+Hill,+NC+27514/@35.9665608,-79.0610948,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdd1ca01ae0c3:0x7d06bb2b6c91c137!8m2!3d35.966708!4d-79.0590326
+https://www.google.com/maps/place/1129+Weaver+Dairy+Rd,+Chapel+Hill,+NC+27514/@35.9637454,-79.056667,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdd1a6a2f3193:0x7a9403495ae6f73a!8m2!3d35.9637454!4d-79.0544783
+https://www.google.com/maps/place/120+Banks+Dr,+Chapel+Hill,+NC+27514/@35.961955,-79.0579306,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdd19811d6fff:0xb5f0ff7e9119ad29!8m2!3d35.961955!4d-79.0557419
+https://www.google.com/maps/place/1207+Eubanks+Rd,+Chapel+Hill,+NC+27516/@35.966065,-79.0874811,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdcec9384cbbf:0x551f73df7e8db67a!8m2!3d35.966065!4d-79.0852924
+https://www.google.com/maps/place/9201+Seawell+School+Rd,+Chapel+Hill,+NC+27516/@35.9426412,-79.0788795,17z/data=!3m1!4b1!4m5!3m4!1s0x89acdcce0801d4a9:0x5eda463f34adaa87!8m2!3d35.9426412!4d-79.0766908
