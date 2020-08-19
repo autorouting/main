@@ -5,7 +5,7 @@
 3. Try to commit single files (every time you update something). Commit often.
 -->
 # Usage
-For each address, go to <code>https://www.google.com/maps/place/whatever the address is</code>. Wait for the URL to redirect and change to a longer URL. Copy the entire final URL, from the <code>https://</code> to the end of the link. Paste into <code>locations.txt</code>. Repeat for every address Have the link for the driver's home be the first line and the link for the restraunt be the second line. Make sure there are no empty lines. Then, open <code>launchprogram.command</code> and follow the output Google Maps link.
+Enter each address into a seperate line of <code>addresses.txt</code>, then run <code>gen_input.py</code>. For each address, a Google Maps link will be opened. Wait for each Google Maps URL to redirect and change from a short URL to a really long URL. For every URL, copy the entire final URL, from the <code>https://</code> to the end of the link, and paste into <code>locations.txt</code>. Have the link for the driver's home be the first line and the link for the restraunt be the second line. Make sure there are no empty lines. Then, open <code>launchprogram.command</code> and follow the output Google Maps link.
 
 # Dependencies
 * \_\_future__
