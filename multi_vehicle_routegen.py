@@ -176,7 +176,7 @@ def main():
 
     for i in range(len(plan_chunks)):
         try:
-            plan_chunks[i].append(endpoints[i])
+            plan_chunks[i].append(end_points[i])
             
         except:
             break
