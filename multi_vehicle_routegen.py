@@ -26,6 +26,7 @@ for i in range(len(inputs)):
     addresses.append(inputs[i])
     locations.append(geolocator.geocode(addresses[i]))
 
+
 i = 0
 while i < len(locations):
     if locations[i] == None:
@@ -56,6 +57,8 @@ def calc_distance_matrix(coords):
             
     return distance_matrix
     
+def calc_distance(point1, point2):
+    return ((point1[0] - point2[1]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
 def generate_distance_matrix():
     output_list = []
     output_list = calc_distance_matrix(coords)
@@ -169,12 +172,15 @@ def main():
     for item in driver_home_addresses:
         end_points.append(item)
     
+    print(end_points)
+    
     locations = []
     
     for i in range(len(end_points)):
         locations.append(geolocator.geocode(end_points[i]))
-    
+    print(locations)
     i = 0
+    
     while i < len(locations):
         if locations[i] == None:
             locations.remove(locations[i])
@@ -184,16 +190,36 @@ def main():
         
     i = 0
     
+    coords = []
     for i in range(len(locations)):    
         coords.append((locations[i].latitude, locations[i].longitude))
 
+    locations1 = []
     for i in range(len(plan_chunks)):
-        try:
-            plan_chunks[i].append(end_points[i])
+        locations1.append(geolocator.geocode(plan_chunks[i][-1]))
+    
+    coords1 = []
+    
+    for i in range(len(locations1)):
+        coords1.append((locations1[i].latitude, locations1[i].longitude))
+       
+    distance_matrix = []
+    for i in range(len(coords1)):
+        distance_matrix.append([])
+        for j in range(len(coords)):
+            distance_matrix[i].append(0)
             
-        except:
-            break
-            
+    for i in range(len(coords1)):
+        for j in range(len(coords)):
+            distance_matrix[i][j] = calc_distance(coords1[i], coords[j])
+        
+    for i in range(len(plan_chunks)):
+        print(distance_matrix)
+        min_index = distance_matrix[i].index(min(distance_matrix[i]))
+        plan_chunks[i].append(end_points[min_index])
+        for j in range(len(distance_matrix)):
+            distance_matrix[j].remove(distance_matrix[j][min_index])
+        end_points.remove(end_points[min_index])
     print(genoutput(plan_chunks))
     
 if __name__ == '__main__':
