@@ -5,9 +5,13 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-geolocator = Nominatim(user_agent=input("User Email\n "))
+geolocator = Nominatim(user_agent=input("User email:\n "))
 G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
-drivers = int(input('How many drivers are there?  '))
+# drivers = int(input('How many drivers are there?  '))
+driver_home_addresses_file = open("driver_home_addresses.txt", "r")
+driver_home_addresses = driver_home_addresses_file.read().split("\n")
+driver_home_addresses_file.close()
+drivers = len(driver_home_addresses)
 
 addresses = []
 locations = []
@@ -162,8 +166,8 @@ def main():
     
     end_points = []
     
-    for i in range(drivers):
-        end_points.append(input('Where is the drivers home?  '))   
+    for item in driver_home_addresses:
+        end_points.append(item)
     
     locations = []
     
