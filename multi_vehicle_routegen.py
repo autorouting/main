@@ -5,7 +5,11 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
 G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
-drivers = int(input('How many drivers are there?  '))
+# drivers = int(input('How many drivers are there?  '))
+driver_home_addresses_file = open("driver_home_addresses.txt", "r")
+driver_home_addresses = driver_home_addresses_file.read().split("\n")
+driver_home_addresses_file.close()
+drivers = len(driver_home_addresses)
 
 addresses = []
 locations = []
@@ -68,6 +72,15 @@ def print_solution(manager, routing, solution):
     outputfile.close()
     return plan_output
     
+def genoutput(chunks_to_display):
+    out = ""
+    for row in chunks_to_display:
+        out = out + "\n" + " -> ".join(row)
+    outputfile = open("route.txt", "w")
+    outputfile.write(out)
+    outputfile.close()
+    return "Routes generated:" + out
+
 def main():
     data = create_data_model()
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -138,8 +151,8 @@ def main():
     
     end_points = []
     
-    for i in range(drivers):
-        end_points.append(input('Enter link to driver home address:\n '))   
+    for item in driver_home_addresses:
+        end_points.append(item)
     
     coords = []
     
@@ -153,7 +166,7 @@ def main():
         except:
             break
             
-    print(plan_chunks)
+    print(genoutput(plan_chunks))
     
 if __name__ == '__main__':
     main()
