@@ -82,7 +82,16 @@ def print_solution(manager, routing, solution):
     outputfile.write(textfileoutput)
     outputfile.close()
     return plan_output
-    
+
+def genoutput(chunks_to_display):
+    out = ""
+    for row in chunks_to_display:
+        out = out + "\n" + " -> ".join(row)
+    outputfile = open("route.txt", "w")
+    outputfile.write(out)
+    outputfile.close()
+    return "Routes generated:" + out
+
 def main():
     data = create_data_model()
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -181,7 +190,7 @@ def main():
         except:
             break
             
-    print(plan_chunks)
+    print(genoutput(plan_chunks))
     
 if __name__ == '__main__':
     main()
