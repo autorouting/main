@@ -19,11 +19,19 @@ def take_inputs():
     nodes = []
 
     for i in range(len(inputs)):
-
         addresses.append(inputs[i])
         locations.append(geolocator.geocode(addresses[i]))
+    
+    i = 0
+
+    while i < len(locations):
         if locations[i] == None:
-            print("faulty input at line {} of locations.txt".format(i + 1))
+            print("Faulty input found at line {} of locations.txt. Skipped.".format(i + 1))
+            locations.remove(locations[i])
+        else:
+            i += 1
+
+    for i in range(len(locations)):
         coords.append((locations[i].latitude, locations[i].longitude))
         nodes.append(ox.get_nearest_node(G, coords[i]))
     

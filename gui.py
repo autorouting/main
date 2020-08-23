@@ -38,7 +38,8 @@ def onclick():
         widget.destroy()
     loading = Label(root, text="Loading...")
     loading.pack()
-    exec(open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())")
+    code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
+    exec(code_to_exec)
 
 myButton = Button(root, text="Launch program", command=onclick)
 myButton.pack()
