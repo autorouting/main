@@ -172,13 +172,11 @@ def main():
     for item in driver_home_addresses:
         end_points.append(item)
     
-    print(end_points)
-    
     locations = []
     
     for i in range(len(end_points)):
         locations.append(geolocator.geocode(end_points[i]))
-    print(locations)
+
     i = 0
     
     while i < len(locations):
@@ -214,7 +212,6 @@ def main():
             distance_matrix[i][j] = calc_distance(coords1[i], coords[j])
         
     for i in range(len(plan_chunks)):
-        print(distance_matrix)
         min_index = distance_matrix[i].index(min(distance_matrix[i]))
         plan_chunks[i].append(end_points[min_index])
         for j in range(len(distance_matrix)):
