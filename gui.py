@@ -29,12 +29,9 @@ label4.pack()
 consumeraddressbox = ScrolledText(root, width=50, height=30)
 consumeraddressbox.pack()
 
-bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")
-bottomtext.pack()
-
 def onclick():
     locationstextfile = open("locations.txt", "w")
-    locationstextfile.write(driveraddressbox.get() + "\n" + restrauntaddressbox.get() + "\n" + consumeraddressbox.get('1.0', END))
+    locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
     locationstextfile.close()
     city = citybox.get()
     for widget in root.winfo_children():
@@ -45,5 +42,8 @@ def onclick():
 
 myButton = Button(root, text="Launch program", command=onclick)
 myButton.pack()
+
+bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")
+bottomtext.pack()
 
 root.mainloop()
