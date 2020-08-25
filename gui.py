@@ -41,7 +41,7 @@ def launch():
     loading.pack()
     #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
     #exec(code_to_exec)
-    onevehicleroutegen.main()
+    onevehicleroutegen.main(str(random.randint(0, 999)) + str(random.randint(0, 999)), city)
 
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()

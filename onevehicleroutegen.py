@@ -5,9 +5,9 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-def take_inputs():
-    geolocator = Nominatim(user_agent=input("Your app name:\n "))
-    G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
+def take_inputs(nominatim_appname, place_to_graph):
+    geolocator = Nominatim(user_agent=nominatim_appname)
+    G = ox.graph_from_place(place_to_graph, network_type='drive')
 
     inputfile = open("locations.txt", "r")
     inputs = inputfile.read().split("\n")
@@ -37,8 +37,8 @@ def take_inputs():
     
     return (G, nodes, addresses)
 
-def generate_distance_matrix():
-    G, nodes, addresses = take_inputs()
+def generate_distance_matrix(nominatim_appname, place_to_graph):
+    G, nodes, addresses = take_inputs(nominatim_appname, place_to_graph)
 
     output_list = []
     for i in range(len(nodes)):
@@ -49,8 +49,8 @@ def generate_distance_matrix():
         output_list[i][1] = 7666432.01
     return (output_list, addresses)
 
-def create_data_model():
-    distancematrix, addresses = generate_distance_matrix()
+def create_data_model(nominatim_appname, place_to_graph):
+    distancematrix, addresses = generate_distance_matrix(nominatim_appname, place_to_graph)
     data = {}
     data['distance_matrix'] = distancematrix
     data['num_vehicles'] = 1
@@ -77,8 +77,8 @@ def print_solution(manager, routing, solution, addresses):
     outputfile.close()
     plan_output += 'Route distance: {}miles\n'.format(route_distance)
 
-def main():
-    addresses, data = create_data_model()
+def main(nominatim_appname, place_to_graph):
+    addresses, data = create_data_model(nominatim_appname, place_to_graph)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -95,4 +95,4 @@ def main():
         print_solution(manager, routing, solution, addresses)
 
 if __name__ == '__main__':
-    main()
+    main(input("Your app name:\n "), input("city (ex.: Piedmont, California, USA):\n "))
