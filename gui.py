@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
 import random
+import onevehicleroutegen
 
 root = Tk()
 root.title("Autorouting app (one-vehicle)")
@@ -23,13 +24,13 @@ label3.pack()
 restrauntaddressbox = Entry(root, width=50)
 restrauntaddressbox.pack()
 
-label4 = Label(root, text="Paste consumer addresses below:")
+label4 = Label(root, text="Consumer adresses (separate with line breaks):")
 label4.pack()
 
-consumeraddressbox = ScrolledText(root, width=50, height=30)
+consumeraddressbox = ScrolledText(root, width=50,height=30)
 consumeraddressbox.pack()
 
-def onclick():
+def launch():
     locationstextfile = open("locations.txt", "w")
     locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
     locationstextfile.close()
@@ -38,10 +39,11 @@ def onclick():
         widget.destroy()
     loading = Label(root, text="Loading...")
     loading.pack()
-    code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
-    exec(code_to_exec)
+    #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
+    #exec(code_to_exec)
+    onevehicleroutegen.main()
 
-myButton = Button(root, text="Launch program", command=onclick)
+myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
 
 bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")

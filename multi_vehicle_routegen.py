@@ -5,41 +5,9 @@ import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-geolocator = Nominatim(user_agent=input("User email:\n "))
-G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
-# drivers = int(input('How many drivers are there?  '))
-driver_home_addresses_file = open("driver_home_addresses.txt", "r")
-driver_home_addresses = driver_home_addresses_file.read().split("\n")
-driver_home_addresses_file.close()
-drivers = len(driver_home_addresses)
+city_name = ""
 
-addresses = []
-locations = []
-coords = []
-nodes = []
-
-inputfile = open("locations.txt", "r")
-inputs = inputfile.read().split("\n")
-inputfile.close()
-
-for i in range(len(inputs)):
-    addresses.append(inputs[i])
-    locations.append(geolocator.geocode(addresses[i]))
-
-
-i = 0
-while i < len(locations):
-    if locations[i] == None:
-        locations.remove(locations[i])
-        i -= 1
-        
-    i += 1
-    
-i = 0
-
-for i in range(len(locations)):
-    coords.append((locations[i].latitude, locations[i].longitude))
-    nodes.append(ox.get_nearest_node(G, coords[i]))
+if __name__ == '__main__': city_name = input("Please enter a city name: ")
 
 def calc_distance_matrix(coords):
     distance_matrix = []
@@ -59,19 +27,19 @@ def calc_distance_matrix(coords):
     
 def calc_distance(point1, point2):
     return ((point1[0] - point2[1]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
-def generate_distance_matrix():
+def generate_distance_matrix(coords):
     output_list = []
     output_list = calc_distance_matrix(coords)
     return output_list
 
-def create_data_model():
+def create_data_model(coords):
     data = {}
-    data['distance_matrix'] = generate_distance_matrix()
+    data['distance_matrix'] = generate_distance_matrix(coords)
     data['num_vehicles'] = 1
     data['depot'] = 0
     return data
 
-def print_solution(manager, routing, solution):
+def print_solution(manager, routing, solution, addresses):
     #print('Objective: {} miles'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
     plan_output = ''
@@ -100,7 +68,43 @@ def genoutput(chunks_to_display):
     return "Routes generated:" + out
 
 def main():
-    data = create_data_model()
+    #set_env
+    addresses, locations, coords, nodes = [],[],[],[]
+    geolocator = Nominatim(user_agent="Placeholder Name") #here.change into random straing
+    G = ox.graph_from_place(city_name, network_type='drive')
+    
+    #G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
+    # drivers = int(input('How many drivers are there?  '))
+    driver_home_addresses_file = open("driver_home_addresses.txt", "r")
+    driver_home_addresses = driver_home_addresses_file.read().split("\n")
+    driver_home_addresses_file.close()
+    drivers = len(driver_home_addresses)
+    
+    inputfile = open("locations.txt", "r")
+    inputs = inputfile.read().split("\n")
+    inputfile.close()
+    
+    for i in range(len(inputs)):
+        addresses.append(inputs[i])
+        locations.append(geolocator.geocode(addresses[i]))
+    
+    
+    i = 0
+    while i < len(locations):
+        if locations[i] == None:
+            locations.remove(locations[i])
+            i -= 1
+            
+        i += 1
+        
+    i = 0
+
+    for i in range(len(locations)):
+        coords.append((locations[i].latitude, locations[i].longitude))
+        nodes.append(ox.get_nearest_node(G, coords[i]))
+    
+    #
+    data = create_data_model(coords)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -114,7 +118,7 @@ def main():
     search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     solution = routing.SolveWithParameters(search_parameters)
     if solution:
-        plan_output = print_solution(manager, routing, solution)
+        plan_output = print_solution(manager, routing, solution, addresses)
         
     plan_output = plan_output.replace(', ', ' ')
     plan_output = plan_output.replace(' -> ', ', ')
@@ -148,9 +152,7 @@ def main():
                 j += 1
                 
         return plan_chunks
-            
-        
-    
+
     plan_chunks = chunks(plan_list[:len(plan_list) - 1], drivers)
     for i in range(len(plan_chunks)):
         plan_chunks[i].insert(0, plan_list[0])
@@ -221,3 +223,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+
