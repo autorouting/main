@@ -4,10 +4,12 @@ import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+import string
+import random
 
 city_name = ""
 
-if __name__ == '__main__': city_name = input("Please enter a city name: ")
+if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
 
 def calc_distance_matrix(coords):
     distance_matrix = []
@@ -70,7 +72,18 @@ def genoutput(chunks_to_display):
 def main():
     #set_env
     addresses, locations, coords, nodes = [],[],[],[]
-    geolocator = Nominatim(user_agent="Placeholder Name") #here.change into random straing
+    symbols = list(string.ascii_lowercase)
+
+    for i in range(10):
+        symbols.append(str(i))
+    
+    key = []
+    for i in range(10):
+        key.append(random.choice(symbols))
+    
+    key = ''.join(key)
+
+    geolocator = Nominatim(user_agent=key) #here.change into random straing
     G = ox.graph_from_place(city_name, network_type='drive')
     
     #G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
@@ -150,7 +163,7 @@ def main():
                     j -= 1
                 
                 j += 1
-                
+
         return plan_chunks
 
     plan_chunks = chunks(plan_list[:len(plan_list) - 1], drivers)
@@ -219,7 +232,7 @@ def main():
         for j in range(len(distance_matrix)):
             distance_matrix[j].remove(distance_matrix[j][min_index])
         end_points.remove(end_points[min_index])
-    print(genoutput(plan_chunks))
+    return genoutput(plan_chunks)
     
 if __name__ == '__main__':
     main()
