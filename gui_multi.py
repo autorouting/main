@@ -7,7 +7,7 @@ import multi_vehicle_routegen as mvr
 root = Tk()
 root.title("Autorouting app")
 
-label1 = Label(root, text="City:")
+label1 = Label(root, text="City, County, or State (choose the smallest one that encompasses all locations):")
 label1.pack()
 
 citybox = Entry(root, width=50)
@@ -49,7 +49,9 @@ def launch():
             widget.destroy()
         #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
         #exec(code_to_exec)
-        mvr.main()
+        routes = mvr.main()
+        output = Label(root, text=routes)
+        output.pack()
     else: messagebox.showwarning(title="Warning", message="Please fill in every box.")
 
 myButton = Button(root, text="Launch program", command=launch)
