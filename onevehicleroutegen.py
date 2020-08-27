@@ -4,10 +4,24 @@ import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+import string
+import random
 
-def take_inputs():
-    geolocator = Nominatim(user_agent=input("Your app name:\n "))
-    G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
+def take_inputs(location):
+    symbols = list(string.ascii_lowercase)
+
+    for i in range(10):
+        symbols.append(str(i))
+    
+    key = []
+    
+    for i in range(10):
+        key.append(random.choice(symbols))
+    
+    key = ''.join(key)
+
+    geolocator = Nominatim(user_agent=key)
+    G = ox.graph_from_place(location, network_type='drive')
 
     inputfile = open("locations.txt", "r")
     inputs = inputfile.read().split("\n")
@@ -19,38 +33,44 @@ def take_inputs():
     nodes = []
 
     for i in range(len(inputs)):
+
         addresses.append(inputs[i])
         locations.append(geolocator.geocode(addresses[i]))
-    
+        #if locations[i] == None:
+            #print("faulty input at line {} of locations.txt".format(i + 1))
+            
     i = 0
-
     while i < len(locations):
         if locations[i] == None:
-            print("Faulty input found at line {} of locations.txt. Skipped.".format(i + 1))
             locations.remove(locations[i])
-        else:
-            i += 1
-
+            i -= 1
+        
+        i += 1
+        
+    i = 0
     for i in range(len(locations)):
         coords.append((locations[i].latitude, locations[i].longitude))
         nodes.append(ox.get_nearest_node(G, coords[i]))
-    
+
+
+
     return (G, nodes, addresses)
 
-def generate_distance_matrix():
-    G, nodes, addresses = take_inputs()
+def generate_distance_matrix(location):
+    G, nodes, addresses = take_inputs(location)
 
     output_list = []
     for i in range(len(nodes)):
         output_list.append([])
         for j in range(len(nodes)):
-            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j]))
     for i in range(2, len(output_list)):
         output_list[i][1] = 7666432.01
+        
     return (output_list, addresses)
 
-def create_data_model():
-    distancematrix, addresses = generate_distance_matrix()
+def create_data_model(location):
+    distancematrix, addresses = generate_distance_matrix(location)
     data = {}
     data['distance_matrix'] = distancematrix
     data['num_vehicles'] = 1
@@ -71,14 +91,15 @@ def print_solution(manager, routing, solution, addresses):
         route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
     plan_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
     textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)])
-    print(plan_output)
     outputfile = open("route.txt", "w")
     outputfile.write(textfileoutput)
     outputfile.close()
     plan_output += 'Route distance: {}miles\n'.format(route_distance)
+    print(plan_output)
+    return plan_output
 
-def main():
-    addresses, data = create_data_model()
+def main(location):
+    addresses, data = create_data_model(location)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -91,8 +112,11 @@ def main():
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     solution = routing.SolveWithParameters(search_parameters)
+    route_solution = print_solution(manager, routing, solution, addresses)
     if solution:
-        print_solution(manager, routing, solution, addresses)
+        route_solution
+
+    return route_solution
 
 if __name__ == '__main__':
-    main()
+    main('Orange County')
