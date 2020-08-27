@@ -31,6 +31,7 @@ consumeraddressbox = ScrolledText(root, width=50,height=30)
 consumeraddressbox.pack()
 
 def launch():
+    global route_solution
     locationstextfile = open("locations.txt", "w")
     locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
     locationstextfile.close()
@@ -41,7 +42,11 @@ def launch():
     loading.pack()
     #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
     #exec(code_to_exec)
-    onevehicleroutegen.main()
+    route_solution = onevehicleroutegen.main(str(city))
+    for widget in root.winfo_children():
+        widget.destroy()
+    display_route = Label(root, text=route_solution)
+    display_route.pack()
 
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
