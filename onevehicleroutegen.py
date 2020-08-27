@@ -20,7 +20,7 @@ def take_inputs(location):
     
     key = ''.join(key)
 
-    geolocator = Nominatim(user_agent=key)
+    geolocator = Nominatim(user_agent = key)
     G = ox.graph_from_place(location, network_type='drive')
 
     inputfile = open("locations.txt", "r")
