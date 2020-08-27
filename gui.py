@@ -42,16 +42,13 @@ def launch():
     loading.pack()
     #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
     #exec(code_to_exec)
-<<<<<<< HEAD
+
     route_solution = onevehicleroutegen.main(str(city))
     for widget in root.winfo_children():
         widget.destroy()
     display_route = Label(root, text=route_solution)
     display_route.pack()
-=======
-    onevehicleroutegen.main(str(random.randint(0, 999)) + str(random.randint(0, 999)), city)
-    import genmapslink
->>>>>>> c566f8003afb4a206a7e3f4dc076b3234b052140
+
 
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
