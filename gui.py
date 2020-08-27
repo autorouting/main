@@ -6,7 +6,7 @@ import onevehicleroutegen
 root = Tk()
 root.title("Autorouting app (one-vehicle)")
 
-label1 = Label(root, text="City, County, or State (choose the smallest one that encompasses locations of all deliveries):")
+label1 = Label(root, text="City, County, or State (choose the smallest one that encompasses all locations):")
 label1.pack()
 
 citybox = Entry(root, width=50)
