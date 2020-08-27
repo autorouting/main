@@ -20,7 +20,7 @@ label2.pack()
 driveraddressbox = Entry(root, width=50)
 driveraddressbox.pack()
 
-label3 = Label(root, text="Restauraunt address:")
+label3 = Label(root, text="Restaurant address:")
 label3.pack()
 
 restrauntaddressbox = Entry(root, width=50)
