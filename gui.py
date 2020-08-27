@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter.scrolledtext import ScrolledText
 import random
 import onevehicleroutegen
+import genmapslink
+import webbrowser
 
 root = Tk()
 root.title("Autorouting app (one-vehicle)")
@@ -18,7 +20,7 @@ label2.pack()
 driveraddressbox = Entry(root, width=50)
 driveraddressbox.pack()
 
-label3 = Label(root, text="Restraunt address:")
+label3 = Label(root, text="Restauraunt address:")
 label3.pack()
 
 restrauntaddressbox = Entry(root, width=50)
@@ -46,8 +48,15 @@ def launch():
     route_solution = onevehicleroutegen.main(str(city))
     for widget in root.winfo_children():
         widget.destroy()
+
     display_route = Label(root, text=route_solution)
     display_route.pack()
+    route_link = genmapslink.maps_link()
+    def callback():
+        webbrowser.open_new(route_link)
+
+    button_link = Button(root, text=route_link, command=callback)
+    button_link.pack()
 
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
