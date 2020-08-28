@@ -95,7 +95,7 @@ def print_solution(manager, routing, solution, addresses):
     outputfile = open("route.txt", "w")
     outputfile.write(textfileoutput)
     outputfile.close()
-    plan_output += 'Route distance: {}miles\n'.format(route_distance)
+    plan_output += 'Route distance: {}meters\n'.format(route_distance)
     print(plan_output)
     return plan_output
 
