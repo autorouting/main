@@ -6,10 +6,11 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import string
 import random
+import pickle
 
 city_name = ""
 
-if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
+#if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
 
 def calc_distance_matrix(coords):
     distance_matrix = []
@@ -84,7 +85,7 @@ def main():
     key = ''.join(key)
 
     geolocator = Nominatim(user_agent=key) #here.change into random straing
-    G = ox.graph_from_place(city_name, network_type='drive')
+    G = pickle.load(open("graph", "rb"))
     
     #G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
     # drivers = int(input('How many drivers are there?  '))
