@@ -13,4 +13,4 @@ def maps_link():
                 outstring += route[j].replace(" ", "+") + "/"
     output = "Google Maps link for vehicle {}: {}\n".format(i, outstring)
     print(output)
-    return output
+    return outstring
