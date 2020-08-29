@@ -39,7 +39,8 @@ def validate():
 def launch():
     if validate():
         global activation
-        activation = [False]
+        #FIX activation stuff
+        activation = [True]
         driveroutput = driveraddressbox.get("1.0", END)
         while driveroutput[-1] in ["\n","\t","r"]: driveroutput = driveroutput[:-1]
         consumeroutput = consumeraddressbox.get("1.0", END)
@@ -57,7 +58,7 @@ def launch():
         for widget in root.winfo_children():
             widget.destroy()
         def callback(routelink):
-            print("hey")
+            #print("hey")
             global activation
             if activation[0]: webbrowser.open(routelink, 0)
         buttons = []
