@@ -5,6 +5,7 @@ import random
 import multi_vehicle_routegen as mvr
 import webbrowser
 import genmapslink
+from functools import partial
 root = Tk()
 root.title("Autorouting app")
 
@@ -73,7 +74,8 @@ def launch():
             displayroutes[-1].pack()
             #def DIE(): callback(genmapslink.maps_link(outputting))
             if outputting != 0:
-                buttons.append(Button(root, text="Open Google Maps link in browser", command=callback(genmapslink.maps_link(outputting))))
+                print(partial(genmapslink.maps_link, outputting)())
+                buttons.append(Button(root, text="Open Google Maps link in browser", command=partial(callback, partial(genmapslink.maps_link, outputting)())))
                 buttons[-1].pack()
         activation[0] = True
             
