@@ -47,7 +47,7 @@ def launch():
     #code_to_exec = open("onevehicleroutegen.py").read().replace('input("city (ex.: Piedmont, California, USA):\\n ")', "'" + city + "'").replace('input("Your app name:\\n ")', "'" + str(random.randint(0, 999)) + str(random.randint(0, 999)) + "'") + "\n    exec(open('genmapslink.py').read())"
     #exec(code_to_exec)
 
-    route_solution = onevehicleroutegen.main()
+    route_solution = onevehicleroutegen.main(city)
     for widget in root.winfo_children():
         widget.destroy()
 
