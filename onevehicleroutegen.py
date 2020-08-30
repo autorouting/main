@@ -6,8 +6,9 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import string
 import random
+import pickle
 
-def take_inputs(location):
+def take_inputs():
     symbols = list(string.ascii_lowercase)
 
     for i in range(10):
@@ -20,8 +21,8 @@ def take_inputs(location):
     
     key = ''.join(key)
 
-    geolocator = Nominatim(user_agent=key)
-    G = ox.graph_from_place(location, network_type='drive')
+    geolocator = Nominatim(user_agent = key)
+    G = pickle.load(open("graph", "rb"))
 
     inputfile = open("locations.txt", "r")
     inputs = inputfile.read().split("\n")
@@ -56,8 +57,8 @@ def take_inputs(location):
 
     return (G, nodes, addresses)
 
-def generate_distance_matrix(location):
-    G, nodes, addresses = take_inputs(location)
+def generate_distance_matrix():
+    G, nodes, addresses = take_inputs()
 
     output_list = []
     for i in range(len(nodes)):
@@ -69,11 +70,10 @@ def generate_distance_matrix(location):
         
     return (output_list, addresses)
 
-def create_data_model(location):
-    distancematrix, addresses = generate_distance_matrix(location)
+def create_data_model():
+    distancematrix, addresses = generate_distance_matrix()
     data = {}
     data['distance_matrix'] = distancematrix
-    print(data['distance_matrix'])
     data['num_vehicles'] = 1
     data['depot'] = 0
     return (addresses, data)
@@ -95,12 +95,12 @@ def print_solution(manager, routing, solution, addresses):
     outputfile = open("route.txt", "w")
     outputfile.write(textfileoutput)
     outputfile.close()
-    plan_output += 'Route distance: {}miles\n'.format(route_distance)
+    plan_output += 'Route distance: {}meters\n'.format(route_distance)
     print(plan_output)
     return plan_output
 
-def main(location):
-    addresses, data = create_data_model(location)
+def main():
+    addresses, data = create_data_model()
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -120,4 +120,4 @@ def main(location):
     return route_solution
 
 if __name__ == '__main__':
-    main('Orange County')
+    main()
