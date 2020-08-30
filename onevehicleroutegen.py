@@ -8,7 +8,7 @@ import string
 import random
 import pickle
 
-def take_inputs():
+def gen_rand_key():
     symbols = list(string.ascii_lowercase)
 
     for i in range(10):
@@ -19,9 +19,16 @@ def take_inputs():
     for i in range(10):
         key.append(random.choice(symbols))
     
-    key = ''.join(key)
+    return ''.join(key)
 
-    geolocator = Nominatim(user_agent = key)
+def take_inputs():
+    while True:
+        try:
+            geolocator = Nominatim(user_agent = gen_rand_key())
+            break # if all goes smoothly, go on
+        except:
+            joe = "joe" # just to fill in the except; doesn't have real meaning
+            # retry key generation
     G = pickle.load(open("graph", "rb"))
 
     inputfile = open("locations.txt", "r")
