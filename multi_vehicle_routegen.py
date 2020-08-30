@@ -12,6 +12,18 @@ city_name = ""
 
 #if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
 
+def gen_rand_key():
+    symbols = list(string.ascii_lowercase)
+
+    for i in range(10):
+        symbols.append(str(i))
+    
+    key = []
+    for i in range(10):
+        key.append(random.choice(symbols))
+    
+    return ''.join(key)
+
 def calc_distance_matrix(coords):
     distance_matrix = []
     for i in range(len(coords)):
@@ -73,18 +85,14 @@ def genoutput(chunks_to_display):
 def main():
     #set_env
     addresses, locations, coords, nodes = [],[],[],[]
-    symbols = list(string.ascii_lowercase)
 
-    for i in range(10):
-        symbols.append(str(i))
-    
-    key = []
-    for i in range(10):
-        key.append(random.choice(symbols))
-    
-    key = ''.join(key)
-
-    geolocator = Nominatim(user_agent=key) #here.change into random straing
+    while True:
+        try:
+            geolocator = Nominatim(user_agent = gen_rand_key()) #set key to random string
+            break # if all goes smoothly, go on
+        except:
+            joe = "joe" # just to fill in the except; doesn't have real meaning
+            # retry key generation
     G = pickle.load(open("graph", "rb"))
     
     #G = ox.graph_from_place(input("City, County, or State (ex.: Chapel Hill, Orange County, North Carolina):\n "), network_type='drive')
