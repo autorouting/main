@@ -8,6 +8,7 @@ import string
 import random
 import pickle
 
+#choose random string to use for Nominatim app name
 def gen_rand_key():
     symbols = list(string.ascii_lowercase)
 
@@ -22,6 +23,7 @@ def gen_rand_key():
     return ''.join(key)
 
 def take_inputs():
+
     while True:
         try:
             geolocator = Nominatim(user_agent = gen_rand_key())
@@ -29,24 +31,30 @@ def take_inputs():
         except:
             joe = "joe" # just to fill in the except; doesn't have real meaning
             # retry key generation
+
+    # load previously saved graph
     G = pickle.load(open("graph", "rb"))
 
+    # open input file
     inputfile = open("locations.txt", "r")
     inputs = inputfile.read().split("\n")
-    inputfile.close()
+    inputfile.close() # close it
 
+    # initiate vars
     addresses = []
     locations = []
     coords = []
     nodes = []
 
+    # for every line of input, generate location object
     for i in range(len(inputs)):
 
         addresses.append(inputs[i])
         locations.append(geolocator.geocode(addresses[i]))
         #if locations[i] == None:
             #print("faulty input at line {} of locations.txt".format(i + 1))
-            
+    
+    # remove faulty locations
     i = 0
     while i < len(locations):
         if locations[i] == None:
@@ -54,31 +62,39 @@ def take_inputs():
             i -= 1
         
         i += 1
-        
+
+    # generate coords & nodes
     i = 0
     for i in range(len(locations)):
         coords.append((locations[i].latitude, locations[i].longitude))
         nodes.append(ox.get_nearest_node(G, coords[i]))
 
 
-
+    # output data
     return (G, nodes, addresses)
 
 def generate_distance_matrix():
+    # initiate vars
     G, nodes, addresses = take_inputs()
 
+    # create 2d array with distances of node i -> node j
     output_list = []
     for i in range(len(nodes)):
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    
+    # rig distance so that optimization algorithm chooses to go to restaraunt asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = 7666432.01
-        
+    
+    # output data
     return (output_list, addresses)
 
 def create_data_model():
+    # create distance matrix; also get corresponding addresses
     distancematrix, addresses = generate_distance_matrix()
+    # initiate ORTools
     data = {}
     data['distance_matrix'] = distancematrix
     data['num_vehicles'] = 1
@@ -86,6 +102,7 @@ def create_data_model():
     return (addresses, data)
 
 def print_solution(manager, routing, solution, addresses):
+    # create ORTools solution
     print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
     plan_output = 'Route for vehicle 0:\n'
@@ -107,6 +124,7 @@ def print_solution(manager, routing, solution, addresses):
     return plan_output
 
 def main():
+    # run ORTools
     addresses, data = create_data_model()
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
@@ -127,4 +145,5 @@ def main():
     return route_solution
 
 if __name__ == '__main__':
+    # run the main script
     main()
