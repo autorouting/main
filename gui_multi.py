@@ -14,12 +14,6 @@ from functools import partial
 root = Tk()
 root.title("Autorouting app")
 
-label1 = Label(root, text="City, County, or State:")
-label1.pack()
-
-citybox = Entry(root, width=50)
-citybox.pack()
-
 label2 = Label(root, text="Restaurant address:")
 label2.pack()
 
@@ -41,7 +35,7 @@ consumeraddressbox.pack()
 
 #Verify if textboxes on the gui are empty or not
 def validate():
-    if citybox.get() == "" or restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
+    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
     else: return True
 
 #Launch routing
@@ -59,7 +53,6 @@ def launch():
         
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
-        mvr.city_name = citybox.get()
         for widget in root.winfo_children():
             widget.destroy()
         loading = Label(root, text="Loading...")
