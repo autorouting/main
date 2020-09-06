@@ -1,4 +1,6 @@
 from geopy.geocoders import Nominatim
+import string
+import random
 
 # Generate random Nomaintim Key
 def gen_rand_key():
@@ -23,6 +25,7 @@ def validate(addresses):
     while True:
         try:
             geolocator = Nominatim(user_agent = gen_rand_key())
+            print("VALIDATOR: created key")
             break # if all goes smoothly, go on
         except:
             joe = "joe" # just to fill in the except; doesn't have real meaning
@@ -30,7 +33,9 @@ def validate(addresses):
     
     # validate
     for address in addresses:
-        if geolocator.geocode(address) == None:
+        if geolocator.geocode(address) == None and address != "":
             out.append(address)
     
+    print("VALIDATOR: finished validation process")
+
     return out

@@ -7,6 +7,7 @@ import multi_vehicle_routegen as mvr
 import webbrowser
 import genmapslink
 from functools import partial
+import validator
 # [END import]
 
 # [START input form objects]
@@ -40,8 +41,11 @@ def validate():
 
 #Launch routing
 def launch():
+    #Check for faulty addresses
+    faultyaddresses = validator.validate(driveraddressbox.get("1.0", END).split("\n") + restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n"))
+
     #if all information are provided, proceed with distances calculating
-    if validate():
+    if validate() and len(faultyaddresses) == 0:
         global activation
         activation = [True]
         driveroutput = driveraddressbox.get("1.0", END)
@@ -79,7 +83,12 @@ def launch():
         activation[0] = True
             
     #if any input box is empty, display a message box     
-    else: messagebox.showwarning(title="Warning", message="Please fill in every box.")
+    elif len(faultyaddresses) == 0:
+        messagebox.showwarning(title="Warning", message="Please fill in every box.")
+    
+    #display faulty addresses
+    else:
+        messagebox.showwarning(title="Warning", message="The following locations could not be found:\n" + "\n".join(faultyaddresses))
 
 # [START buttons on the input form]
 myButton = Button(root, text="Launch program", command=launch)
