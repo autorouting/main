@@ -1,5 +1,5 @@
 from __future__ import print_function
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
@@ -11,21 +11,6 @@ import pickle
 city_name = ""
 
 #if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
-
-#Generate random Nomaintim Key
-def gen_rand_key():
-    #adding all lowercase letters to symbols
-    symbols = list(string.ascii_lowercase)
-    #adding numbers to list of symbols
-    for i in range(10):
-        symbols.append(str(i))
-    
-    key = []
-    #choose 10 random digits and append them to a list 
-    for i in range(10):
-        key.append(random.choice(symbols))
-    #turn list into string, return it as finished key
-    return ''.join(key)
 
 def calc_distance_matrix(coords):
     #Creating initial distance matrix with all 0s
@@ -96,17 +81,12 @@ def genoutput(chunks_to_display):
     outputfile.close()
     return "Routes generated:" + out
 
-def main():
+def main(api_key):
     #set_env
     addresses, locations, coords, nodes = [],[],[],[]
 
-    while True:
-        try:
-            geolocator = Nominatim(user_agent = gen_rand_key()) #set key to random string
-            break # if all goes smoothly, go on
-        except:
-            joe = "joe" # just to fill in the except; doesn't have real meaning
-            # retry key generation
+    geolocator = GoogleV3(api_key=api_key)
+        
     #loading graph of orange county
     G = pickle.load(open("graph", "rb"))
     
@@ -271,5 +251,5 @@ def main():
     return genoutput(plan_chunks)
     
 if __name__ == '__main__':
-    main()
+    main(input("API key:\n "))
 
