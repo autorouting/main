@@ -15,6 +15,12 @@ import validator
 root = Tk()
 root.title("Autorouting app")
 
+label1 = Label(root, text="Google Geocoding API key:")
+label1.pack()
+
+apikeybox = Entry(root, width=50)
+apikeybox.pack()
+
 label2 = Label(root, text="Restaurant address:")
 label2.pack()
 
@@ -36,16 +42,18 @@ consumeraddressbox.pack()
 
 #Verify if textboxes on the gui are empty or not
 def validate():
-    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
+    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0 or len(apikeybox.get())== 0: return False
     else: return True
 
 #Launch routing
 def launch():
+    """
     #Check for faulty addresses
     faultyaddresses = validator.validate(driveraddressbox.get("1.0", END).split("\n") + restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n"))
+    """ # current validator does not run on GoogleV3
 
     #if all information are provided, proceed with distances calculating
-    if validate() and len(faultyaddresses) == 0:
+    if validate():
         global activation
         activation = [True]
         driveroutput = driveraddressbox.get("1.0", END)
@@ -83,12 +91,8 @@ def launch():
         activation[0] = True
             
     #if any input box is empty, display a message box     
-    elif len(faultyaddresses) == 0:
-        messagebox.showwarning(title="Warning", message="Please fill in every box.")
-    
-    #display faulty addresses
     else:
-        messagebox.showwarning(title="Warning", message="The following locations could not be found:\n" + "\n".join(faultyaddresses))
+        messagebox.showwarning(title="Warning", message="Please fill in every box.")
 
 # [START buttons on the input form]
 myButton = Button(root, text="Launch program", command=launch)
