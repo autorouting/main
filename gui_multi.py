@@ -63,6 +63,9 @@ def launch():
         #save driver
         with open("driver_home_addresses.txt", "w") as drivertextfile: drivertextfile.write(driveroutput)
         
+        #save api key
+        apikey = apikeybox.get()
+
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
         for widget in root.winfo_children():
@@ -77,7 +80,7 @@ def launch():
         buttons = []
         displayroutes = []
         functions = [None]
-        routes = mvr.main()
+        routes = mvr.main(apikey)
         for widget in root.winfo_children():
             widget.destroy()
         outputroutes = routes.split("\n")

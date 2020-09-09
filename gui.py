@@ -43,6 +43,9 @@ def launch():
     locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
     locationstextfile.close()
 
+    # Save value before destroying all widgets
+    apikey = apikeybox.get()
+
     # Destroy previous display
     for widget in root.winfo_children():
         widget.destroy()
@@ -50,7 +53,7 @@ def launch():
     loading.pack()
 
     # Communicate with main program
-    route_solution = onevehicleroutegen.main(apikeybox.get())
+    route_solution = onevehicleroutegen.main(apikey)
     for widget in root.winfo_children():
         widget.destroy()
 
