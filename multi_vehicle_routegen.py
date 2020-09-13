@@ -1,5 +1,6 @@
 from __future__ import print_function
 from geopy.geocoders import GoogleV3
+import googlemaps as gmaps
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
@@ -85,7 +86,7 @@ def main(api_key):
     #set_env
     addresses, locations, coords, nodes = [],[],[],[]
 
-    geolocator = GoogleV3(api_key=api_key)
+    geolocator = gmaps.Client(key=api_key)
         
     #loading graph of orange county
     G = pickle.load(open("graph", "rb"))
@@ -106,21 +107,15 @@ def main(api_key):
     #adding geocode readable format to locations.  addresses is a helper
     for i in range(len(inputs)):
         addresses.append(inputs[i])
-        locations.append(geolocator.geocode(addresses[i]))
-    
-    #filtering faulty locations
-    i = 0
-    while i < len(locations):
-        if locations[i] == None:
-            locations.remove(locations[i])
-            i -= 1
-            
-        i += 1
+        try:
+            locations.append(geolocator.geocode(addresses[i]))
+        except:
+            error_found = "faulty input at line {} of locations.txt".format(i + 1)
         
     i = 0
     #converting locations to lattitude and longitude and putting into coords, and putting the nodes into nodes
     for i in range(len(locations)):
-        coords.append((locations[i].latitude, locations[i].longitude))
+        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
         nodes.append(ox.get_nearest_node(G, coords[i]))
     
     #creating dict of everything
@@ -202,22 +197,16 @@ def main(api_key):
     locations = []
     
     for i in range(len(end_points)):
-        locations.append(geolocator.geocode(end_points[i]))
+        try:
+            locations.append(geolocator.geocode(addresses[i]))
+        except:
+            error_found = "faulty input at line {} of locations.txt".format(i + 1)
 
-    i = 0
-    #remove Nonetypes
-    while i < len(locations):
-        if locations[i] == None:
-            locations.remove(locations[i])
-            i -= 1
-            
-        i += 1
-        
     i = 0
     #convert to coordinates
     coords = []
-    for i in range(len(locations)):    
-        coords.append((locations[i].latitude, locations[i].longitude))
+    for i in range(len(locations)):
+        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
     #create list of last stops for each driver route
     locations1 = []
     for i in range(len(plan_chunks)):
@@ -226,7 +215,7 @@ def main(api_key):
     coords1 = []
     
     for i in range(len(locations1)):
-        coords1.append((locations1[i].latitude, locations1[i].longitude))
+        coords1.append((locations1[i][0]['geometry']['location']['lat'], locations1[i][0]['geometry']['location']['lng']))
     #create distance matrix of driver routes to each endpoint 
     distance_matrix = []
     for i in range(len(coords1)):
