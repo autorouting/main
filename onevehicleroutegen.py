@@ -1,5 +1,6 @@
 from __future__ import print_function
 from geopy.geocoders import GoogleV3
+import googlemaps as gmaps
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
@@ -10,7 +11,7 @@ import pickle
 
 def take_inputs(api_key):
 
-    geolocator = GoogleV3(api_key=api_key)
+    geolocator = gmaps.Client(key=api_key)
 
     # load previously saved graph
     G = pickle.load(open("graph", "rb"))
@@ -30,23 +31,17 @@ def take_inputs(api_key):
     for i in range(len(inputs)):
 
         addresses.append(inputs[i])
-        locations.append(geolocator.geocode(addresses[i]))
+        try:
+            locations.append(geolocator.geocode(addresses[i]))
+        except:
+            error_found = "faulty input at line {} of locations.txt".format(i + 1)
         #if locations[i] == None:
             #print("faulty input at line {} of locations.txt".format(i + 1))
-    
-    # remove faulty locations
-    i = 0
-    while i < len(locations):
-        if locations[i] == None:
-            locations.remove(locations[i])
-            i -= 1
-        
-        i += 1
 
     # generate coords & nodes
     i = 0
     for i in range(len(locations)):
-        coords.append((locations[i].latitude, locations[i].longitude))
+        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
         nodes.append(ox.get_nearest_node(G, coords[i]))
 
 
