@@ -4,4 +4,5 @@ source activate ox;
 python -m pip install --upgrade --user ortools;
 python -m pip install geopy;
 python -m pip install networkx;
+python -m pip install googlemaps;
 exit;
