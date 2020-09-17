@@ -15,11 +15,38 @@ import validator
 root = Tk()
 root.title("Autorouting app")
 
-label2 = Label(root, text="Restaurant address:")
+label2 = Label(root, text="Depot:")
 label2.pack()
 
 restaurantaddressbox = Entry(root, width=50)
 restaurantaddressbox.pack()
+
+label4 = Label(root, text="Consumer addresses:")
+label4.pack()
+
+consumeraddressbox = ScrolledText(root, width=50,height=12)
+consumeraddressbox.pack()
+
+label2 = Label(root, text="Use depot as endpoints for route?  After you click, follow the instructions that will appear at the bottom of your screen")
+label2.pack()
+def yes():
+    global endpoint
+    global label6
+    endpoint = no
+    label6 = Label(root, text="Please input number of drivers and leave driver addresses blank")
+    label6.pack()
+def no():
+    global endpoint
+    global label6
+    endpoint = yes
+    label6 = Label(root, text="Please input driver addresses and leave number of drivers blank")
+    label6.pack()
+yes = Button(root, text="Yes", command=yes)
+yes.pack()
+
+no = Button(root, text="No", command=no)
+no.pack()
+
 
 label3 = Label(root, text="Driver addresses:")
 label3.pack()
@@ -27,11 +54,12 @@ label3.pack()
 driveraddressbox = ScrolledText(root, width=50, height = 12)
 driveraddressbox.pack()
 
-label4 = Label(root, text="Consumer adresses:")
-label4.pack()
+label5 = Label(root, text="Number of drivers")
+label5.pack()
+num_drivers = Entry(root, width=50)
+num_drivers.pack()
 
-consumeraddressbox = ScrolledText(root, width=50,height=12)
-consumeraddressbox.pack()
+
 # [END input form objects]
 
 #Verify if textboxes on the gui are empty or not
@@ -42,13 +70,23 @@ def validate():
 #Launch routing
 def launch():
     #Check for faulty addresses
-    faultyaddresses = validator.validate(driveraddressbox.get("1.0", END).split("\n") + restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n"))
+    if endpoint == yes:
+        faultyaddresses = validator.validate(driveraddressbox.get("1.0", END).split("\n") + restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n"))
+    if endpoint == no:
+        faultyaddresses = validator.validate(restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n") + list(num_drivers.get()))
 
     #if all information are provided, proceed with distances calculating
     if validate() and len(faultyaddresses) == 0:
         global activation
         activation = [True]
-        driveroutput = driveraddressbox.get("1.0", END)
+        if endpoint == yes:
+            driveroutput = driveraddressbox.get("1.0", END)
+
+        if endpoint == no:
+            driveroutput = ''
+            for i in range(int(num_drivers.get())):
+                driveroutput = driveroutput + restaurantaddressbox.get() + "\n"
+
         while driveroutput[-1] in ["\n","\t","r"]: driveroutput = driveroutput[:-1]
         consumeroutput = consumeraddressbox.get("1.0", END)
         while consumeroutput[-1] in ["\n","\t","r"]: consumeroutput = consumeroutput[:-1]
