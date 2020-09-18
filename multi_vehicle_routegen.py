@@ -15,39 +15,29 @@ city_name = ""
 
 def calc_distance_matrix(coords):
     #Creating initial distance matrix with all 0s
-    distance_matrix = []
-    #Rows
-    for i in range(len(coords)):
-        distance_matrix.append([])
-        #Columns
-        for j in range(len(coords)):
-            distance_matrix[i].append(0)
-           
-    for i in range(len(coords)):
-        for j in range(len(coords)):     
-            #Calculating euclidean distance
-            x_distance_squared = (coords[i][0] - coords[j][0]) ** 2
-            y_distance_squared = (coords[i][1] - coords[j][1]) ** 2
-            distance = (x_distance_squared + y_distance_squared) ** 0.5
-            distance_matrix[i][j] = distance
+    output_list = []
+    for i in range(len(nodes)):
+        output_list.append([])
+        for j in range(len(nodes)):
+            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
             
-    return distance_matrix
+    return output_list
     
 def calc_distance(point1, point2):
     #returning euclidean distance
-    return ((point1[0] - point2[1]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
+    return nx.shortest_path_length(G, point1, point2, weight='length')
 
-def generate_distance_matrix(coords):
+def generate_distance_matrix(nodes):
     output_list = []
     #Putting the distance matrix into output list.  Unnecessary.  Will be removed in final version
-    output_list = calc_distance_matrix(coords)
+    output_list = calc_distance_matrix(nodes)
     return output_list
 
-def create_data_model(coords):
+def create_data_model(nodes):
     #defining data as a dict
     data = {}
     #defining distance matrix
-    data['distance_matrix'] = generate_distance_matrix(coords)
+    data['distance_matrix'] = generate_distance_matrix(nodes)
     #initializing num_vehicles
     data['num_vehicles'] = 1
     #initializing depot
@@ -84,6 +74,7 @@ def genoutput(chunks_to_display):
 
 def main(api_key):
     #set_env
+    global G
     addresses, locations, coords, nodes = [],[],[],[]
 
     geolocator = gmaps.Client(key=api_key)
@@ -119,7 +110,7 @@ def main(api_key):
         nodes.append(ox.get_nearest_node(G, coords[i]))
     
     #creating dict of everything
-    data = create_data_model(coords)
+    data = create_data_model(nodes)
     #initializing or-tools formatted vars
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
@@ -205,17 +196,23 @@ def main(api_key):
     i = 0
     #convert to coordinates
     coords = []
-    for i in range(len(locations)):
+    nodes = []
+    for i in range(len(locations)):    
         coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
+        nodes.append(ox.get_nearest_node(G, coords[i]))
+        
     #create list of last stops for each driver route
     locations1 = []
     for i in range(len(plan_chunks)):
         locations1.append(geolocator.geocode(plan_chunks[i][-1]))
     #get coordinates for final stops in each driver route
     coords1 = []
+    nodes1 = []
     
     for i in range(len(locations1)):
         coords1.append((locations1[i][0]['geometry']['location']['lat'], locations1[i][0]['geometry']['location']['lng']))
+        nodes1.append(ox.get_nearest_node(G, coords1[i]))
+    
     #create distance matrix of driver routes to each endpoint 
     distance_matrix = []
     for i in range(len(coords1)):
@@ -227,7 +224,7 @@ def main(api_key):
             
     for i in range(len(coords1)):
         for j in range(len(coords)):
-            distance_matrix[i][j] = calc_distance(coords1[i], coords[j])
+            distance_matrix[i][j] = calc_distance(nodes1[i], nodes[j])
     #append the closest endpoint to the last stop in each route to the respective driver route   
     for i in range(len(plan_chunks)):
         #get minimum distance to the last stop in the i th driver route 
@@ -237,6 +234,7 @@ def main(api_key):
         for j in range(len(distance_matrix)):
             distance_matrix[j].remove(distance_matrix[j][min_index])
         end_points.remove(end_points[min_index])
+    print(genoutput(plan_chunks))
     return genoutput(plan_chunks)
     
 if __name__ == '__main__':
