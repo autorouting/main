@@ -1,5 +1,6 @@
 from __future__ import print_function
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
+import googlemaps as gmaps
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
@@ -8,29 +9,9 @@ import string
 import random
 import pickle
 
-#choose random string to use for Nominatim app name
-def gen_rand_key():
-    symbols = list(string.ascii_lowercase)
+def take_inputs(api_key):
 
-    for i in range(10):
-        symbols.append(str(i))
-    
-    key = []
-    
-    for i in range(10):
-        key.append(random.choice(symbols))
-    
-    return ''.join(key)
-
-def take_inputs():
-
-    while True:
-        try:
-            geolocator = Nominatim(user_agent = gen_rand_key())
-            break # if all goes smoothly, go on
-        except:
-            joe = "joe" # just to fill in the except; doesn't have real meaning
-            # retry key generation
+    geolocator = gmaps.Client(key=api_key)
 
     # load previously saved graph
     G = pickle.load(open("graph", "rb"))
@@ -50,32 +31,26 @@ def take_inputs():
     for i in range(len(inputs)):
 
         addresses.append(inputs[i])
-        locations.append(geolocator.geocode(addresses[i]))
+        try:
+            locations.append(geolocator.geocode(addresses[i]))
+        except:
+            error_found = "faulty input at line {} of locations.txt".format(i + 1)
         #if locations[i] == None:
             #print("faulty input at line {} of locations.txt".format(i + 1))
-    
-    # remove faulty locations
-    i = 0
-    while i < len(locations):
-        if locations[i] == None:
-            locations.remove(locations[i])
-            i -= 1
-        
-        i += 1
 
     # generate coords & nodes
     i = 0
     for i in range(len(locations)):
-        coords.append((locations[i].latitude, locations[i].longitude))
+        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
         nodes.append(ox.get_nearest_node(G, coords[i]))
 
 
     # output data
     return (G, nodes, addresses)
 
-def generate_distance_matrix():
+def generate_distance_matrix(api_key):
     # initiate vars
-    G, nodes, addresses = take_inputs()
+    G, nodes, addresses = take_inputs(api_key)
 
     # create 2d array with distances of node i -> node j
     output_list = []
@@ -91,9 +66,9 @@ def generate_distance_matrix():
     # output data
     return (output_list, addresses)
 
-def create_data_model():
+def create_data_model(api_key):
     # create distance matrix; also get corresponding addresses
-    distancematrix, addresses = generate_distance_matrix()
+    distancematrix, addresses = generate_distance_matrix(api_key)
     # initiate ORTools
     data = {}
     data['distance_matrix'] = distancematrix
@@ -123,9 +98,9 @@ def print_solution(manager, routing, solution, addresses):
     print(plan_output)
     return plan_output
 
-def main():
+def main(api_key):
     # run ORTools
-    addresses, data = create_data_model()
+    addresses, data = create_data_model(api_key)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -146,4 +121,4 @@ def main():
 
 if __name__ == '__main__':
     # run the main script
-    main()
+    main(input("API key:\n "))

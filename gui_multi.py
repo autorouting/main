@@ -15,6 +15,12 @@ import validator
 root = Tk()
 root.title("Autorouting app")
 
+label1 = Label(root, text="Google Geocoding API key:")
+label1.pack()
+
+apikeybox = Entry(root, width=50)
+apikeybox.pack()
+
 label2 = Label(root, text="Depot:")
 label2.pack()
 
@@ -64,19 +70,21 @@ num_drivers.pack()
 
 #Verify if textboxes on the gui are empty or not
 def validate():
-    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
+    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0 or len(apikeybox.get())== 0: return False
     else: return True
 
 #Launch routing
 def launch():
+    """
     #Check for faulty addresses
     if endpoint == yes:
         faultyaddresses = validator.validate(driveraddressbox.get("1.0", END).split("\n") + restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n"))
     if endpoint == no:
         faultyaddresses = validator.validate(restaurantaddressbox.get().split("\n") + consumeraddressbox.get('1.0', END).split("\n") + list(num_drivers.get()))
+    """ # this framework currently doesn't work on latest versions
 
     #if all information are provided, proceed with distances calculating
-    if validate() and len(faultyaddresses) == 0:
+    if validate():
         global activation
         activation = [True]
         if endpoint == yes:
@@ -93,6 +101,9 @@ def launch():
         #save driver
         with open("driver_home_addresses.txt", "w") as drivertextfile: drivertextfile.write(driveroutput)
         
+        #save api key
+        apikey = apikeybox.get()
+
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
         for widget in root.winfo_children():
@@ -107,7 +118,7 @@ def launch():
         buttons = []
         displayroutes = []
         functions = [None]
-        routes = mvr.main()
+        routes = mvr.main(apikey)
         for widget in root.winfo_children():
             widget.destroy()
         outputroutes = routes.split("\n")
@@ -121,12 +132,8 @@ def launch():
         activation[0] = True
             
     #if any input box is empty, display a message box     
-    elif len(faultyaddresses) == 0:
-        messagebox.showwarning(title="Warning", message="Please fill in every box.")
-    
-    #display faulty addresses
     else:
-        messagebox.showwarning(title="Warning", message="The following locations could not be found:\n" + "\n".join(faultyaddresses))
+        messagebox.showwarning(title="Warning", message="Please fill in every box.")
 
 # [START buttons on the input form]
 myButton = Button(root, text="Launch program", command=launch)
