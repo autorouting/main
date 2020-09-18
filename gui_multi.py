@@ -10,31 +10,10 @@ from functools import partial
 import validator
 # [END import]
 
-# [START input form objects]
-# These are labels and textboxes on the GUI input form.
-root = Tk()
-root.title("Autorouting app")
+#How to setup API Key button
+def displayAPI():
+    webbrowser.open("apikeysetupguide.html")
 
-label1 = Label(root, text="Google Geocoding API key:")
-label1.pack()
-
-apikeybox = Entry(root, width=50)
-apikeybox.pack()
-
-label2 = Label(root, text="Depot:")
-label2.pack()
-
-restaurantaddressbox = Entry(root, width=50)
-restaurantaddressbox.pack()
-
-label4 = Label(root, text="Consumer addresses:")
-label4.pack()
-
-consumeraddressbox = ScrolledText(root, width=50,height=12)
-consumeraddressbox.pack()
-
-label2 = Label(root, text="Use depot as endpoints for route?  After you click, follow the instructions that will appear at the bottom of your screen")
-label2.pack()
 def yes():
     global endpoint
     global label6
@@ -47,33 +26,13 @@ def no():
     endpoint = yes
     label6 = Label(root, text="Please input driver addresses and leave number of drivers blank")
     label6.pack()
-yes = Button(root, text="Yes", command=yes)
-yes.pack()
-
-no = Button(root, text="No", command=no)
-no.pack()
-
-
-label3 = Label(root, text="Driver addresses:")
-label3.pack()
-
-driveraddressbox = ScrolledText(root, width=50, height = 12)
-driveraddressbox.pack()
-
-label5 = Label(root, text="Number of drivers")
-label5.pack()
-num_drivers = Entry(root, width=50)
-num_drivers.pack()
-
-
-# [END input form objects]
-
+	
 #Verify if textboxes on the gui are empty or not
 def validate():
     if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0 or len(apikeybox.get())== 0: return False
     else: return True
 
-#Launch routing
+#Launch routing 
 def launch():
     """
     #Check for faulty addresses
@@ -115,6 +74,7 @@ def launch():
         def callback(routelink):
             global activation
             if activation[0]: webbrowser.open(routelink, 0)
+
         buttons = []
         displayroutes = []
         functions = [None]
@@ -129,19 +89,72 @@ def launch():
                 print(partial(genmapslink.maps_link, outputting)())
                 buttons.append(Button(root, text="Open Google Maps link in browser", command=partial(callback, partial(genmapslink.maps_link, outputting)())))
                 buttons[-1].pack()
+                #pad empty space between objects
+                labelSpace = Label(root, pady=5)
+                labelSpace.pack()
         activation[0] = True
             
     #if any input box is empty, display a message box     
     else:
         messagebox.showwarning(title="Warning", message="Please fill in every box.")
 
-# [START buttons on the input form]
+# [START input form objects]
+# These are labels and textboxes on the GUI input form.
+root = Tk()
+root.title("Autorouting app")
+
+label1 = Label(root, text="Google Geocoding API key:")
+label1.pack()
+
+apikeybox = Entry(root, width=50)
+apikeybox.pack()
+
+apiButton = Button(root, text="How to setup API Key", command=displayAPI)
+apiButton.pack()
+
+#pad empty space between objects
+labelSpace = Label(root, pady=3)
+labelSpace.pack()
+
+label2 = Label(root, text="Depot:")
+label2.pack()
+
+restaurantaddressbox = Entry(root, width=50)
+restaurantaddressbox.pack()
+
+label4 = Label(root, text="Consumer addresses:")
+label4.pack()
+
+consumeraddressbox = ScrolledText(root, width=50,height=8)
+consumeraddressbox.pack()
+
+label2 = Label(root, text="Use depot as endpoints for route?  After you click, follow the instructions that will appear at the bottom of your screen")
+label2.pack()
+
+yes = Button(root, text="Yes", command=yes)
+yes.pack()
+
+no = Button(root, text="No", command=no)
+no.pack()
+
+
+label3 = Label(root, text="Driver addresses:")
+label3.pack()
+
+driveraddressbox = ScrolledText(root, width=50, height = 8)
+driveraddressbox.pack()
+
+label5 = Label(root, text="Number of drivers")
+label5.pack()
+num_drivers = Entry(root, width=50)
+num_drivers.pack()
+
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
 
 bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")
 bottomtext.pack()
-# [END buttons on the input form]
+# [END input form objects]
 
 # call the main function
 root.mainloop()
