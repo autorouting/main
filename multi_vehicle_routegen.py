@@ -13,7 +13,7 @@ city_name = ""
 
 #if __name__ == '__main__': city_name = input("City, County, or State (choose smallest one that encompasses on locations): ")
 
-def calc_distance_matrix(coords):
+def calc_distance_matrix(nodes):
     #Creating initial distance matrix with all 0s
     output_list = []
     for i in range(len(nodes)):
@@ -24,7 +24,7 @@ def calc_distance_matrix(coords):
     return output_list
     
 def calc_distance(point1, point2):
-    #returning euclidean distance
+    #returning driving distance
     return nx.shortest_path_length(G, point1, point2, weight='length')
 
 def generate_distance_matrix(nodes):
