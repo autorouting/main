@@ -10,6 +10,12 @@ root = Tk()
 root.title("Autorouting app (one-vehicle)")
 
 # Build display
+label1 = Label(root, text="Google Geocoding API key:")
+label1.pack()
+
+apikeybox = Entry(root, width=50)
+apikeybox.pack()
+
 label2 = Label(root, text="Driver address:")
 label2.pack()
 
@@ -37,6 +43,9 @@ def launch():
     locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
     locationstextfile.close()
 
+    # Save value before destroying all widgets
+    apikey = apikeybox.get()
+
     # Destroy previous display
     for widget in root.winfo_children():
         widget.destroy()
@@ -44,7 +53,7 @@ def launch():
     loading.pack()
 
     # Communicate with main program
-    route_solution = onevehicleroutegen.main()
+    route_solution = onevehicleroutegen.main(apikey)
     for widget in root.winfo_children():
         widget.destroy()
 
