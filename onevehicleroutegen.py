@@ -84,11 +84,13 @@ def print_solution(manager, routing, solution, addresses):
     route_distance = 0
     textfileoutput = ""
     while not routing.IsEnd(index):
-        plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
-        textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+        if index:
+            plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+            textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)])
         previous_index = index
         index = solution.Value(routing.NextVar(index))
-        route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
+        if index:
+            route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
     plan_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
     textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)])
     outputfile = open("route.txt", "w")
