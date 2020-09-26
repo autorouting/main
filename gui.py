@@ -38,6 +38,10 @@ consumeraddressbox.pack()
 def launch():
     global route_solution
 
+    # make new window
+    newroot = Tk()
+    newroot.title("Solution")
+
     # Write inputs to communication file
     locationstextfile = open("locations.txt", "w")
     locationstextfile.write(driveraddressbox.get().replace("\n", "") + "\n" + restrauntaddressbox.get().replace("\n", "") + "\n" + consumeraddressbox.get('1.0', END))
@@ -46,19 +50,11 @@ def launch():
     # Save value before destroying all widgets
     apikey = apikeybox.get()
 
-    # Destroy previous display
-    for widget in root.winfo_children():
-        widget.destroy()
-    loading = Label(root, text="Loading...")
-    loading.pack()
-
     # Communicate with main program
     route_solution = onevehicleroutegen.main(apikey)
-    for widget in root.winfo_children():
-        widget.destroy()
 
     # Generate output text
-    display_route = Label(root, text=route_solution.replace(" -> ", " ->\n"))
+    display_route = Label(newroot, text=route_solution.replace(" -> ", " ->\n"))
     display_route.pack()
 
     # Generate output link
@@ -66,8 +62,10 @@ def launch():
     def callback():
         webbrowser.open(route_link, 0) # open link in browser if callback is called
 
-    button_link = Button(root, text="Open Google Maps link in browser", command=callback)
+    button_link = Button(newroot, text="Open Google Maps link in browser", command=callback)
     button_link.pack()
+
+    newroot.mainloop()
 
 # Finish main display
 myButton = Button(root, text="Launch program", command=launch)
