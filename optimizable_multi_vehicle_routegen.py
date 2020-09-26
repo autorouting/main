@@ -161,7 +161,8 @@ def split_route():
             temp = [0, 0]
             for l in range(1, len(chunks[i][j])):
                 temp[j] += nx.shortest_path_length(G, nodes[addresses.index(chunks[i][j][l - 1])], nodes[addresses.index(chunks[i][j][l])], weight='length')
-            total_distance.append(temp)
+            temp[j] *= -1
+        total_distance.append(temp)
     print(chunks)   
     print(total_distance)
     optimizer = max_value(total_distance)
