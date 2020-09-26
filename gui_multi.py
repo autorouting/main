@@ -49,6 +49,9 @@ def launch():
         if endpoint == yes:
             driveroutput = driveraddressbox.get("1.0", END)
 
+        newroot = Tk()
+        newroot.title("Solution")
+
         if endpoint == no:
             driveroutput = ''
             for i in range(int(num_drivers.get())):
@@ -65,12 +68,14 @@ def launch():
 
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
+        """
         for widget in root.winfo_children():
             widget.destroy()
         loading = Label(root, text="Loading...")
         loading.pack()
         for widget in root.winfo_children():
             widget.destroy()
+        """
         def callback(routelink):
             global activation
             if activation[0]: webbrowser.open(routelink, 0)
@@ -79,20 +84,24 @@ def launch():
         displayroutes = []
         functions = [None]
         routes = mvr.main(apikey)
+        """
         for widget in root.winfo_children():
             widget.destroy()
+        """
         outputroutes = routes.split("\n")
         for outputting in range(len(outputroutes)):
-            displayroutes.append(Label(root, text=(outputroutes[outputting].replace("\n", "\n\n")).replace(" -> ", " ->\n")))
+            displayroutes.append(Label(newroot, text=(outputroutes[outputting].replace("\n", "\n\n")).replace(" -> ", " ->\n")))
             displayroutes[-1].pack()
             if outputting != 0:
                 print(partial(genmapslink.maps_link, outputting)())
-                buttons.append(Button(root, text="Open Google Maps link in browser", command=partial(callback, partial(genmapslink.maps_link, outputting)())))
+                buttons.append(Button(newroot, text="Open Google Maps link in browser", command=partial(callback, partial(genmapslink.maps_link, outputting)())))
                 buttons[-1].pack()
                 #pad empty space between objects
-                labelSpace = Label(root, pady=5)
+                labelSpace = Label(newroot, pady=5)
                 labelSpace.pack()
         activation[0] = True
+
+        newroot.mainloop()
             
     #if any input box is empty, display a message box     
     else:
