@@ -28,15 +28,25 @@ def take_inputs(api_key):
     nodes = []
 
     # for every line of input, generate location object
-    for i in range(len(inputs)):
+    i = 0
+    while True:
 
         addresses.append(inputs[i])
         try:
             locations.append(geolocator.geocode(addresses[i]))
+            if len(locations[i]) == 0:
+                locations.pop(i)
+                raise "errorerrorerror"
+            i += 1
         except:
-            error_found = "faulty input at line {} of locations.txt".format(i + 1)
-        #if locations[i] == None:
-            #print("faulty input at line {} of locations.txt".format(i + 1))
+            addresses.pop(i)
+            inputs.pop(i)
+        
+        if i == len(inputs):
+            break
+
+    print(addresses)
+    print(locations[len(locations) - 1])
 
     # generate coords & nodes
     i = 0
