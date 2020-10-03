@@ -137,38 +137,57 @@ def split_route():
             temp.pop(0)
             route[j] = ''.join(temp)
     
-    start = route[0]
+    start_end = route[0]
 
-    chunks = []
-    for combs in [combinations(route, num) for num in range(len(route) + 1)]:
-        for comb in combs:
-            comb = list(set(comb))
-            chunk = [list(comb)]
-            diff = list(set(route) - set(comb))
-            if start in diff:
-                comb.insert(0, start)
-
-            else:
-                diff.insert(0, start)
-
-            chunk.append(diff)
-            chunks.append(chunk)
+    chunks = sorted_k_partitions(route, int(input('How many drivers are there?  ')), start_end)
     
-    total_distance = []
-
+    total_distance = [[] for sub_route in chunks]
+    print(chunks) 
     for i in range(len(chunks)):
-        for j in range(2):
-            temp = [0, 0]
+        for j in range(len(chunks[i])):
+            temp = 0
             for l in range(1, len(chunks[i][j])):
-                temp[j] += nx.shortest_path_length(G, nodes[addresses.index(chunks[i][j][l - 1])], nodes[addresses.index(chunks[i][j][l])], weight='length')
-            temp[j] *= -1
-        total_distance.append(temp)
+                temp += nx.shortest_path_length(G, nodes[addresses.index(chunks[i][j][l - 1])], nodes[addresses.index(chunks[i][j][l])], weight='length')
+            temp *= -1
+            total_distance[i].append(temp)
     print(chunks)   
     print(total_distance)
     optimizer = max_value(total_distance)
     print(chunks[optimizer[0]])
     
+def sorted_k_partitions(tsp_route, k, start_end):
+    n = len(tsp_route)
+    groups = []
 
+    def generate_partitions(i):
+        if i >= n:
+            yield list(map(list, groups))
+        else:
+            if n - i > k - len(groups):
+                for group in groups:
+                    group.append(tsp_route[i])
+                    yield from generate_partitions(i + 1)
+                    group.pop()
+
+            if len(groups) < k:
+                groups.append([tsp_route[i]])
+                yield from generate_partitions(i + 1)
+                groups.pop()
+
+    routes = generate_partitions(0)
+
+    routes = [sorted(ps, key = lambda p: (len(p), p)) for ps in routes]
+    routes = sorted(routes, key = lambda ps: (*map(len, ps), ps))
+    
+    for i in range(len(routes)):
+      for j in range(len(routes[i])):
+        if routes[i][j][0] != start_end:
+          routes[i][j].insert(0, start_end)
+        if routes[i][j][-1] != start_end:
+          routes[i][j].append(start_end)
+
+
+    return routes
     
 def max_value(test):
     max_sublist = []
