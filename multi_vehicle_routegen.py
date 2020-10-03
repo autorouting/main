@@ -95,13 +95,23 @@ def main(api_key):
     inputs = inputfile.read().split("\n")
     inputfile.close()
     
-    #adding geocode readable format to locations.  addresses is a helper
-    for i in range(len(inputs)):
+    #adding geocode readable format to locations.  addresses is a helperi = 0
+    i = 0
+    while True:
+
         addresses.append(inputs[i])
         try:
             locations.append(geolocator.geocode(addresses[i]))
+            if len(locations[i]) == 0:
+                locations.pop(i)
+                raise "errorerrorerror"
+            i += 1
         except:
-            error_found = "faulty input at line {} of locations.txt".format(i + 1)
+            addresses.pop(i)
+            inputs.pop(i)
+        
+        if i == len(inputs):
+            break
         
     i = 0
     #converting locations to lattitude and longitude and putting into coords, and putting the nodes into nodes
@@ -186,12 +196,21 @@ def main(api_key):
         end_points.append(item)
     #convert addresses to geocode readable form
     locations = []
-    
-    for i in range(len(end_points)):
+
+    i = 0
+    while True:
+
         try:
-            locations.append(geolocator.geocode(addresses[i]))
+            locations.append(geolocator.geocode(end_points[i]))
+            if len(locations[i]) == 0:
+                locations.pop(i)
+                raise "errorerrorerror"
+            i += 1
         except:
-            error_found = "faulty input at line {} of locations.txt".format(i + 1)
+            end_points.pop(i)
+        
+        if i == len(end_points):
+            break
 
     i = 0
     #convert to coordinates
