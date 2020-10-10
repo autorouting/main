@@ -9,6 +9,7 @@ import string
 import random
 import pickle
 from itertools import combinations
+from time import perf_counter
 
 def take_inputs(api_key):
     global G
@@ -114,8 +115,9 @@ def main(api_key):
     solution = routing.SolveWithParameters(search_parameters)
     route_solution = print_solution(manager, routing, solution, addresses)
     if solution:
-        split_route()
-def split_route():
+        split_route(data['distance_matrix'])
+
+def split_route(distance_matrix):
     route = open("route.txt", "r")
     route = route.read()
     route = str(route).split(" -> ")
@@ -138,22 +140,22 @@ def split_route():
             route[j] = ''.join(temp)
     
     start_end = route[0]
-
     chunks = sorted_k_partitions(route, int(input('How many drivers are there?  ')), start_end)
-    
     total_distance = [[] for sub_route in chunks]
-    print(chunks) 
+    
     for i in range(len(chunks)):
         for j in range(len(chunks[i])):
             temp = 0
             for l in range(1, len(chunks[i][j])):
-                temp += nx.shortest_path_length(G, nodes[addresses.index(chunks[i][j][l - 1])], nodes[addresses.index(chunks[i][j][l])], weight='length')
+                temp += distance_matrix[addresses.index(chunks[i][j][l - 1])][addresses.index(chunks[i][j][l])]
             temp *= -1
             total_distance[i].append(temp)
-    print(chunks)   
-    print(total_distance)
-    optimizer = max_value(total_distance)
-    print(chunks[optimizer[0]])
+
+    optimizer_shortest = max_value(total_distance)
+    optimizer_min_average = min_average(total_distance)
+    
+    print(chunks[optimizer_shortest[0]])
+    print(chunks[optimizer_min_average])
     
 def sorted_k_partitions(tsp_route, k, start_end):
     n = len(tsp_route)
@@ -188,21 +190,30 @@ def sorted_k_partitions(tsp_route, k, start_end):
 
 
     return routes
-    
-def max_value(test):
+
+def max_value(distances):
     max_sublist = []
   
-    for i in range(len(test)):
-        max_sublist.append([test[i].index(max(test[i])), max(test[i])])
+    for i in range(len(distances)):
+        max_sublist.append([distances[i].index(max(distances[i])), max(distances[i])])
         largest = [0, -1]
         
         for i in range(len(max_sublist)):
             if max_sublist[i][-1] > max_sublist[largest[0]][largest[1]]:
                 largest = [i, -1]
 
-    largest_sublist = test[largest[0]]
+    largest_sublist = distances[largest[0]]
     largest = [largest[0], largest_sublist.index(max(largest_sublist))]
     return largest
+
+def min_average(distances):
+    avgs = []
+
+    for i in range(len(distances)):
+        avg = sum(distances[i]) / len(distances[i])
+        avgs.append(avg)
+
+    return avgs.index(max(avgs))
 
 
 
