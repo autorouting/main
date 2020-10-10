@@ -1,6 +1,7 @@
+#!put your python path here ...\python.exe
 import cgi, cgitb
-import onevehicleroutegen
-import genmapslink
+import onevehicleroutegen_web
+import genmapslink_web
 
 # get the inputs
 form = cgi.FieldStorage()
@@ -9,9 +10,15 @@ driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
 
-route_solution = onevehicleroutegen.main(api_key)
-route_link = genmapslink.maps_link()
+# Write inputs to communication file
+locationstextfile = open("locations.txt", "w")
+locationstextfile.write(driver_address + "\n" + restaurant_address + "\n" + consumer_addresses)
+locationstextfile.close()
 
-print("Content-type:text/html")
-print(route_solution.replace(" -> ", " ->\n"))
-print("<br/><a href='" + route_link + "'>Open Google Maps link</a>")
+route_solution = onevehicleroutegen_web.main(api_key)
+route_link = genmapslink_web.maps_link()
+
+# Display routes
+print("Content-type:text/html\n")
+print(route_solution.replace(" -> ", " -><br>"))
+print("<br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>")
