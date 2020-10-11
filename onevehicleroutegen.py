@@ -1,67 +1,118 @@
 from __future__ import print_function
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
+import googlemaps as gmaps
 import networkx as nx
 import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+import string
+import random
+import pickle
 
-geolocator = Nominatim(user_agent=input("Your app name:\n "))
-G = ox.graph_from_place(input("city (ex.: Piedmont, California, USA):\n "), network_type='drive')
+def take_inputs(api_key):
 
-addresses = []
-locations = []
-coords = []
-nodes = []
+    geolocator = gmaps.Client(key=api_key)
 
-inputfile = open("locations.txt", "r")
-inputs = inputfile.read().split("\n")
-inputfile.close()
+    # load previously saved graph
+    G = pickle.load(open("graph", "rb"))
 
-for i in range(len(inputs)):
-    addresses.append(inputs[i])
-    locations.append(geolocator.geocode(addresses[i]))
-    coords.append((locations[i].latitude, locations[i].longitude))
-    nodes.append(ox.get_nearest_node(G, coords[i]))
+    # open input file
+    inputfile = open("locations.txt", "r")
+    inputs = inputfile.read().split("\n")
+    inputfile.close() # close it
 
-def generate_distance_matrix():
+    # initiate vars
+    addresses = []
+    locations = []
+    coords = []
+    nodes = []
+
+    # for every line of input, generate location object
+    i = 0
+    while True:
+
+        addresses.append(inputs[i])
+        try:
+            locations.append(geolocator.geocode(addresses[i]))
+            if len(locations[i]) == 0:
+                locations.pop(i)
+                raise "errorerrorerror"
+            i += 1
+        except:
+            addresses.pop(i)
+            inputs.pop(i)
+        
+        if i == len(inputs):
+            break
+
+    print(addresses)
+    print(locations[len(locations) - 1])
+
+    # generate coords & nodes
+    i = 0
+    for i in range(len(locations)):
+        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
+        nodes.append(ox.get_nearest_node(G, coords[i]))
+
+
+    # output data
+    return (G, nodes, addresses)
+
+def generate_distance_matrix(api_key):
+    # initiate vars
+    G, nodes, addresses = take_inputs(api_key)
+
+    # create 2d array with distances of node i -> node j
     output_list = []
     for i in range(len(nodes)):
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    
+    # rig distance so that optimization algorithm chooses to go to restaraunt asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = 7666432.01
-    return output_list
+    
+    # output data
+    return (output_list, addresses)
 
-def create_data_model():
+def create_data_model(api_key):
+    # create distance matrix; also get corresponding addresses
+    distancematrix, addresses = generate_distance_matrix(api_key)
+    # initiate ORTools
     data = {}
-    data['distance_matrix'] = generate_distance_matrix()
+    data['distance_matrix'] = distancematrix
     data['num_vehicles'] = 1
     data['depot'] = 0
-    return data
+    return (addresses, data)
 
-def print_solution(manager, routing, solution):
+def print_solution(manager, routing, solution, addresses):
+    # create ORTools solution
     print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
     plan_output = 'Route for vehicle 0:\n'
     route_distance = 0
     textfileoutput = ""
     while not routing.IsEnd(index):
-        plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
-        textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+        if index:
+            plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+            textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)])
         previous_index = index
         index = solution.Value(routing.NextVar(index))
-        route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
+        if index:
+            route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
     plan_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
     textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)])
-    print(plan_output)
     outputfile = open("route.txt", "w")
     outputfile.write(textfileoutput)
     outputfile.close()
-    plan_output += 'Route distance: {}miles\n'.format(route_distance)
+    plan_output += 'Route distance: {}meters\n'.format(route_distance)
+    print(plan_output)
+    return plan_output
 
-def main():
-    data = create_data_model()
+def main(api_key):
+    # run ORTools
+    addresses, data = create_data_model(api_key)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -74,8 +125,12 @@ def main():
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     solution = routing.SolveWithParameters(search_parameters)
+    route_solution = print_solution(manager, routing, solution, addresses)
     if solution:
-        print_solution(manager, routing, solution)
+        route_solution
+
+    return route_solution
 
 if __name__ == '__main__':
-    main()
+    # run the main script
+    main(input("API key:\n "))
