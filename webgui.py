@@ -3,6 +3,19 @@ import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
 
+# change to HTML display
+print("Content-type:text/html\n")
+
+# add doc title
+print("<title>Autorouting app (Solutions)</title>")
+
+# add stylesheet
+print("""
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+""")
+
 # get the inputs
 form = cgi.FieldStorage()
 api_key = form.getvalue("api_key")
@@ -19,6 +32,5 @@ route_solution = onevehicleroutegen_web.main(api_key)
 route_link = genmapslink_web.maps_link()
 
 # Display routes
-print("Content-type:text/html\n")
 print(route_solution.replace(" -> ", " -><br>"))
 print("<br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>")
