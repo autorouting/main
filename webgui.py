@@ -1,4 +1,4 @@
-#!put your python path here ...\python.exe
+#!/usr/bin/python3
 import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
