@@ -48,13 +48,13 @@
         <center>
             <form action="webgui.py" target="_blank">
                 <label for="api_key">Google Geocoding API key</label>
-                <input type="password" id="api_key" name="api_key" placeholder="API key">
+                <input type="password" id="api_key" name="api_key" placeholder="API key" required>
                 <label for="driver">Driver address</label>
-                <input type="text" id="driver" name="driver" placeholder="Driver address">
+                <input type="text" id="driver" name="driver" placeholder="Driver address" required>
                 <label for="restaurant">Restaurant address</label>
-                <input type="text" id="restaurant" name="restaurant" placeholder="Restaurant address">
+                <input type="text" id="restaurant" name="restaurant" placeholder="Restaurant address" required>
                 <label for="consumer">Comsumer addresses</label>
-                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Addresses to be covered in between"></textarea>
+                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Addresses to be covered in between" required></textarea>
                 <input type="submit" value="Launch program">
             </form>
         </center>
