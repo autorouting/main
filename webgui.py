@@ -35,7 +35,7 @@ body {
 </style>""")
 
 route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstextfilecontent)
-route_link = genmapslink_web.maps_link(-1, stringoutput)
+route_link = genmapslink_web.maps_link(stringoutput, -1)
 
 # Display routes
 print("<div id='containerbox'>"
