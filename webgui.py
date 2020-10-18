@@ -42,5 +42,5 @@ route_link = genmapslink_web.maps_link()
 # Display routes
 print("<div id='containerbox'>"
  + route_solution.replace(" -> ", " -><br/>")
- + "<br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>"
+ + "<br/><br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>"
  + "</div>")
