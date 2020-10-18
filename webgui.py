@@ -10,10 +10,8 @@ driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
  
-# Write inputs to communication file
-locationstextfile = open("locations.txt", "w")
-locationstextfile.write(driver_address + "\n" + restaurant_address + "\n" + consumer_addresses)
-locationstextfile.close()
+# create big input string
+locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
 
 # change to HTML display
 print("Content-type:text/html\n")
@@ -36,8 +34,8 @@ body {
 }
 </style>""")
 
-route_solution = onevehicleroutegen_web.main(api_key)
-route_link = genmapslink_web.maps_link()
+route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstextfilecontent)
+route_link = genmapslink_web.maps_link(-1, stringoutput)
 
 # Display routes
 print("<div id='containerbox'>"
