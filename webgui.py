@@ -27,11 +27,21 @@ print("""
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
+#containerbox {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
+    -webkit-filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
+}
 """)
 
 route_solution = onevehicleroutegen_web.main(api_key)
 route_link = genmapslink_web.maps_link()
 
 # Display routes
-print(route_solution.replace(" -> ", " -><br>"))
-print("<br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>")
+print("<div id='containerbox'>"
+ + "<b>Route generated:</b><br/>"
+ + route_solution.replace(" -> ", " -><br/>")
+ + "<br/><a target='_blank' href='" + route_link + "'>Open Google Maps link</a>"
+ + "</div>")
