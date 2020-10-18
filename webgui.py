@@ -5,6 +5,7 @@ import genmapslink_web
 
 # change to HTML display
 print("Content-type:text/html\n")
+print()
 
 # add doc title
 print("<title>Autorouting app (Solutions)</title>")
