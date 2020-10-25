@@ -153,9 +153,11 @@ def split_route(distance_matrix):
 
     optimizer_shortest = max_value(total_distance)
     optimizer_min_average = min_average(total_distance)
-    
+    optimizer_min_deviance = min_deviance(total_distance)
+
     print(chunks[optimizer_shortest[0]])
     print(chunks[optimizer_min_average])
+    print(chunks[optimizer_min_deviance])
     
 def sorted_k_partitions(tsp_route, k, start_end):
     n = len(tsp_route)
@@ -214,6 +216,26 @@ def min_average(distances):
         avgs.append(avg)
 
     return avgs.index(max(avgs))
+
+def min_deviance(distances):
+    avgs = []
+    
+    for i in range(len(distances)):
+        avg = sum(distances[i]) / len(distances[i])
+        avgs.append(avg)   
+
+    mads = []
+
+    for i in range(len(distances)):
+        temp = 0
+        for j in range(len(distances[i])):
+            difference = ((avgs[i] - distances[i][j]) ** 2) ** 0.5
+            temp += difference
+        
+        mads.append(temp)
+
+    return mads.index(min(mads))   
+
 
 
 
