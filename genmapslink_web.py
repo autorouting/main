@@ -1,8 +1,6 @@
 #exec(open("onevehicleroutegen.py").read())
-def maps_link(x=-1):
-    in_file = open("route.txt", "r")
-    routes = in_file.read().split("\n")
-    in_file.close()
+def maps_link(routesstring, x=-1):
+    routes = routesstring.split("\n")
     
     outstring = "https://www.google.com/maps/dir/"
     if x==-1:
