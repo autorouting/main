@@ -5,7 +5,7 @@ import genmapslink_web
 
 # get the inputs
 form = cgi.FieldStorage()
-api_key = form.getvalue("api_key")
+api_key = ""# Enter API key here
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
