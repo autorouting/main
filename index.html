@@ -42,14 +42,23 @@
             body {
                 font-family: Arial, Helvetica, sans-serif;
             }
+            
+            toptitle {
+                font-size: 25px;
+                font-family: comic sans ms;
+                line-height: 25px;
+                padding-bottom: 20px;
+            }
         </style>
     </head>
     <body>
         <center>
-            <form action="webgui.py" target="_blank">
+            <form action="/cgi-bin/webgui.py" target="_blank">
                 <!--<label for="api_key">Google Geocoding API key</label>
                 <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
-                <label for="restaurant">Restaurant address</label>
+                <toptitle>Welcome to the Routing Application</toptitle>
+		<P>Please enter restaurant, driver, and consumer addresses, and the optimized route will be generated.</P><br>
+		<label for="restaurant">Restaurant address</label>
                 <input type="text" id="restaurant" name="restaurant" placeholder="Restaurant address" required>
                 <label for="driver">Driver address</label>
                 <input type="text" id="driver" name="driver" placeholder="Driver address" required>
