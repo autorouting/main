@@ -3,6 +3,8 @@ import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
 
+# cgitb.enable() # comment out after usage
+
 # get the inputs
 form = cgi.FieldStorage()
 api_key = ""# Enter API key here
@@ -39,6 +41,6 @@ route_link = genmapslink_web.maps_link(stringoutput, -1)
 
 # Display routes
 print("<div id='containerbox'>"
- + route_solution.replace(" -> ", " -><br/>")
- + "<a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
+ + route_solution.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(" -> ", " -><br/>")
+ + "<a target='_blank' href=\"" + route_link.replace(u"\u2018", "'").replace(u"\u2019", "'") + "\">Open Google Maps link</a>"
  + "</div>")
