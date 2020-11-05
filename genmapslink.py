@@ -1,3 +1,5 @@
+import urllib
+
 #exec(open("onevehicleroutegen.py").read())
 def maps_link(x=-1):
     in_file = open("route.txt", "r")
@@ -10,7 +12,7 @@ def maps_link(x=-1):
                 route = routes[i].split(" -> ")
                 outstring = "https://www.google.com/maps/dir/"
                 for j in range(len(route)):
-                    outstring += route[j].replace(" ", "+") + "/"
+                    outstring += urllib.parse.quote_plus(route[j]) + "/"
                 output = "Google Maps link for vehicle {}: {}\n".format(i, outstring)
 
     else:
@@ -18,7 +20,7 @@ def maps_link(x=-1):
             route = routes[x].split(" -> ")
             outstring = "https://www.google.com/maps/dir/"
             for j in range(len(route)):
-                outstring += route[j].replace(" ", "+") + "/"
+                outstring += urllib.parse.quote_plus(route[j]) + "/"
             output = "Google Maps link for vehicle {}: {}\n".format(x, outstring)
     print(output)
     return outstring
