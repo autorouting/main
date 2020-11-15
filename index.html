@@ -60,12 +60,17 @@
 		        <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p><br>
 		        <label for="restaurant">Origin</label>
                 <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-                <label for="intermediate">Intermediate addresses</label>
+                <label for="intermediate">Intermediate addresses (seperate by line breaks)</label>
                 <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Addresses to be covered in between" required></textarea>
                 <label for="driver">Destination</label>
                 <input type="text" id="driver" name="driver" placeholder="Ending address" required>
 		        <input type="submit" value="Launch program">
             </form>
         </center>
+        <script>
+            document.getElementsByTagName("textarea")[0].onkeyup = function() {
+                this.value = this.value.split("\n").slice(0, 50).join("\n");
+            };
+        </script>
     </body>
 </html>
