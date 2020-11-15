@@ -10,6 +10,7 @@ import random
 import pickle
 from itertools import combinations
 from time import perf_counter
+import genmapslink as gml
 
 def take_inputs(api_key):
     global G
@@ -140,7 +141,7 @@ def split_route(distance_matrix):
             route[j] = ''.join(temp)
     
     start_end = route[0]
-    chunks = sorted_k_partitions(route, int(input('How many drivers are there?  ')), start_end)
+    chunks = k_partitions(route, int(input('How many drivers are there?  ')), start_end)
     total_distance = [[] for sub_route in chunks]
     
     for i in range(len(chunks)):
@@ -154,34 +155,54 @@ def split_route(distance_matrix):
     optimizer_shortest = max_value(total_distance)
     optimizer_min_average = min_average(total_distance)
     optimizer_min_deviance = min_deviance(total_distance)
+    route_generated = chunks[optimizer_min_deviance]
+    out = ''
+    for row in route_generated:
+        out = out + "\n" + " -> ".join(row)
 
-    print(chunks[optimizer_shortest[0]])
-    print(chunks[optimizer_min_average])
+    print(out)
+    #print(chunks[optimizer_shortest[0]])
+    #print(chunks[optimizer_min_average])
     print(chunks[optimizer_min_deviance])
-    
-def sorted_k_partitions(tsp_route, k, start_end):
+    print(out)
+    outputfile = open("route.txt", "w")
+    outputfile.write(out.split('\n')[1])
+    print(out[0])
+    outputfile.close()
+    gml.maps_link()
+    outputfile = open("route.txt", "w")
+    outputfile.write(out[1])
+    outputfile.close()
+    gml.maps_link()
+
+#Splits tsp_route into k pieces    
+def k_partitions(tsp_route, k, start_end):
     n = len(tsp_route)
     groups = []
 
     def generate_partitions(i):
+        #Once the end of the tsp_route is reached, yield a copy ->
+        #of the groups that have been built up
         if i >= n:
             yield list(map(list, groups))
         else:
+            #n - i is the elements that haven't been placed in a group
+            #k - len(groups) is the number of new groups that need to be added
             if n - i > k - len(groups):
                 for group in groups:
                     group.append(tsp_route[i])
-                    yield from generate_partitions(i + 1)
+                    for x in generate_partitions(i + 1): yield x
                     group.pop()
-
+            #only add a new group if groups is not more than k
             if len(groups) < k:
                 groups.append([tsp_route[i]])
-                yield from generate_partitions(i + 1)
+                for x in generate_partitions(i + 1): yield x
                 groups.pop()
 
     routes = generate_partitions(0)
 
-    routes = [sorted(ps, key = lambda p: (len(p), p)) for ps in routes]
-    routes = sorted(routes, key = lambda ps: (*map(len, ps), ps))
+    routes = list(routes)
+
     
     for i in range(len(routes)):
       for j in range(len(routes[i])):
