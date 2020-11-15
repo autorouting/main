@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,16 +13,14 @@
                 box-sizing: border-box;
                 font-family: Arial, Helvetica, sans-serif;
             }
-			
+            
             .finetext{
-				font-size:12px;
-			|
-			
+                font-size:12px;
+            }
+                   
             textarea { resize: vertical; }
 
-        </style>
-		<style>
-			input[type=submit] {
+            input[type=submit] {
                 width: 100%;
                 background-color: #838383;
                 color: white;
@@ -37,7 +34,11 @@
             input[type=submit]:hover {
                 background-color: #a3a3a3;
             }
-			
+            
+            label {
+                font-weight: bold;
+            }
+            
             form {
                 border-radius: 5px;
                 background-color: #f2f2f2;
@@ -56,29 +57,58 @@
                 line-height: 25px;
                 padding-bottom: 20px;
             }
-			
-			#content {
-				padding: 0 18px;
-				display: none;
-				overflow: hidden;
-				background-color: #f1f1f1;
+            
+            #content {
+                padding: 0 18px;
+                display: none;
+                overflow: hidden;
+                background-color: #f1f1f1;
 			}
+            
+            .active, .collapsible:hover {
+                background-color: #555;
+            }
 			
-			.active, .collapsible:hover {
-				background-color: #555;
-			}
-			
-			#collapsible {
-				background-color: #777;
-				color: white;
-				cursor: pointer;
-				width: 25%;
-				height:25px;
-				border: none;
-				outline: none;
-			}
-		</style>
-		<script>
+            #collapsible {
+                background-color: #777;
+                color: white;
+                cursor: pointer;
+                width: 25%;
+                height:25px;
+                border: none;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <form action="/cgi-bin/webgui.py" target="_blank">
+                <!--<label for="api_key">Google Geocoding API key</label>
+                <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
+                <toptitle><b>Welcome to the Routing Application</b></toptitle>
+		        <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
+		        <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p><br>
+                
+                <button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
+                    <div id="content">
+                        <br>
+                        <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
+                            <source src="routing.mp4"/>
+                        </video>
+                    </div>
+                <br>
+                <br>
+                <br>
+		        <label for="restaurant">Origin</label>
+                <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
+                <label for="intermediate">Intermediate addresses (seperate by line breaks)</label>
+                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="At most one address per line" required></textarea>
+                <label for="driver">Destination</label>
+                <input type="text" id="driver" name="driver" placeholder="Ending address" required>
+		        <input type="submit" value="Launch program">
+            </form>
+        </center>
+        <script>
 			function toggle(){
 				var content = document.getElementById("content");
 				var collapsible = document.getElementById("collapsible");
@@ -91,35 +121,9 @@
 					collapsible.innerHTML = "Close Instruction Video";
 				}
 			}
-		</script>
-    </head>
-    <body>
-        <center>
-            <form action="/cgi-bin/webgui.py" target="_blank">
-                <!--<label for="api_key">Google Geocoding API key</label>
-                <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
-                <toptitle><b>Welcome to the Routing Application</b></toptitle>
-		        <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
-		        <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p><br>
-				
-				<button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
-					<div id="content">
-						<br>
-						<video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
-							<source src="routing.mp4"/>
-						</video>
-					</div>
-				<br>
-				<br>
-				<br>
-		        <label for="restaurant"><b>Origin</b></label>
-                <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-                <label for="intermediate"><b>Intermediate addresses</b></label>
-                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="At most one address per line" required></textarea>
-                <label for="driver"><b>Destination</b></label>
-                <input type="text" id="driver" name="driver" placeholder="Ending address" required>
-		        <input type="submit" value="Launch program">
-            </form>
-        </center>
+            document.getElementsByTagName("textarea")[0].onkeyup = function() {
+                this.value = this.value.split("\n").slice(0, 50).join("\n");
+            };
+        </script>
     </body>
 </html>
