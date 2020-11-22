@@ -3,6 +3,7 @@ import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
 import urllib
+import send_email
 
 # cgitb.enable() # comment out after usage
 
@@ -12,6 +13,7 @@ api_key = ""# Enter API key here
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
+user_email = form.getvalue("user_email")
  
 # create big input string
 locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
@@ -44,6 +46,11 @@ iframe {
 
 route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstextfilecontent)
 route_link = genmapslink_web.maps_link(stringoutput, -1)
+
+# read sender and password from email config file
+credentials = str(open("email_config.txt", "r").read())
+credentials = credentials.split('\n')
+send_email.send_email(credentials[0], credentials[1], user_email, route_link)
 
 # Display routes
 print("<div id='containerbox'>"
