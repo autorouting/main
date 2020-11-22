@@ -2,27 +2,12 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import time
-from datetime import date
 
-def send_email(receiver_email, route='https://www.google.com/'):
-  today = str(date.today())
-  today = today[5:]
-  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  today = months[int(today[:2]) - 1] + ' ' + today[3:]
-
+def send_email(sender_email, password, receiver_email, route='https://www.google.com/'):
   t = time.localtime()
-  current_time = time.strftime("%H:%M", t)
-
-  if len(current_time) > 4:
-    current_time = str(int(current_time[:2]) - 12) + ':' + current_time[3:] + ' PM'
-  else:
-    current_time = current_time + ' AM'
-
-  timestamp = today + ' ' + current_time
-  sender_email = "autorouting.app"
-  password = '________' #Fill in the password
+  timestamp = time.strftime("%A %B %d %Y %I:%M:%S %p", t) 
   message = MIMEMultipart("alternative")
-  message["Subject"] = 'Your Route Has Generated, ' + timestamp 
+  message["Subject"] = 'Your Route Has Been Generated, ' + timestamp 
   message["From"] = sender_email
   message["To"] = receiver_email
 
@@ -53,6 +38,3 @@ def send_email(receiver_email, route='https://www.google.com/'):
     server.sendmail(
         sender_email, receiver_email, message.as_string()
     )
-
-send_email('jaden.mu@gmail.com')
-print(1)
