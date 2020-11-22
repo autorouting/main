@@ -36,7 +36,7 @@
             }
             
             label {
-                font-weight: bold;
+                /* font-weight: bold; */
             }
             
             form {
@@ -102,8 +102,8 @@
                 <br />
 		        <label for="restaurant">Origin</label>
                 <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-                <label for="intermediate">Intermediate addresses (separate by line breaks)</label>
-                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="At most one address per line" required></textarea>
+                <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
+                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Stops to be sorted" required></textarea>
                 <label for="driver">Destination</label>
                 <input type="text" id="driver" name="driver" placeholder="Ending address" required>
 		        <input type="submit" value="Launch program">
