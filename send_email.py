@@ -1,12 +1,14 @@
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import random
 
 def send_email(receiver_email, route='filler route insert route here'):
   sender_email = "autorouting.app"
   password = 'ElegantPiano'
   message = MIMEMultipart("alternative")
-  message["Subject"] = "Your Route has Been Generated!"
+  subject_lines = ['Your Route Has Been Generated!', 'Route Generation Completed!', 'Here is Your Custom Route']
+  message["Subject"] = random.choice(subject_lines)
   message["From"] = sender_email
   message["To"] = receiver_email
 
