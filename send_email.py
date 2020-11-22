@@ -5,7 +5,7 @@ import time
 
 def send_email(sender_email, password, receiver_email, route='https://www.google.com/'):
   t = time.localtime()
-  timestamp = time.strftime("%A %B %d %Y %I:%M:%S %p", t) 
+  timestamp = time.strftime("%A %B %d %Y %I:%M %p", t) 
   message = MIMEMultipart("alternative")
   message["Subject"] = 'Your Route Has Been Generated, ' + timestamp 
   message["From"] = sender_email
