@@ -131,4 +131,7 @@ def main(api_key, fakeinputfile):
 
 if __name__ == '__main__':
     # run the main script
+    # locations.txt: line 1: destination?
+    # locations.txt: line 2: origin?
+    # locations.txt: line 3-: intermediate addresses
     main(input("API key:\n "), open("locations.txt", "r").read())
