@@ -2,7 +2,7 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def send_email(receiver_email, route='filler'):
+def send_email(receiver_email, route='filler route insert route here'):
   sender_email = "autorouting.app"
   password = 'ElegantPiano'
   message = MIMEMultipart("alternative")
@@ -16,8 +16,9 @@ def send_email(receiver_email, route='filler'):
     <body>
       <p>Hi,<br>
         Your route is: blah blah blah
-        <br>
-       Generated with: <a href="http://www.techworldconnect.com/delivery/">Autorouting</a> 
+        <br><br>
+       Generated with: <a href="http://www.techworldconnect.com/delivery/">Autorouting</a> <br>
+       -The Autorouting Team
     </p>
   </body>
 </html>
@@ -25,7 +26,7 @@ def send_email(receiver_email, route='filler'):
 
   html1 =  html[:60]
   html2 = html[80:]
-  html = html1 + str(route) + html2
+  html = html1 + '<b>' + str(route) + '</b>' + html2
   content = MIMEText(html, "html")
 
 
