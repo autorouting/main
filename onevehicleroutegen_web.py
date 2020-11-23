@@ -54,29 +54,46 @@ def take_inputs(api_key, fakeinputfile):
 
 
     # output data
-    return (G, nodes, addresses)
+    print(coords)
+    return (G, nodes, addresses, coords)
 
-def generate_distance_matrix(api_key, fakeinputfile):
+def fast_mode_distance(coords1, coords2):
+    return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2)
+
+
+def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
+    MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
-    G, nodes, addresses = take_inputs(api_key, fakeinputfile)
+    G, nodes, addresses, coords = take_inputs(api_key, fakeinputfile)
 
     # create 2d array with distances of node i -> node j
-    output_list = []
-    for i in range(len(nodes)):
-        output_list.append([])
-        for j in range(len(nodes)):
-            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    if fast_mode_toggled:
+        output_list = []
+        for i in range(len(nodes)):
+            output_list.append([])
+            for j in range(len(nodes)):
+                output_list[i].append(fast_mode_distance(coords[i], coords[j]))
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(2, len(output_list)):
+            output_list[i][1] = MAX_DISTANCE
+    else:
+        output_list = []
+        
+        for i in range(len(nodes)):
+            output_list.append([])
+            for j in range(len(nodes)):
+                output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     
-    # rig distance so that optimization algorithm chooses to go to restaraunt asap (after depot)
-    for i in range(2, len(output_list)):
-        output_list[i][1] = 7666432.01
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(2, len(output_list)):
+            output_list[i][1] = MAX_DISTANCE
     
     # output data
     return (output_list, addresses)
 
-def create_data_model(api_key, fakeinputfile):
+def create_data_model(api_key, fakeinputfile, fast_mode_toggled):
     # create distance matrix; also get corresponding addresses
-    distancematrix, addresses = generate_distance_matrix(api_key, fakeinputfile)
+    distancematrix, addresses = generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled)
     # initiate ORTools
     data = {}
     data['distance_matrix'] = distancematrix
@@ -108,9 +125,9 @@ def print_solution(manager, routing, solution, addresses):
     #print(plan_output)
     return plan_output, textfileoutput
 
-def main(api_key, fakeinputfile):
+def main(api_key, fakeinputfile, fast_mode_toggled):
     # run ORTools
-    addresses, data = create_data_model(api_key, fakeinputfile)
+    addresses, data = create_data_model(api_key, fakeinputfile, fast_mode_toggled)
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                               data['num_vehicles'], data['depot'])
     routing = pywrapcp.RoutingModel(manager)
@@ -126,7 +143,7 @@ def main(api_key, fakeinputfile):
     route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
     if solution:
         route_solution
-
+    print(route_solution)
     return (route_solution.replace("->", " -><br>"), stringoutput)
 
 if __name__ == '__main__':
@@ -134,4 +151,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    main(input("API key:\n "), open("locations.txt", "r").read())
+    main(input("API key:\n "), open("locations.txt", "r").read(), True)
