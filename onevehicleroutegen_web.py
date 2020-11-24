@@ -13,9 +13,6 @@ def take_inputs(api_key, fakeinputfile):
 
     geolocator = gmaps.Client(key=api_key)
 
-    # load previously saved graph
-    G = pickle.load(open("graph", "rb"))
-
     # get inputs
     inputs = fakeinputfile.split("\n")
 
@@ -55,7 +52,7 @@ def take_inputs(api_key, fakeinputfile):
 
     # output data
     #print(coords)
-    return (G, nodes, addresses, coords)
+    return (nodes, addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
     return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2)
@@ -63,8 +60,12 @@ def fast_mode_distance(coords1, coords2):
 
 def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+
     # initiate vars
-    G, nodes, addresses, coords = take_inputs(api_key, fakeinputfile)
+    nodes, addresses, coords = take_inputs(api_key, fakeinputfile)
+    if not fast_mode_toggled:
+        # load previously saved graph; unneeded if not fast mode
+        G = pickle.load(open("graph", "rb"))
 
     # create 2d array with distances of node i -> node j
     if fast_mode_toggled:
