@@ -66,6 +66,8 @@ def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
     if not fast_mode_toggled:
         # load previously saved graph; unneeded if not fast mode
         G = pickle.load(open("graph", "rb"))
+    else:
+        G = "who cares really (if fast mode is off)? this is just to prevent error"
 
     # create 2d array with distances of node i -> node j
     if fast_mode_toggled:
