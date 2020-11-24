@@ -54,7 +54,7 @@ def take_inputs(api_key, fakeinputfile):
 
 
     # output data
-    print(coords)
+    #print(coords)
     return (G, nodes, addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
@@ -143,7 +143,7 @@ def main(api_key, fakeinputfile, fast_mode_toggled):
     route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
     if solution:
         route_solution
-    print(route_solution)
+    #print(route_solution)
     return (route_solution.replace("->", " -><br>"), stringoutput)
 
 if __name__ == '__main__':
