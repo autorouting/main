@@ -47,12 +47,11 @@ def take_inputs(api_key, fakeinputfile):
     i = 0
     for i in range(len(locations)):
         coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
-        nodes.append(ox.get_nearest_node(G, coords[i]))
 
 
     # output data
     #print(coords)
-    return (nodes, addresses, coords)
+    return (addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
     return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2)
@@ -62,7 +61,7 @@ def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
 
     # initiate vars
-    nodes, addresses, coords = take_inputs(api_key, fakeinputfile)
+    addresses, coords = take_inputs(api_key, fakeinputfile)
     if not fast_mode_toggled:
         # load previously saved graph; unneeded if not fast mode
         G = pickle.load(open("graph", "rb"))
@@ -80,6 +79,10 @@ def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
         for i in range(2, len(output_list)):
             output_list[i][1] = MAX_DISTANCE
     else:
+        # Generate nodes
+        for i in range(len(coords)):
+            nodes.append(ox.get_nearest_node(G, coords[i]))
+
         output_list = []
         
         for i in range(len(nodes)):
