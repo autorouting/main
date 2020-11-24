@@ -20,7 +20,6 @@ def take_inputs(api_key, fakeinputfile):
     addresses = []
     locations = []
     coords = []
-    nodes = []
 
     # for every line of input, generate location object
     i = 0
@@ -71,15 +70,16 @@ def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
     # create 2d array with distances of node i -> node j
     if fast_mode_toggled:
         output_list = []
-        for i in range(len(nodes)):
+        for i in range(len(coords)):
             output_list.append([])
-            for j in range(len(nodes)):
+            for j in range(len(coords)):
                 output_list[i].append(fast_mode_distance(coords[i], coords[j]))
         # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
         for i in range(2, len(output_list)):
             output_list[i][1] = MAX_DISTANCE
     else:
         # Generate nodes
+        nodes = []
         for i in range(len(coords)):
             nodes.append(ox.get_nearest_node(G, coords[i]))
 
