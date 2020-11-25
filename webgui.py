@@ -49,9 +49,7 @@ route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstex
 route_link = genmapslink_web.maps_link(stringoutput, -1)
 
 # read sender and password from email config file
-credentials = str(open("email_config.txt", "r").read())
-credentials = credentials.split('\n')
-if len(str(user_email)) != 0 and user_email != None:
+if str(user_email) != 'None':
     credentials = str(open("email_config.txt", "r").read())
     credentials = credentials.split('\n')
     send_email.send_email(credentials[0], credentials[1], user_email, route_link)
