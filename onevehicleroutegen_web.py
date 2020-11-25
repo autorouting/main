@@ -13,9 +13,6 @@ def take_inputs(api_key, fakeinputfile):
 
     geolocator = gmaps.Client(key=api_key)
 
-    # load previously saved graph
-    G = pickle.load(open("graph", "rb"))
-
     # get inputs
     inputs = fakeinputfile.split("\n")
 
@@ -23,7 +20,6 @@ def take_inputs(api_key, fakeinputfile):
     addresses = []
     locations = []
     coords = []
-    nodes = []
 
     # for every line of input, generate location object
     i = 0
@@ -50,12 +46,11 @@ def take_inputs(api_key, fakeinputfile):
     i = 0
     for i in range(len(locations)):
         coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
-        nodes.append(ox.get_nearest_node(G, coords[i]))
 
 
     # output data
-    print(coords)
-    return (G, nodes, addresses, coords)
+    #print(coords)
+    return (addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
     return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2)
@@ -63,20 +58,31 @@ def fast_mode_distance(coords1, coords2):
 
 def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+
     # initiate vars
-    G, nodes, addresses, coords = take_inputs(api_key, fakeinputfile)
+    addresses, coords = take_inputs(api_key, fakeinputfile)
+    if not fast_mode_toggled:
+        # load previously saved graph; unneeded if not fast mode
+        G = pickle.load(open("graph", "rb"))
+    else:
+        G = "who cares really (if fast mode is off)? this is just to prevent error"
 
     # create 2d array with distances of node i -> node j
     if fast_mode_toggled:
         output_list = []
-        for i in range(len(nodes)):
+        for i in range(len(coords)):
             output_list.append([])
-            for j in range(len(nodes)):
+            for j in range(len(coords)):
                 output_list[i].append(fast_mode_distance(coords[i], coords[j]))
         # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
         for i in range(2, len(output_list)):
             output_list[i][1] = MAX_DISTANCE
     else:
+        # Generate nodes
+        nodes = []
+        for i in range(len(coords)):
+            nodes.append(ox.get_nearest_node(G, coords[i]))
+
         output_list = []
         
         for i in range(len(nodes)):
@@ -143,7 +149,7 @@ def main(api_key, fakeinputfile, fast_mode_toggled):
     route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
     if solution:
         route_solution
-    print(route_solution)
+    #print(route_solution)
     return (route_solution.replace("->", " -><br>"), stringoutput)
 
 if __name__ == '__main__':
