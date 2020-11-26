@@ -46,5 +46,5 @@ if str(user_email) != 'None':
 print("<div id='containerbox'>"
  + route_solution.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(" -> ", " -><br/>")
  + "<a target='_blank' href=\"" + route_link.replace(u"\u2018", "'").replace(u"\u2019", "'") + "\">Open Google Maps link</a>"
- + "<br/>Or scan this QR code:<br/><iframe src=\"https://easyqrgen.netlify.app/index.html?uri=" + urllib.parse.quote_plus(route_link) + "\">oops, something's broken</iframe>"
+ + "<br/>Or scan this QR code:<br/><iframe id=\"qrcode\" src=\"https://easyqrgen.netlify.app/index.html?uri=" + urllib.parse.quote_plus(route_link) + "\">oops, something's broken</iframe>"
  + "</div>")
