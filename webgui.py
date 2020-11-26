@@ -27,23 +27,9 @@ print()
 print("<title>Autorouting app (Solutions)</title>")
 
 # add stylesheet
-print("""<style>
-body {
-    font-family: Arial, Helvetica, sans-serif;
-}
-#containerbox {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
-    -webkit-filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
-}
-iframe {
-    border: 0;
-    width: 300px;
-    height: 300px;
-}
-</style>""")
+stylesheet = open("/var/www/html/delivery/style.css")
+print("<style>" + stylesheet.read() + "</style>")
+stylesheet.close()
 
 route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstextfilecontent, bool(fast_mode_toggled))
 route_link = genmapslink_web.maps_link(stringoutput, -1)
