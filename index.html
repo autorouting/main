@@ -8,10 +8,12 @@
                 padding: 12px 20px;
                 margin: 8px 0;
                 display: inline-block;
-                border: 1px solid #ccc;
+                /* border: 1px solid #ccc; */
+                border: none;
                 border-radius: 4px;
                 box-sizing: border-box;
-                font-family: Arial, Helvetica, sans-serif;
+                background-color: rgba(240, 240, 240, 1);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             }
             
             .finetext{
@@ -29,26 +31,24 @@
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             }
             
             input[type=submit]:hover {
                 background-color: #a3a3a3;
             }
             
-            label {
-                /* font-weight: bold; */
-            }
-            
             form {
                 border-radius: 5px;
-                background-color: #f2f2f2;
+                background-color: white;
                 padding: 20px;
-                filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
-                -webkit-filter: drop-shadow(-0.1px 1px 3px #bbbbbb);
+                filter: drop-shadow(-0.1px 1px 3px rgba(0, 0, 0, 0.2));
+                -webkit-filter: drop-shadow(-0.1px 1px 3px rgba(0, 0, 0, 0.2));
             }
 
             body {
-                font-family: Arial, Helvetica, sans-serif;
+                background-color: rgba(240, 240, 240, 1);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             }
 
             toptitle {
@@ -87,7 +87,7 @@
                 <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
                 <toptitle><b>Welcome to the Routing Application</b></toptitle>
 		        <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
-		        <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p><br />
+		        <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p>
                 
                 <button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
                     <div id="content">
@@ -99,11 +99,10 @@
                 <br /><a href="usageguide.pdf">Or read instructions</a>
                 <br />
                 <br />
-                <br />
 		        <label for="restaurant">Origin</label>
                 <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
                 <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
-                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Stops to be sorted" required></textarea>
+                <textarea name="consumer" id="consumer" cols="40" rows="5" placeholder="Locations to include in the route" required></textarea>
                 <label for="driver">Destination</label>
                 <input type="text" id="driver" name="driver" placeholder="Ending address" required>
                 <label for="user_email">Your Email (Optional, leave blank if you do not want to receive an email with your route)</label>
