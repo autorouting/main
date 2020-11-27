@@ -4,12 +4,16 @@ import onevehicleroutegen_web
 import genmapslink_web
 import urllib
 import send_email
+import api_key
+"""
+Make a file called api_key.py with the following text:
+google_geocoding_api = "API_KEY"
+"""
 
 # cgitb.enable() # comment out after usage
 
 # get the inputs
 form = cgi.FieldStorage()
-api_key = ""# Enter API key here
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
@@ -31,7 +35,7 @@ stylesheet = open("/var/www/html/delivery/style.css", "r")
 print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
-route_solution, stringoutput = onevehicleroutegen_web.main(api_key, locationstextfilecontent, bool(fast_mode_toggled))
+route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
 route_link = genmapslink_web.maps_link(stringoutput, -1)
 
 # read sender and password from email config file
