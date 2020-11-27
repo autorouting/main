@@ -13,7 +13,10 @@ def send_email(sender_email, password, receiver_email, route='https://www.google
   message["To"] = receiver_email
 
   htmlfile = open("email_contents.html", "r")
-  html = htmlfile.read().replace("_blank_1_", route).replace("_blank_2_", urllib.parse.quote_plus(str(route)))
+  html = htmlfile.read().format_map({
+    "routelink": route,
+    "qrdata": urllib.parse.quote_plus(route)
+  })
   htmlfile.close()
   content = MIMEText(html, "html")
 
