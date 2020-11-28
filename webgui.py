@@ -5,6 +5,7 @@ import genmapslink_web
 import urllib
 import send_email
 import api_key
+
 """
 Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
@@ -42,7 +43,7 @@ route_link = genmapslink_web.maps_link(stringoutput, -1)
 if str(user_email) != 'None':
     credentials = str(open("email_config.txt", "r").read())
     credentials = credentials.split('\n')
-    send_email.send_email(credentials[0], credentials[1], user_email, route_link)
+    send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
 
 # Display routes
 print("<div id='containerbox'>"
