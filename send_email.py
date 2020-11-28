@@ -3,6 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import time
 import urllib
+import threading
 
 def send_email(sender_email, password, receiver_email, route='https://www.google.com/'):
   t = time.localtime()
@@ -30,3 +31,8 @@ def send_email(sender_email, password, receiver_email, route='https://www.google
     server.sendmail(
         sender_email, receiver_email, message.as_string()
     )
+
+def send_email_async(sender_email, password, receiver_email, route='https://www.google.com/'):
+  send_email_thread = threading.Thread(target = send_email, args=(sender_email, password, receiver_email, route))
+  send_email_thread.start()
+
