@@ -1,6 +1,8 @@
 import send_email
+user_email = 'jaden.mu@gmail.com'
+route_link = 'google.com'
 
-credentials = str(open("email_config.txt", "r").read())
-credentials = credentials.split('\n')
-send_email.send_email(credentials[0], credentials[1], str(input('receiver email?  ')), 'https://www.google.com/')
-print('Completed')
+if len(str(user_email)) != 0 and user_email != None:
+    credentials = str(open("email_config.txt", "r").read())
+    credentials = credentials.split('\n')
+    send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
