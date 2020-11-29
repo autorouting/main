@@ -29,7 +29,7 @@ print("Content-type:text/html\n")
 print()
 
 # add doc title
-print("<title>Autorouting app (Solutions)</title>")
+print("<title>Autorouting App (Solutions)</title>")
 
 # add stylesheet
 stylesheet = open("/var/www/html/delivery/style.css", "r")
