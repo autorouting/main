@@ -33,6 +33,11 @@ input[type=submit]:hover {
     background-color: #a3a3a3;
 }
 
+input:focus, textarea:focus {
+    outline: none!important;
+    box-shadow: 0 0 0 2px rgba(54, 95, 199, 0.5);
+}
+
 form, #containerbox {
     border-radius: 10px;
     background-color: white;
