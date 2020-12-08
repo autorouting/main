@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
@@ -11,7 +12,12 @@ Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
 """
 
-# cgitb.enable() # comment out after usage
+cgitb.enable() # comment out after usage
+
+# allow unicode strings
+import sys
+import codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
 # get the inputs
 form = cgi.FieldStorage()
@@ -25,7 +31,8 @@ user_email = form.getvalue("user_email")
 locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
 
 # change to HTML display
-print("Content-type:text/html\n")
+print("Content-Type: text/html;charset=utf-8")
+print()
 print()
 
 # add doc title
@@ -47,7 +54,7 @@ if str(user_email) != 'None':
 
 # Display routes
 print("<div id='containerbox'>"
- + route_solution.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(" -> ", " -><br/>")
- + "<a target='_blank' href=\"" + route_link.replace(u"\u2018", "'").replace(u"\u2019", "'") + "\">Open Google Maps link</a>"
+ + route_solution.replace(" -> ", " -><br/>")
+ + "<a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
  + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
  + "</div>")
