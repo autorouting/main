@@ -55,10 +55,10 @@ def take_inputs(api_key, fakeinputfile):
 
 def fast_mode_distance(coords1, coords2):
     # convert coords to meters
-    lon1 = coords1[1] * 40075000 * math.cos(coords1[0] * math.pi / 180) / 360
-    lon2 = coords2[1] * 40075000 * math.cos(coords2[0] * math.pi / 180) / 360
-    lat1 = coords1[0] * 111320
-    lat2 = coords2[0] * 111320
+    lon1 = coords1[1] * 111132.954 * math.cos(coords1[0] * math.pi / 180)
+    lon2 = coords2[1] * 111132.954 * math.cos(coords2[0] * math.pi / 180)
+    lat1 = coords1[0] * (111132.954  - 559.822 * math.cos(2 * coords1[0] * math.pi / 180) + 1.175 * math.cos(4 * coords1[0] * math.pi / 180))
+    lat2 = coords2[0] * (111132.954  - 559.822 * math.cos(2 * coords2[0] * math.pi / 180) + 1.175 * math.cos(4 * coords2[0] * math.pi / 180))
     return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
 
 
