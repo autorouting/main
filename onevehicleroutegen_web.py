@@ -53,7 +53,7 @@ def take_inputs(api_key, fakeinputfile):
     return (addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
-    return ( ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** 0.5 ) * 10000 # swell the distances such that the tsp algorithm doesn't read them as all zeroes
+    return ( ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** 0.5 ) * 140000 # swell the distances such that the tsp algorithm doesn't read them as all zeroes
 
 
 def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
