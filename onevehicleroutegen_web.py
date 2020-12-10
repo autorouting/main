@@ -8,6 +8,7 @@ from ortools.constraint_solver import pywrapcp
 import string
 import random
 import pickle
+import math
 
 def take_inputs(api_key, fakeinputfile):
 
@@ -53,7 +54,12 @@ def take_inputs(api_key, fakeinputfile):
     return (addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
-    return ( ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** 0.5 ) * 140000 # swell the distances such that the tsp algorithm doesn't read them as all zeroes
+    # convert coords to meters
+    lon1 = coords1[1] * 111132.954 * math.cos(coords1[0] * math.pi / 180)
+    lon2 = coords2[1] * 111132.954 * math.cos(coords2[0] * math.pi / 180)
+    lat1 = coords1[0] * (111132.954  - 559.822 * math.cos(2 * coords1[0] * math.pi / 180) + 1.175 * math.cos(4 * coords1[0] * math.pi / 180))
+    lat2 = coords2[0] * (111132.954  - 559.822 * math.cos(2 * coords2[0] * math.pi / 180) + 1.175 * math.cos(4 * coords2[0] * math.pi / 180))
+    return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
 
 
 def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
