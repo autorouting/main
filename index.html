@@ -48,9 +48,22 @@
 					collapsible.innerHTML = "Close Instruction Video";
 				}
 			}
+            function resizeCheck() {
+                if (document.getElementsByTagName("form")[0].getBoundingClientRect().height > document.body.getBoundingClientRect().height) {
+                    document.getElementsByTagName("form")[0].style.top = "0";
+                    document.getElementsByTagName("form")[0].style.transform = "translate(-50%, 0)";
+                }
+                else {
+                    document.getElementsByTagName("form")[0].style.top = "50%";
+                    document.getElementsByTagName("form")[0].style.transform = "translate(-50%, -50%)";
+                }
+            }
             document.getElementsByTagName("textarea")[0].onkeyup = function() {
                 this.value = this.value.split("\n").slice(0, 50).join("\n");
             };
+            document.body.onresize = resizeCheck;
+            document.getElementsByTagName("form")[0].onclick = resizeCheck;
+            resizeCheck();
         </script>
     </body>
 </html>
