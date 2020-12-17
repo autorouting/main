@@ -51,6 +51,7 @@ form, #containerbox {
     padding: 20px;
     filter: drop-shadow(-0.1px 1px 3px rgba(0, 0, 0, 0.2));
     -webkit-filter: drop-shadow(-0.1px 1px 3px rgba(0, 0, 0, 0.2));
+    text-align: center;
 }
 
 body {

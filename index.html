@@ -5,36 +5,34 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <center>
-            <form action="/cgi-bin/webgui.py" target="_blank">
-                <!--<label for="api_key">Google Geocoding API key</label>
-                <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
-                <toptitle><b>Welcome to the Routing Application</b></toptitle>
-		        <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
-		        <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p>
-                
-                <button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
-                    <div id="content">
-                        <br>
-                        <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
-                            <source src="routing.mp4"/>
-                        </video>
-                    </div>
-                <br /><a href="usageguide.pdf">Or read instructions</a>
-                <br />
-                <br />
-		        <label for="restaurant">Origin</label>
-                <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-                <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
-                <textarea name="consumer" id="consumer" rows="5" placeholder="Locations to include in the route" required></textarea>
-                <label for="driver">Destination</label>
-                <input type="text" id="driver" name="driver" placeholder="Ending address" required>
-                <label for="user_email">Your Email (Optional, leave blank if you do not want to receive an email with your route)</label>
-                <input type="email" id="user_email" name="user_email" placeholder="me@example.com">
-                <input type="checkbox" name="fast_mode_toggled">Speed up calculation (this will reduce the quality of the outcome)
-		        <input type="submit" value="Launch program">
-            </form>
-        </center>
+        <form action="/cgi-bin/webgui.py" target="_blank">
+            <!--<label for="api_key">Google Geocoding API key</label>
+            <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
+            <toptitle><b>Welcome to the Routing Application</b></toptitle>
+            <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
+            <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p>
+            
+            <button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
+                <div id="content">
+                    <br>
+                    <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
+                        <source src="routing.mp4"/>
+                    </video>
+                </div>
+            <br /><a href="usageguide.pdf">Or read instructions</a>
+            <br />
+            <br />
+            <label for="restaurant">Origin</label>
+            <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
+            <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
+            <textarea name="consumer" id="consumer" rows="5" placeholder="Locations to include in the route" required></textarea>
+            <label for="driver">Destination</label>
+            <input type="text" id="driver" name="driver" placeholder="Ending address" required>
+            <label for="user_email">Your Email (Optional, leave blank if you do not want to receive an email with your route)</label>
+            <input type="email" id="user_email" name="user_email" placeholder="me@example.com">
+            <input type="checkbox" name="fast_mode_toggled">Speed up calculation (this will reduce the quality of the outcome)
+            <input type="submit" value="Launch program">
+        </form>
         <script>
 			function toggle(){
 				var content = document.getElementById("content");
