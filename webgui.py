@@ -55,6 +55,6 @@ if str(user_email) != 'None':
 # Display routes
 print("<div id='containerbox'>"
  + route_solution.replace(" -> ", " -><br/>")
- + "<a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
+ + "<br/><a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
  + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
  + "</div>")
