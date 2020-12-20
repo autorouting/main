@@ -114,8 +114,8 @@ select {
 }
 
 #google_translate_element {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: fixed;
+    top: 5px;
+    left: 5px;
     z-index: 100;
 }
