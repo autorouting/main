@@ -21,37 +21,38 @@ def take_inputs(api_key, fakeinputfile):
     addresses = []
     locations = []
     coords = []
-
+    faultyAddress = []
+    lessThanOneInt = True
+    
     # for every line of input, generate location object
-    i = 0
-    while True:
-
-        addresses.append(inputs[i])
+    for i in range(0, len(inputs)):
         try:
-            locations.append(geolocator.geocode(addresses[i]))
-            if len(locations[i]) == 0:
-                locations.pop(i)
+            location = geolocator.geocode(inputs[i])
+            #print("inputs[i]:", inputs[i])
+            if len(location) == 0:
                 raise "errorerrorerror"
-            i += 1
+            addresses.append(inputs[i])
+            locations.append(location)
         except:
-            addresses.pop(i)
-            inputs.pop(i)
-        
-        if i == len(inputs):
-            break
-
-    #print(addresses)
-    #print(locations[len(locations) - 1])
+            if i == 0:
+                faultyAddress.append("Destination Address(s): ")
+            elif i == 1:
+                faultyAddress.append("Origin Address(s): ")
+            elif lessThanOneInt:
+               faultyAddress.append("Intermediate Address(s): ")
+               lessThanOneInt = False
+            faultyAddress.append(inputs[i])
 
     # generate coords & nodes
-    i = 0
-    for i in range(len(locations)):
-        coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
+    if len(faultyAddress) == 0:
+        i = 0
+        for i in range(len(locations)):
+            coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
 
 
     # output data
     #print(coords)
-    return (addresses, coords)
+    return (faultyAddress, addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
     # convert coords to meters
@@ -61,12 +62,10 @@ def fast_mode_distance(coords1, coords2):
     lat2 = coords2[0] * (111132.954  - 559.822 * math.cos(2 * coords2[0] * math.pi / 180) + 1.175 * math.cos(4 * coords2[0] * math.pi / 180))
     return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
 
-
-def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
+def generate_distance_matrix(coords, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
 
     # initiate vars
-    addresses, coords = take_inputs(api_key, fakeinputfile)
     if not fast_mode_toggled:
         # load previously saved graph; unneeded if not fast mode
         G = pickle.load(open("graph", "rb"))
@@ -101,17 +100,15 @@ def generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled):
             output_list[i][1] = MAX_DISTANCE
     
     # output data
-    return (output_list, addresses)
+    return (output_list)
 
-def create_data_model(api_key, fakeinputfile, fast_mode_toggled):
-    # create distance matrix; also get corresponding addresses
-    distancematrix, addresses = generate_distance_matrix(api_key, fakeinputfile, fast_mode_toggled)
+def create_data_model(distancematrix):
     # initiate ORTools
     data = {}
     data['distance_matrix'] = distancematrix
     data['num_vehicles'] = 1
     data['depot'] = 0
-    return (addresses, data)
+    return (data)
 
 def print_solution(manager, routing, solution, addresses):
     # create ORTools solution
@@ -138,25 +135,34 @@ def print_solution(manager, routing, solution, addresses):
     return plan_output, textfileoutput
 
 def main(api_key, fakeinputfile, fast_mode_toggled):
-    # run ORTools
-    addresses, data = create_data_model(api_key, fakeinputfile, fast_mode_toggled)
-    manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
-                                              data['num_vehicles'], data['depot'])
-    routing = pywrapcp.RoutingModel(manager)
-    def distance_callback(from_index, to_index):
-        from_node = manager.IndexToNode(from_index)
-        to_node = manager.IndexToNode(to_index)
-        return data['distance_matrix'][from_node][to_node]
-    transit_callback_index = routing.RegisterTransitCallback(distance_callback)
-    routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
-    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
-    solution = routing.SolveWithParameters(search_parameters)
-    route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
-    if solution:
-        route_solution
-    #print(route_solution)
-    return (route_solution.replace("->", " -><br>"), stringoutput)
+    #process addresses and check for faulty ones
+    faultyAddress, addresses, coords = take_inputs(api_key, fakeinputfile)
+    if len(faultyAddress) == 0:
+        # run ORTools
+        distancematrix = generate_distance_matrix(coords, fast_mode_toggled)
+        data = create_data_model(distancematrix)
+        manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
+                                                data['num_vehicles'], data['depot'])
+        routing = pywrapcp.RoutingModel(manager)
+        def distance_callback(from_index, to_index):
+            from_node = manager.IndexToNode(from_index)
+            to_node = manager.IndexToNode(to_index)
+            return data['distance_matrix'][from_node][to_node]
+        transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+        routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+        search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+        search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+        solution = routing.SolveWithParameters(search_parameters)
+        route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
+        if solution:
+            route_solution
+        #print(route_solution)
+        return (route_solution.replace("->", " -><br>"), stringoutput)
+    else:
+        output = "<h1>Incorrect address(es)</h1>"
+        for address in faultyAddress:
+            output += "<p style=\"color:Tomato;\">" + address + "</p>"
+        return(output, "")
 
 if __name__ == '__main__':
     # run the main script
