@@ -6,8 +6,9 @@
     </head>
     <body>
         <form action="/cgi-bin/webgui.py" target="_blank">
-            <!--<label for="api_key">Google Geocoding API key</label>
-            <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
+
+            <div id="google_translate_element"></div>
+
             <toptitle><b>Welcome to the Routing Application</b></toptitle>
             <p>Please enter origin, intermediate addresses, and destination, and the optimized route will be generated.</p>
             <p class="finetext">Currently this application only works for destinations in the Research Triangle Park area.</p>
@@ -22,6 +23,8 @@
             <br /><a href="usageguide.pdf">Or read instructions</a>
             <br />
             <br />
+            <!--<label for="api_key">Google Geocoding API key</label>
+            <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
             <label for="restaurant">Origin</label>
             <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
             <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
@@ -56,6 +59,9 @@
                     document.getElementsByTagName("form")[0].style.transform = "translate(-50%, -50%)";
                 }
             }
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+            }
             document.getElementsByTagName("textarea")[0].onkeyup = function() {
                 this.value = this.value.split("\n").slice(0, 50).join("\n");
             };
@@ -63,5 +69,6 @@
             document.getElementsByTagName("form")[0].onclick = resizeCheck;
             resizeCheck();
         </script>
+        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     </body>
 </html>
