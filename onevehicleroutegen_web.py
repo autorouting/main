@@ -28,7 +28,7 @@ def take_inputs(api_key, fakeinputfile):
     for i in range(0, len(inputs)):
         try:
             location = geolocator.geocode(inputs[i])
-            print("inputs[i]:", inputs[i])
+            #print("inputs[i]:", inputs[i])
             if len(location) == 0:
                 raise "errorerrorerror"
             addresses.append(inputs[i])
