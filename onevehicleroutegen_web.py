@@ -72,32 +72,28 @@ def generate_distance_matrix(coords, fast_mode_toggled):
     else:
         G = "who cares really (if fast mode is off)? this is just to prevent error"
 
+    output_list = []
+
     # create 2d array with distances of node i -> node j
     if fast_mode_toggled:
-        output_list = []
         for i in range(len(coords)):
             output_list.append([])
             for j in range(len(coords)):
                 output_list[i].append(fast_mode_distance(coords[i], coords[j]))
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(output_list)):
-            output_list[i][1] = MAX_DISTANCE
     else:
         # Generate nodes
         nodes = []
         for i in range(len(coords)):
             nodes.append(ox.get_nearest_node(G, coords[i]))
-
-        output_list = []
         
         for i in range(len(nodes)):
             output_list.append([])
             for j in range(len(nodes)):
                 output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(output_list)):
-            output_list[i][1] = MAX_DISTANCE
+    # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+    for i in range(2, len(output_list)):
+        output_list[i][1] = MAX_DISTANCE
     
     # output data
     return (output_list)
