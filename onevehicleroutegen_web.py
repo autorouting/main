@@ -23,11 +23,16 @@ def take_inputs(api_key, fakeinputfile):
     coords = []
     faultyAddress = []
     lessThanOneInt = True
+    prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
         try:
-            location = geolocator.geocode(inputs[i])
+            if inputs[i] in prevGeocodes:
+                location = prevGeocodes[inputs[i]]
+            else:
+                location = geolocator.geocode(inputs[i])
+                prevGeocodes[inputs[i]] = location
             #print("inputs[i]:", inputs[i])
             if len(location) == 0:
                 raise "errorerrorerror"
@@ -49,6 +54,7 @@ def take_inputs(api_key, fakeinputfile):
         for i in range(len(locations)):
             coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
 
+    pickle.dump( prevGeocodes, open( "prev_geocodes.p", "wb" ) )
 
     # output data
     #print(coords)
@@ -165,4 +171,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    main(input("API key:\n "), open("locations.txt", "r").read(), True)
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), True))
