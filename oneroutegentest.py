@@ -43,8 +43,6 @@ def take_inputs(api_key, fakeinputfile):
                faultyAddress.append("Intermediate Address(s): ")
                lessThanOneInt = False
             faultyAddress.append(inputs[i])
-    
-    print(faultyAddress)
 
     # generate coords & nodes
     if len(faultyAddress) == 0:

@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import cgi, cgitb
 import oneroutegentest
 import genmapslink_web
@@ -11,7 +12,12 @@ Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
 """
 
-# cgitb.enable() # comment out after usage
+cgitb.enable() # comment out after usage
+
+# allow unicode strings
+import sys
+import codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
 # get the inputs
 form = cgi.FieldStorage()
@@ -21,15 +27,12 @@ consumer_addresses = form.getvalue("consumer")
 fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
 
-driver_address = "bad destination"
-restaurant_address = "bad origin"
-consumer_addresses = "bad intermediate"
-
 # create big input string
 locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
 
 # change to HTML display
-print("Content-type:text/html\n")
+print("Content-Type: text/html;charset=utf-8")
+print()
 print()
 
 # add doc title
@@ -41,6 +44,7 @@ print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
 route_solution, stringoutput = oneroutegentest.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
+route_link = genmapslink_web.maps_link(stringoutput, -1)
 
 if stringoutput != "":
     route_link = genmapslink_web.maps_link(stringoutput, -1)

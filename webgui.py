@@ -44,17 +44,22 @@ print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
 route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
-route_link = genmapslink_web.maps_link(stringoutput, -1)
 
-# read sender and password from email config file
-if str(user_email) != 'None':
-    credentials = str(open("email_config.txt", "r").read())
-    credentials = credentials.split('\n')
-    send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
-
-# Display routes
-print("<div id='containerbox'>"
- + route_solution.replace(" -> ", " -><br/>")
- + "<br/><a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
- + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
- + "</div>")
+if stringoutput != "":
+    route_link = genmapslink_web.maps_link(stringoutput, -1)
+    
+    # read sender and password from email config file
+    if str(user_email) != 'None':
+        credentials = str(open("email_config.txt", "r").read())
+        credentials = credentials.split('\n')
+        send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
+    
+    # Display routes
+    print("<div id='containerbox'>"
+    + route_solution.replace(" -> ", " -><br/>")
+    + "<br/><a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
+    + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
+    + "</div>")
+    
+else:
+    print(route_solution)
