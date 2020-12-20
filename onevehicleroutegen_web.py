@@ -10,10 +10,6 @@ import random
 import pickle
 import math
 
-import urllib
-import requests
-import json
-
 def take_inputs(api_key, fakeinputfile):
 
     geolocator = gmaps.Client(key=api_key)
@@ -67,6 +63,8 @@ def fast_mode_distance(coords1, coords2):
     return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
 
 def generate_distance_matrix(addresses, api_key):
+    geolocator = gmaps.Client(key=api_key)
+
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
 
     # create 2d array with distances of node i -> node j
@@ -74,16 +72,7 @@ def generate_distance_matrix(addresses, api_key):
     for i in range(len(addresses)):
         output_list.append([])
         for j in range(len(addresses)):
-            print(
-                json.loads(
-                    requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + urllib.parse.quote_plus(addresses[i] + "|" + addresses[j]) + "&key=" + api_key).text
-                )
-            )
-            output_list[i].append(
-                json.loads(
-                    requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + urllib.parse.quote_plus(addresses[i] + "|" + addresses[j]) + "&key=" + api_key).text
-                )["rows"][0]["elements"][0]["distance"]["value"]
-            )
+            output_list[i].append(geolocator.distance_matrix(addresses[i], addresses[j], mode="driving")["rows"][0]["elements"][0]["distance"]["value"])
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
@@ -153,4 +142,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    main(input("API key:\n "), open("locations.txt", "r").read(), True)
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), True))
