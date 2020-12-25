@@ -62,7 +62,7 @@ if stringoutput != "":
     + "</div>")
     
 else:
-    print("<div id='containerbox'>" + route_solution + "</div>"))
+    print("<div id='containerbox'>" + route_solution + "</div>")
     if str(user_email) != 'None':
         credentials = str(open("email_config.txt", "r").read())
         credentials = credentials.split('\n')
