@@ -12,7 +12,7 @@ Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
 """
 
-cgitb.enable() # comment out after usage
+# cgitb.enable() # comment out after usage
 
 # allow unicode strings
 import sys
@@ -63,7 +63,10 @@ if stringoutput != "":
     
 else:
     print(route_solution)
-    send_email.send_error_email(credentials[0], credentials[1], user_email, route_solution)
+    if str(user_email) != 'None':
+        credentials = str(open("email_config.txt", "r").read())
+        credentials = credentials.split('\n')
+        send_email.send_error_email(credentials[0], credentials[1], user_email, route_solution)
 
 # add translate
 print("<div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); }</script><script type=\"text/javascript\" src=\"https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>")
