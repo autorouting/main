@@ -67,14 +67,12 @@ def take_inputs(api_key, fakeinputfile):
     return (faultyAddress, addresses, coords)
 
 def fast_mode_distance(coords1, coords2):
-    DEGREE_TO_RAD = math.pi / 180
-    DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
     # convert coords to meters
-    lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
-    lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
-    lat1 = coords1[0] * DEGREE_LATITUDE
-    lat2 = coords2[0] * DEGREE_LATITUDE
-    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+    lon1 = coords1[1] * 111132.954 * math.cos(coords1[0] * math.pi / 180)
+    lon2 = coords2[1] * 111132.954 * math.cos(coords2[0] * math.pi / 180)
+    lat1 = coords1[0] * (111132.954  - 559.822 * math.cos(2 * coords1[0] * math.pi / 180) + 1.175 * math.cos(4 * coords1[0] * math.pi / 180))
+    lat2 = coords2[0] * (111132.954  - 559.822 * math.cos(2 * coords2[0] * math.pi / 180) + 1.175 * math.cos(4 * coords2[0] * math.pi / 180))
+    return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
 
 def generate_distance_matrix(coords, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
@@ -179,4 +177,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read(), True))
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), True)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t"))
