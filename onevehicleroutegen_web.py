@@ -24,8 +24,14 @@ def take_inputs(api_key, fakeinputfile):
     faultyAddress = []
     lessThanOneInt = True
 
-    # read database
-    prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
+    try:
+        # read database
+        prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
+    except:
+        # create database
+        pickle.dump( {}, open( "prev_geocodes.p", "wb" ) )
+        # read database
+        prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
