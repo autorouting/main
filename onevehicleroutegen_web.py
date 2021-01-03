@@ -12,7 +12,10 @@ import math
 
 def take_inputs(api_key, fakeinputfile):
 
-    geolocator = gmaps.Client(key=api_key)
+    try:
+        geolocator = gmaps.Client(key=api_key)
+    except:
+        raise ValueError("The following API key may be problematic: " + api_key)
 
     # get inputs
     inputs = fakeinputfile.split("\n")
@@ -42,7 +45,10 @@ def take_inputs(api_key, fakeinputfile):
             if inputs[i] in prevGeocodes:
                 location = prevGeocodes[inputs[i]]
             else:
-                location = geolocator.geocode(inputs[i])
+                try:
+                    location = geolocator.geocode(inputs[i])
+                except:
+                    raise ValueError("The following API key may be problematic: " + api_key)
                 prevGeocodes[inputs[i]] = location # add new datapoint to database
             
             if len(location) == 0:
