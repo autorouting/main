@@ -47,7 +47,7 @@ def take_inputs(api_key, fakeinputfile):
             
             if len(location) == 0:
                 raise "errorerrorerror"
-            addresses.append(inputs[i])
+            addresses.append(location[0]["formatted_address"])
             locations.append(location)
         except:
             if i == 0:
