@@ -12,7 +12,7 @@
             Research Triangle Area, NC
             <br />
             <br />
-            <button type="button" id="collapsible" onclick="toggle()">Open Instruction Video</button>
+            <button type="button" id="collapsible" onclick="toggle()">Instruction Video</button>
                 <div id="content">
                     <br />
                     <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
@@ -25,13 +25,13 @@
             <br />
             <!--<label for="api_key">Google Geocoding API key</label>
             <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
-            <label for="restaurant">Origin</label>
+            <label for="restaurant">Starting address</label>
             <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
             <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
-            <textarea name="consumer" id="consumer" rows="5" placeholder="Locations to include in the route" required></textarea>
-            <label for="driver">Destination</label>
+            <textarea name="consumer" id="consumer" rows="5" placeholder="Intermediate addresses" required></textarea>
+            <label for="driver">Ending address</label>
             <input type="text" id="driver" name="driver" placeholder="Ending address" required>
-            <label for="user_email">Your Email (Optional, leave blank if you do not want to receive an email with your route)</label>
+            <label for="user_email">Your Email (Optional)</label>
             <input type="email" id="user_email" name="user_email" placeholder="me@example.com">
             <input type="checkbox" name="fast_mode_toggled">Speed up calculation (this will reduce the quality of the outcome)
             <input type="submit" value="Launch program">
@@ -42,7 +42,7 @@
 				var collapsible = document.getElementById("collapsible");
 				if (content.style.display === "block") {
 					content.style.display = "none";
-					collapsible.innerHTML = "Open Instruction Video";
+					collapsible.innerHTML = "Instruction Video";
 					
 				} else {
 					content.style.display = "block";
