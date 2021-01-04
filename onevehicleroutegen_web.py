@@ -14,6 +14,7 @@ def take_inputs(api_key, fakeinputfile):
 
     try:
         geolocator = gmaps.Client(key=api_key)
+        testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
     except:
         raise ValueError("The following API key may be problematic: " + api_key)
 
@@ -45,10 +46,7 @@ def take_inputs(api_key, fakeinputfile):
             if inputs[i] in prevGeocodes:
                 location = prevGeocodes[inputs[i]]
             else:
-                try:
-                    location = geolocator.geocode(inputs[i])
-                except:
-                    raise ValueError("The following API key may be problematic: " + api_key)
+                location = geolocator.geocode(inputs[i])
                 prevGeocodes[inputs[i]] = location # add new datapoint to database
             
             if len(location) == 0:
