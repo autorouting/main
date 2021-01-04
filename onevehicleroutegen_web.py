@@ -55,11 +55,11 @@ def take_inputs(api_key, fakeinputfile):
             locations.append(location)
         except:
             if i == 0:
-                faultyAddress.append("Destination Address(s): ")
+                faultyAddress.append("<B>Destination Address(es): </B>")
             elif i == 1:
-                faultyAddress.append("Origin Address(s): ")
+                faultyAddress.append("<B>Origin Address(es): </B>")
             elif lessThanOneInt:
-               faultyAddress.append("Intermediate Address(s): ")
+               faultyAddress.append("<B>Intermediate Address(es): </B>")
                lessThanOneInt = False
             faultyAddress.append(inputs[i])
 
