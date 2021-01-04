@@ -189,4 +189,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read(), True)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t"))
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), True)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
