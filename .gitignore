@@ -6,4 +6,3 @@ __pycache__
 # Private info
 api_key.py
 email_config.txt
-prev_geocodes.p

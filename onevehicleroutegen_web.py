@@ -27,27 +27,12 @@ def take_inputs(api_key, fakeinputfile):
     coords = []
     faultyAddress = []
     lessThanOneInt = True
-
-    try:
-        # read database
-        prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
-    except:
-        # create database
-        pickle.dump( {}, open( "prev_geocodes.p", "wb" ) )
-        # read database
-        prevGeocodes = pickle.load( open( "prev_geocodes.p", "rb" ) )
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
         try:
 
-            # if datapoint is already in database, use the previously called output; otherwise, create a new request
-            # this will help save money on Google API, as repeated requests are unnecessary
-            if inputs[i] in prevGeocodes:
-                location = prevGeocodes[inputs[i]]
-            else:
-                location = geolocator.geocode(inputs[i])
-                prevGeocodes[inputs[i]] = location # add new datapoint to database
+            location = geolocator.geocode(inputs[i])
             
             if len(location) == 0:
                 raise "errorerrorerror"
@@ -68,9 +53,6 @@ def take_inputs(api_key, fakeinputfile):
         i = 0
         for i in range(len(locations)):
             coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
-
-    # save database
-    pickle.dump( prevGeocodes, open( "prev_geocodes.p", "wb" ) )
 
     # output data
     #print(coords)
