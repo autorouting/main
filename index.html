@@ -14,12 +14,6 @@
                 <br />
                 <br />
                 <button type="button" id="collapsible" onclick="toggle()">Instruction Video</button>
-                    <div id="content">
-                        <br />
-                        <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
-                            <source src="routing.mp4"/>
-                        </video>
-                    </div>
                 <br /><a href="usageguide.pdf">Or read instructions</a>
                 <br />
                 <p>To avoid confusion, please specify the city and state of every address.</p>
@@ -40,6 +34,12 @@
                 <input type="submit" value="Launch program">
             </div>
         </form>
+        <div id="content">
+            <br />
+            <video class="tab" height="250px" controls>Your browser does not support the &lt;video&gt; tag.
+                <source src="routing.mp4"/>
+            </video>
+        </div>
         <script>
 			function toggle(){
 				var content = document.getElementById("content");
@@ -51,6 +51,18 @@
 				} else {
 					content.style.display = "block";
 					collapsible.innerHTML = "Close Instruction Video";
+                    
+                    greywall = document.createElement("div");
+                    greywall.style.backgroundColor = "#141414";
+                    greywall.style.opacity = "0.75";
+                    greywall.style.width = "100%";
+                    greywall.style.height = "100%";
+                    greywall.style.position = "fixed";
+                    greywall.style.top = "0";
+                    greywall.style.left = "0";
+                    greywall.style.zIndex = "500";
+                    document.body.appendChild(greywall);
+                    greywall.addEventListener("click", function() { toggle(); this.remove(); });
 				}
 			}
             function googleTranslateElementInit() {
