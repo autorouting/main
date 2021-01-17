@@ -1,14 +1,12 @@
 from __future__ import print_function
-from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
-import networkx as nx
-import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import string
 import random
 import pickle
 import math
+import requests
 
 def take_inputs(api_key, fakeinputfile):
 
@@ -68,15 +66,14 @@ def fast_mode_distance(coords1, coords2):
     lat2 = coords2[0] * DEGREE_LATITUDE
     return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
 
+def osm_routing_distance(coords1, coords2):
+    coords1 = [str(coords1[0]), str(coords1[1])]
+    coords2 = [str(coords2[0]), str(coords2[1])]
+    request = requests.get("http://router.project-osrm.org/route/v1/driving/" + ",".join(coords1) + ";" + ",".join(coords2) + "?exclude=motorway")
+    return request.json()["routes"][0]["legs"][0]["distance"]
+
 def generate_distance_matrix(coords, fast_mode_toggled):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
-
-    # initiate vars
-    if not fast_mode_toggled:
-        # load previously saved graph; unneeded if not fast mode
-        G = pickle.load(open("graph", "rb"))
-    else:
-        G = "who cares really (if fast mode is off)? this is just to prevent error"
 
     output_list = []
 
@@ -87,15 +84,10 @@ def generate_distance_matrix(coords, fast_mode_toggled):
             for j in range(len(coords)):
                 output_list[i].append(fast_mode_distance(coords[i], coords[j]))
     else:
-        # Generate nodes
-        nodes = []
         for i in range(len(coords)):
-            nodes.append(ox.get_nearest_node(G, coords[i]))
-        
-        for i in range(len(nodes)):
             output_list.append([])
-            for j in range(len(nodes)):
-                output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+            for j in range(len(coords)):
+                output_list[i].append(osm_routing_distance(coords[i], coords[j]))
     
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
