@@ -1,4 +1,5 @@
 import mysql.connector
+import json
 
 """
 CREATE THE FOLLOWING database_config.json
@@ -9,10 +10,12 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
+config = json.load(open("database_config.json"))
+
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="yourusername",
-    password="yourpassword"
+    host=config["host"],
+    user=config["user"],
+    password=config["password"]
 )
 
 mycursor = mydb.cursor()
