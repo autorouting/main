@@ -11,7 +11,7 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
-def main():
+def main(placeid):
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -23,9 +23,6 @@ def main():
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT name, address FROM customers")
+    mycursor.execute("SELECT " + placeid + ", UserInput")
 
     myresult = mycursor.fetchall()
-
-    for x in myresult:
-    print(x)
