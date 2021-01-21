@@ -16,7 +16,8 @@ config = json.load(open("database_config.json"))
 mydb = mysql.connector.connect(
     host=config["host"],
     user=config["user"],
-    password=config["password"]
+    password=config["password"],
+    database=config["database"]
 )
 
 mycursor = mydb.cursor()
