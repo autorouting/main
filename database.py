@@ -6,7 +6,8 @@ CREATE THE FOLLOWING database_config.json
 {
     "host":"HOSTNAME",
     "user":"USERNAME",
-    "password":"PASSWORD"
+    "password":"PASSWORD",
+    "database":"DATABASENAME"
 }
 """
 
