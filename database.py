@@ -11,13 +11,21 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
-config = json.load(open("database_config.json"))
+def main():
+    config = json.load(open("database_config.json"))
 
-mydb = mysql.connector.connect(
-    host=config["host"],
-    user=config["user"],
-    password=config["password"],
-    database=config["database"]
-)
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
 
-mycursor = mydb.cursor()
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT name, address FROM customers")
+
+    myresult = mycursor.fetchall()
+
+    for x in myresult:
+    print(x)
