@@ -26,3 +26,5 @@ def main(placeid):
     mycursor.execute("SELECT " + placeid + ", UserInput")
 
     myresult = mycursor.fetchall()
+
+    print(myresult)
