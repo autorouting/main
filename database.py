@@ -23,8 +23,12 @@ def main(placeid):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT " + placeid + ", UserInput")
+    mycursor.execute("SELECT PlaceID, UserInput")
 
     myresult = mycursor.fetchall()
 
     print(myresult)
+
+## TESTING ##
+if __name__ == "__main__":
+    print(main("ChIJp35uIRzDrIkRy-RDBOC6A38"))
