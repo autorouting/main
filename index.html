@@ -71,6 +71,13 @@
             document.getElementsByTagName("textarea")[0].onkeyup = function() {
                 this.value = this.value.split("\n").slice(0, 50).join("\n");
             };
+            window.addEventListener("load", function() {
+                document.querySelector("textarea").style.height = document.querySelector("textarea").getBoundingClientRect().height.toString() + "px";
+                document.querySelector("form").style.display = "block";
+                document.querySelector("form").style.height = "auto";
+                document.querySelector("form").style.position = "static";
+                document.querySelector("form").style.transform = "scale(1)";
+            });
         </script>
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     </body>
