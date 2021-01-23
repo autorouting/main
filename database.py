@@ -23,7 +23,7 @@ def fetch_placeid(InputAddress):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT placeid FROM userinput WHERE inputaddress = %s", (InputAddress))
+    mycursor.execute("SELECT placeid FROM userinput WHERE inputaddress = %s", (InputAddress,))
 
     myresult = mycursor.fetchall()
 
