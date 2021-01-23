@@ -23,7 +23,7 @@ def main(placeid):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT PlaceID, UserInput")
+    mycursor.execute("SELECT placeid FROM userinput")
 
     myresult = mycursor.fetchall()
 
