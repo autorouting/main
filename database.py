@@ -11,7 +11,7 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
-def main(placeid):
+def fetch_placeid(placeid):
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -27,8 +27,8 @@ def main(placeid):
 
     myresult = mycursor.fetchall()
 
-    print(myresult)
+    return myresult
 
 ## TESTING ##
 if __name__ == "__main__":
-    print(main("ChIJp35uIRzDrIkRy-RDBOC6A38"))
+    print(fetch_placeid("ChIJp35uIRzDrIkRy-RDBOC6A38"))
