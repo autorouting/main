@@ -11,7 +11,7 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
-def fetch_placeid(placeid):
+def fetch_placeid(InputAddress):
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -23,7 +23,7 @@ def fetch_placeid(placeid):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT placeid FROM userinput")
+    mycursor.execute("SELECT placeid FROM userinput WHERE inputaddress = %s", (InputAddress,))
 
     myresult = mycursor.fetchall()
 
