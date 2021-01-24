@@ -47,11 +47,11 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
     try:
         mycursor.execute(input_code, (InputAddress, PlaceID,))
     except mysql.connector.Error as err:
-        print("Something went wrong: " + err)
+        print("Something went wrong: " + str(err))
     try:
         mycursor.execute(output_code, (PlaceID, lon, lat, FormattedAddress, OSMnode))
     except mysql.connector.Error as err:
-        print("Something went wrong: " + err)
+        print("Something went wrong: " + str(err))
 
     mydb.commit()
 
