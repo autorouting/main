@@ -29,9 +29,8 @@ def take_inputs(api_key, fakeinputfile):
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
+        location = geolocator.geocode(inputs[i])
         try:
-
-            location = geolocator.geocode(inputs[i])
             if len(location) == 0:
                 raise "errorerrorerror"
             address = location[0]["formatted_address"]
@@ -39,7 +38,6 @@ def take_inputs(api_key, fakeinputfile):
             
             addresses.append(address)
             coords.append(coordpair)
-
         except:
             if i == 0:
                 faultyAddress.append("<B>Destination Address(es): </B>")
