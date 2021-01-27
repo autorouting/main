@@ -23,7 +23,6 @@ def take_inputs(api_key, fakeinputfile):
 
     # initiate vars
     addresses = []
-    locations = []
     coords = []
     faultyAddress = []
     lessThanOneInt = True
@@ -33,11 +32,14 @@ def take_inputs(api_key, fakeinputfile):
         try:
 
             location = geolocator.geocode(inputs[i])
-            
             if len(location) == 0:
                 raise "errorerrorerror"
-            addresses.append(location[0]["formatted_address"])
-            locations.append(location)
+            address = location[0]["formatted_address"]
+            coordpair = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
+            
+            addresses.append(address)
+            coords.append(coordpair)
+
         except:
             if i == 0:
                 faultyAddress.append("<B>Destination Address(es): </B>")
@@ -47,12 +49,6 @@ def take_inputs(api_key, fakeinputfile):
                faultyAddress.append("<B>Intermediate Address(es): </B>")
                lessThanOneInt = False
             faultyAddress.append(inputs[i])
-
-    # generate coords & nodes
-    if len(faultyAddress) == 0:
-        i = 0
-        for i in range(len(locations)):
-            coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
 
     # output data
     #print(coords)
