@@ -62,7 +62,7 @@ def take_inputs(api_key, fakeinputfile):
     # output data
     return (faultyAddress, addresses, osmnodes, G)
 
-def generate_distance_matrix(nodes, fast_mode_toggled, G):
+def generate_distance_matrix(nodes, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
 
     output_list = []
@@ -113,12 +113,12 @@ def print_solution(manager, routing, solution, addresses):
     #print(plan_output)
     return plan_output, textfileoutput
 
-def main(api_key, fakeinputfile, fast_mode_toggled):
+def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     faultyAddress, addresses, nodes, G = take_inputs(api_key, fakeinputfile)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = generate_distance_matrix(nodes, fast_mode_toggled, G)
+        distancematrix = generate_distance_matrix(nodes, G)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -148,4 +148,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read(), True)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
+    print(main(input("API key:\n "), open("locations.txt", "r").read())[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
