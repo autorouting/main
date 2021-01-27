@@ -9,6 +9,7 @@ import string
 import random
 import pickle
 import math
+import database
 
 def take_inputs(api_key, fakeinputfile):
 
@@ -22,74 +23,56 @@ def take_inputs(api_key, fakeinputfile):
     inputs = fakeinputfile.split("\n")
 
     # initiate vars
+    G = pickle.load(open("graph", "rb"))
     addresses = []
-    coords = []
+    osmnodes = []
     faultyAddress = []
     lessThanOneInt = True
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
-        location = geolocator.geocode(inputs[i])
-        try:
-            if len(location) == 0:
-                raise "errorerrorerror"
-            address = location[0]["formatted_address"]
-            coordpair = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
-            
-            addresses.append(address)
-            coords.append(coordpair)
-        except:
-            if i == 0:
-                faultyAddress.append("<B>Destination Address(es): </B>")
-            elif i == 1:
-                faultyAddress.append("<B>Origin Address(es): </B>")
-            elif lessThanOneInt:
-               faultyAddress.append("<B>Intermediate Address(es): </B>")
-               lessThanOneInt = False
-            faultyAddress.append(inputs[i])
+        placeid = database.fetch_placeid(inputs[i])
+        if len(placeid) == 0:
+            location = geolocator.geocode(inputs[i])
+            try:
+                if len(location) == 0:
+                    raise "errorerrorerror"
+                address = location[0]["formatted_address"]
+                coordpair = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
+                osmnode = ox.get_nearest_node(G, coordpair)
+
+                database.insert_data(inputs[i], location[0]['place_id'], coordpair[0], coordpair[1], address, str(osmnode))
+                
+                addresses.append(address)
+                osmnodes.append(osmnode)
+            except:
+                if i == 0:
+                    faultyAddress.append("<B>Destination Address(es): </B>")
+                elif i == 1:
+                    faultyAddress.append("<B>Origin Address(es): </B>")
+                elif lessThanOneInt:
+                    faultyAddress.append("<B>Intermediate Address(es): </B>")
+                    lessThanOneInt = False
+                faultyAddress.append(inputs[i])
+        else:
+            out_data = database.fetch_output_data(placeid[0][0])
+            addresses.append(out_data[0][1])
+            osmnodes.append(int(out_data[0][0]))
 
     # output data
-    #print(coords)
-    return (faultyAddress, addresses, coords)
+    return (faultyAddress, addresses, osmnodes, G)
 
-def fast_mode_distance(coords1, coords2):
-    DEGREE_TO_RAD = math.pi / 180
-    DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
-    # convert coords to meters
-    lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
-    lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
-    lat1 = coords1[0] * DEGREE_LATITUDE
-    lat2 = coords2[0] * DEGREE_LATITUDE
-    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
-
-def generate_distance_matrix(coords, fast_mode_toggled):
+def generate_distance_matrix(nodes, fast_mode_toggled, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
-
-    # initiate vars
-    if not fast_mode_toggled:
-        # load previously saved graph; unneeded if not fast mode
-        G = pickle.load(open("graph", "rb"))
-    else:
-        G = "who cares really (if fast mode is off)? this is just to prevent error"
 
     output_list = []
 
     # create 2d array with distances of node i -> node j
-    if fast_mode_toggled:
-        for i in range(len(coords)):
-            output_list.append([])
-            for j in range(len(coords)):
-                output_list[i].append(fast_mode_distance(coords[i], coords[j]))
-    else:
-        # Generate nodes
-        nodes = []
-        for i in range(len(coords)):
-            nodes.append(ox.get_nearest_node(G, coords[i]))
         
-        for i in range(len(nodes)):
-            output_list.append([])
-            for j in range(len(nodes)):
-                output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+    for i in range(len(nodes)):
+        output_list.append([])
+        for j in range(len(nodes)):
+            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
@@ -132,10 +115,10 @@ def print_solution(manager, routing, solution, addresses):
 
 def main(api_key, fakeinputfile, fast_mode_toggled):
     #process addresses and check for faulty ones
-    faultyAddress, addresses, coords = take_inputs(api_key, fakeinputfile)
+    faultyAddress, addresses, nodes, G = take_inputs(api_key, fakeinputfile)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = generate_distance_matrix(coords, fast_mode_toggled)
+        distancematrix = generate_distance_matrix(nodes, fast_mode_toggled, G)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
