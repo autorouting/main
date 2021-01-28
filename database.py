@@ -74,3 +74,23 @@ def fetch_output_data(PlaceID):
     myresult = mycursor.fetchall()
 
     return myresult
+
+def purge_data(no_of_year):
+    config = json.load(open("database_config.json"))
+
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+    mycursor = mydb.cursor()
+
+    del_userinput = "DELETE FROM userinput WHERE last_updated < CURRENT_DATE - INTERVAL %s YEAR"
+
+    try:
+        mycursor.execute(del_userinput , (no_of_year,))
+    except mysql.connector.Error as err:
+        mydb.rollback()
+        print("Something went wrong: " + str(err))
+    mydb.commit()
