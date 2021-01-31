@@ -31,6 +31,7 @@ def take_inputs(api_key, fakeinputfile):
     
     # for every line of input, generate location object
     for i in range(0, len(inputs)):
+        inputs[i] = inputs[i].strip() # remove unnecessary spaces or return characters (\r) from input
         placeid = database.fetch_placeid(inputs[i])
         if len(placeid) == 0:
             location = geolocator.geocode(inputs[i])
