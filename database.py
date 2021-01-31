@@ -36,6 +36,8 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
     global mydb
     global mycursor
 
+    InputAddress.strip()
+
     input_code = "INSERT INTO userinput (inputaddress, placeid) VALUES (%s, %s)"
     output_code = "INSERT INTO maptable (placeid, coorx, coory, googleaddresses, openmnode) VALUES (%s, %s, %s, %s, %s)"
 
