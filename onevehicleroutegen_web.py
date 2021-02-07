@@ -12,7 +12,6 @@ import math
 import database
 
 def take_inputs(api_key, fakeinputfile):
-
     try:
         geolocator = gmaps.Client(key=api_key)
         testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
