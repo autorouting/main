@@ -79,15 +79,6 @@ def geocode_input(api_key, input, geolocator):
     # output data
     #print(coords)
     return (faultyAddress, address, coords)
-def fast_mode_distance(coords1, coords2):
-    DEGREE_TO_RAD = math.pi / 180
-    DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
-    # convert coords to meters
-    lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
-    lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
-    lat1 = coords1[0] * DEGREE_LATITUDE
-    lat2 = coords2[0] * DEGREE_LATITUDE
-    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
 def generate_distance_matrix(nodes, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
