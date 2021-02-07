@@ -11,7 +11,7 @@ import pickle
 import math
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
-import time
+#import time
 import database
 
 def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
@@ -129,7 +129,7 @@ def print_solution(manager, routing, solution, addresses):
     return plan_output, textfileoutput
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
-    start_time = time.perf_counter_ns()
+    #start_time = time.perf_counter_ns()
     G = pickle.load( open("graph", "rb") )
     faultyAddress, addresses, nodes = parallel_geocode_inputs(api_key, fakeinputfile, G)
     if len(faultyAddress) == 0:
@@ -151,7 +151,7 @@ def main(api_key, fakeinputfile):
         route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
         if solution:
             route_solution
-        end_time = time.perf_counter_ns()
+        #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
