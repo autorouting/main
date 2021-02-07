@@ -157,7 +157,7 @@ def main(api_key, fakeinputfile):
         if solution:
             route_solution
         end_time = time.perf_counter_ns()
-        print((end_time - start_time) / 10 ** 9)
+        #print((end_time - start_time) / 10 ** 9)
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
         output = "<h1>Incorrect address(es)</h1>"
