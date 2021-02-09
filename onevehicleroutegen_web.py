@@ -11,8 +11,7 @@ import pickle
 import math
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
-#import time
-import database
+import time
 
 def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     try:
@@ -40,7 +39,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executer:
         for address in inputs:
             #print(address)
-            future = executer.submit(geocode_input, api_key, address, geolocator, G)
+            future = executer.submit(geocode_input, api_key, address, geolocator)
             futures.append(future)
     # Wait until all are finished
     concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
@@ -48,41 +47,38 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     #print(results)
     faulty_addresses = []
     addresses = []
+    coords = []
     nodes = []
     for i in range(len(results)):
         if results[i][1] != None: 
             addresses.append(results[i][1])
-            nodes.append(results[i][2])
+            coords.append(results[i][2])
+            nodes.append(ox.get_nearest_node(G, results[i][2]))
         else:
             faulty_addresses.append(results[i][0]) 
             addresses.append(None)
-            nodes.append(None)
+            coords.append(None)
+            nodes.append(ox.get_nearest_node(G, results[i][2]))
     return (faulty_addresses, addresses, nodes)
-def geocode_input(api_key, input, geolocator, G):
+def geocode_input(api_key, input, geolocator):
     #lessThanOneInt = True
     #time.sleep(1)
     #print(input)
     faultyAddress = None
-    node = None
+    coords = None
     address = None
     #print('1')
     # for every line of input, generate location object
-    placeid = database.fetch_placeid(input)
-    if len(placeid) == 0:
-        try:
-            location = geolocator.geocode(input)
-            coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
-            node = ox.get_nearest_node(G, coords)
-            address = location[0]["formatted_address"]
-        except:
-            faultyAddress = "<B>Address(es): </B>" + str(input)
-            #print(faultyAddress)
-    else:
-        out_data = database.fetch_output_data(placeid[0][0])
-        address = out_data[0][1]
-        node = int(out_data[0][0])
+    try:
+        location = geolocator.geocode(input)
+        coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
+        address = location[0]["formatted_address"]
+    except:
+        faultyAddress = "<B>Address(es): </B>" + str(input)
+        #print(faultyAddress)
     # output data
-    return (faultyAddress, address, node)
+    #print(coords)
+    return (faultyAddress, address, coords)
 def generate_distance_matrix(nodes, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
