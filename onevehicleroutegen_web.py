@@ -131,7 +131,7 @@ def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
     G = pickle.load( open("graph", "rb") )
-    faultyAddress, addresses, nodes = parallel_geocode_inputs(api_key, fakeinputfile, G)
+    faultyAddress, addresses, nodes = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
     if len(faultyAddress) == 0:
         # run ORTools
         distancematrix = generate_distance_matrix(nodes, G)
