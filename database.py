@@ -11,20 +11,17 @@ CREATE THE FOLLOWING database_config.json
 }
 """
 
-config = json.load(open("database_config.json"))
-
-mydb = mysql.connector.connect(
-    host=config["host"],
-    user=config["user"],
-    password=config["password"],
-    database=config["database"]
-)
-
-mycursor = mydb.cursor()
-
 def fetch_placeid(InputAddress):
-    global mydb
-    global mycursor
+    config = json.load(open("database_config.json"))
+
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+
+    mycursor = mydb.cursor()
 
     mycursor.execute("SELECT placeid FROM userinput WHERE inputaddress = %s", (InputAddress,))
 
@@ -33,8 +30,16 @@ def fetch_placeid(InputAddress):
     return myresult
 
 def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
-    global mydb
-    global mycursor
+    config = json.load(open("database_config.json"))
+
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+
+    mycursor = mydb.cursor()
 
     input_code = "INSERT INTO userinput (inputaddress, placeid) VALUES (%s, %s)"
     output_code = "INSERT INTO maptable (placeid, coorx, coory, googleaddresses, openmnode) VALUES (%s, %s, %s, %s, %s)"
@@ -53,8 +58,16 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
     mydb.commit()
 
 def fetch_output_data(PlaceID):
-    global mydb
-    global mycursor
+    config = json.load(open("database_config.json"))
+
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+
+    mycursor = mydb.cursor()
 
     mycursor.execute("SELECT openmnode, googleaddresses FROM maptable WHERE placeid = %s", (PlaceID,))
 
@@ -63,8 +76,15 @@ def fetch_output_data(PlaceID):
     return myresult
 
 def purge_data(no_of_year):
-    global mydb
-    global mycursor
+    config = json.load(open("database_config.json"))
+
+    mydb = mysql.connector.connect(
+        host=config["host"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+    mycursor = mydb.cursor()
 
     del_userinput = "DELETE FROM userinput WHERE last_updated < CURRENT_DATE - INTERVAL %s YEAR"
 
