@@ -58,6 +58,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
             addresses.append(None)
             nodes.append(None)
     return (faulty_addresses, addresses, nodes)
+
 def geocode_input(api_key, input, geolocator, G):
     #lessThanOneInt = True
     #time.sleep(1)
@@ -83,6 +84,7 @@ def geocode_input(api_key, input, geolocator, G):
         node = int(out_data[0][0])
     # output data
     return (faultyAddress, address, node)
+
 def generate_distance_matrix(nodes, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
@@ -97,6 +99,7 @@ def generate_distance_matrix(nodes, G):
         output_list[i][1] = MAX_DISTANCE
     # output data
     return (output_list)
+
 def create_data_model(distancematrix):
     # initiate ORTools
     data = {}
@@ -104,6 +107,7 @@ def create_data_model(distancematrix):
     data['num_vehicles'] = 1
     data['depot'] = 0
     return (data)
+
 def print_solution(manager, routing, solution, addresses):
     # create ORTools solution
     #print('Objective: {} meters'.format(solution.ObjectiveValue()))
@@ -127,6 +131,7 @@ def print_solution(manager, routing, solution, addresses):
     #plan_output += '<P><B>Route distance: {} meters</B></P>'.format(route_distance)
     #print(plan_output)
     return plan_output, textfileoutput
+
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
@@ -162,6 +167,7 @@ def main(api_key, fakeinputfile):
             #print('\n' + output)
         #print(1)
         return(output, "")
+
 if __name__ == '__main__':
     # run the main script
     # locations.txt: line 1: destination?
