@@ -1,22 +1,21 @@
 import socket
 import sys
 
-for i in range(0,10):
+def senddata(message):
 
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
     server_address = ('localhost', 6000)
-    print('connecting to %s port %s' % server_address)
+    #print('connecting to %s port %s' % server_address)
     sock.connect(server_address)
 
     try:
         # Send data
-        message = 'client1 This is the message%d. It will be repeated.\n' % (i)
-        print('sending "%s"' % message)
+        #print('sending "%s"' % message)
         sock.sendall(message.encode('utf-8'))
-        print('done sending')
+        #print('done sending')
 
         # Wait for the response
         while True:
@@ -24,7 +23,13 @@ for i in range(0,10):
             if len(data)<256 or data[-1]==10 :
                 print('received "%s"' % data)
                 break
-
+                
+        return data
+    
     finally:
         print('closing socket')
         sock.close()
+
+if __name__ == '__main__':
+    for i in range(10):
+        print(senddata('hi this is message ' + str(i)))
