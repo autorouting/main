@@ -22,8 +22,5 @@ def senddata(message):
             data = sock.recv(256)
             if len(data)<256 or data[-1]==10 :
                 print('received "%s"' % data)
+                return data
                 break
-
-    finally:
-        print('closing socket')
-        sock.close()
