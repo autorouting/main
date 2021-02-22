@@ -1,6 +1,10 @@
 import socket
 import sys
 import time
+import pickle
+
+# Read graph file
+G = pickle.load(open('graph', 'rb'))
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
