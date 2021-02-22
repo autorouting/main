@@ -13,6 +13,7 @@ import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 #import time
 import database
+import distancematrix_web
 
 def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     try:
@@ -58,6 +59,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
             addresses.append(None)
             nodes.append(None)
     return (faulty_addresses, addresses, nodes)
+
 def geocode_input(api_key, input, geolocator, G):
     #lessThanOneInt = True
     #time.sleep(1)
@@ -83,20 +85,7 @@ def geocode_input(api_key, input, geolocator, G):
         node = int(out_data[0][0])
     # output data
     return (faultyAddress, address, node)
-def generate_distance_matrix(nodes, G):
-    MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
-    # initiate vars
-    output_list = []
-    # create 2d array with distances of node i -> node j
-    for i in range(len(nodes)):
-        output_list.append([])
-        for j in range(len(nodes)):
-            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
-    # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-    for i in range(2, len(output_list)):
-        output_list[i][1] = MAX_DISTANCE
-    # output data
-    return (output_list)
+
 def create_data_model(distancematrix):
     # initiate ORTools
     data = {}
@@ -104,6 +93,7 @@ def create_data_model(distancematrix):
     data['num_vehicles'] = 1
     data['depot'] = 0
     return (data)
+
 def print_solution(manager, routing, solution, addresses):
     # create ORTools solution
     #print('Objective: {} meters'.format(solution.ObjectiveValue()))
@@ -127,6 +117,7 @@ def print_solution(manager, routing, solution, addresses):
     #plan_output += '<P><B>Route distance: {} meters</B></P>'.format(route_distance)
     #print(plan_output)
     return plan_output, textfileoutput
+
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
@@ -134,7 +125,7 @@ def main(api_key, fakeinputfile):
     faultyAddress, addresses, nodes = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = generate_distance_matrix(nodes, G)
+        distancematrix = distancematrix_web.generate_distance_matrix(nodes, G)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -162,6 +153,7 @@ def main(api_key, fakeinputfile):
             #print('\n' + output)
         #print(1)
         return(output, "")
+
 if __name__ == '__main__':
     # run the main script
     # locations.txt: line 1: destination?
