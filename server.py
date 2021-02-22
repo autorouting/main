@@ -2,9 +2,17 @@ import socket
 import sys
 import time
 import pickle
+import distancematrix_web
 
 # Read graph file
 G = pickle.load(open('graph', 'rb'))
+
+def handle_message(message):
+    global G
+    coorpairs = message.split(';') # '3,1;1,3' -> ['3,1', '1,3']
+    for each in coorpairs: # ['3,1', '1,3'] -> [[3, 1], [1, 3]]
+        each = each.split(',')
+    return str(distancematrix_web.generate_distance_matrix(each, G))
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +44,7 @@ while True:
                 break
         time.sleep(1)
         print("send reply")
-        message="reply: "+message
+        message=handle_message(message)
         connection.sendall(message.encode("utf-8"))
         print("done sending")
             
