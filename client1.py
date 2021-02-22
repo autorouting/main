@@ -1,7 +1,7 @@
 import socket
 import sys
 
-for i in range(0,10):
+def senddata(message):
 
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,7 +13,6 @@ for i in range(0,10):
 
     try:
         # Send data
-        message = 'client1 This is the message%d. It will be repeated.\n' % (i)
         print('sending "%s"' % message)
         sock.sendall(message.encode('utf-8'))
         print('done sending')
