@@ -30,6 +30,6 @@ def senddata(message):
         print('closing socket')
         sock.close()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     for i in range(10):
-        print(senddata("hi this is message " + str(i)))
+        print(senddata('hi this is message ' + str(i)))
