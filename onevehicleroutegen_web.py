@@ -2,7 +2,6 @@ from __future__ import print_function
 from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
 import networkx as nx
-import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import string
@@ -49,23 +48,23 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     #print(results)
     faulty_addresses = []
     addresses = []
-    nodes = []
+    coordpairs = []
     for i in range(len(results)):
         if results[i][1] != None: 
             addresses.append(results[i][1])
-            nodes.append(results[i][2])
+            coordpairs.append(results[i][2])
         else:
             faulty_addresses.append(results[i][0]) 
             addresses.append(None)
-            nodes.append(None)
-    return (faulty_addresses, addresses, nodes)
+            coordpairs.append(None)
+    return (faulty_addresses, addresses, coordpairs)
 
 def geocode_input(api_key, input, geolocator, G):
     #lessThanOneInt = True
     #time.sleep(1)
     #print(input)
     faultyAddress = None
-    node = None
+    coords = None
     address = None
     #print('1')
     # for every line of input, generate location object
@@ -74,17 +73,16 @@ def geocode_input(api_key, input, geolocator, G):
         try:
             location = geolocator.geocode(input)
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
-            node = ox.get_nearest_node(G, coords)
             address = location[0]["formatted_address"]
         except:
             faultyAddress = "<B>Address(es): </B>" + str(input)
             #print(faultyAddress)
     else:
         out_data = database.fetch_output_data(placeid[0][0])
-        address = out_data[0][1]
-        node = int(out_data[0][0])
+        address = out_data[0][2]
+        coords = [int(out_data[0][0]), int(out_data[0][1])]
     # output data
-    return (faultyAddress, address, node)
+    return (faultyAddress, address, coords)
 
 def create_data_model(distancematrix):
     # initiate ORTools
@@ -122,10 +120,10 @@ def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
     G = pickle.load( open("graph", "rb") )
-    faultyAddress, addresses, nodes = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
+    faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = distancematrix_web.generate_distance_matrix(nodes, G)
+        distancematrix = distancematrix_web.generate_distance_matrix(coordpairs, G)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
