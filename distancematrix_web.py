@@ -1,6 +1,11 @@
 import networkx as nx
+import osmnx as ox
 
-def generate_distance_matrix(nodes, G):
+def generate_distance_matrix(coordpairs, G):
+    # get nodes
+    nodes = []
+    for coords in coordpairs:
+        nodes.append(ox.get_nearest_node(G, coords))
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
     output_list = []

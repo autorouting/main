@@ -69,7 +69,7 @@ def fetch_output_data(PlaceID):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("SELECT openmnode, googleaddresses FROM maptable WHERE placeid = %s", (PlaceID,))
+    mycursor.execute("SELECT coorx, coory, googleaddresses FROM maptable WHERE placeid = %s", (PlaceID,))
 
     myresult = mycursor.fetchall()
 
