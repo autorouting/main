@@ -80,7 +80,7 @@ def geocode_input(api_key, input, geolocator, G):
     else:
         out_data = database.fetch_output_data(placeid[0][0])
         address = out_data[0][2]
-        coords = [int(out_data[0][0]), int(out_data[0][1])]
+        coords = [float(out_data[0][0]), float(out_data[0][1])]
     # output data
     return (faultyAddress, address, coords)
 
