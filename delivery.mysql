@@ -1,0 +1,16 @@
+USE delivery;
+
+CREATE TABLE IF NOT EXISTS userinput (
+inputaddress varchar(1024),
+placeid varchar(1024),
+PRIMARY KEY (inputaddress)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS maptable (
+placeid varchar(1024),
+coorx double(10,7),
+coory double(10,7),
+googleaddresses varchar(1024),
+openmnode varchar(255),
+PRIMARY KEY (placeid)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
