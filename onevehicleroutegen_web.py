@@ -12,7 +12,8 @@ import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 #import time
 import database
-import distancematrix_web
+import client1
+import serialize
 
 def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     try:
@@ -124,7 +125,7 @@ def main(api_key, fakeinputfile):
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = distancematrix_web.generate_distance_matrix(coordpairs, G)
+        distancematrix = serialize.deserializeCgiToServer(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
