@@ -1,4 +1,6 @@
-def serializeCgiToServer(coors):
+#ending character: ?
+
+def serializeCgiToServer(coors): #coors is a n by 2 2D array
     string = ""
     for i in range(0, len(coors)):
         string += str(coors[i][0]) + "," + str(coors[i][1])
@@ -9,9 +11,10 @@ def deserializeCgiToServer(string):
     string = string.decode('utf-8')
     
     splitted = string.split(";")
-    coors = [None]*(len(splitted)-1)
+    coors = [None]*(len(splitted)-1) # create list: [None, None, None,...] with length len(splitted)-1
     for i in range(0,len(splitted)-1):
         coors[i] = splitted[i].split(",")
+        coors[i] = [float(x) for x in coors[i]]
     return coors
 
 def serializeServerToCgi(distanceMatrix):
@@ -30,6 +33,7 @@ def deserializeServerToCgi(string):
     for i in range(0,len(splitted)-1):
         row = splitted[i].split(",")
         distanceMatrix[i] = row[0:len(row)-1]
+        distanceMatrix[i] = [float(x) for x in distanceMatrix[i]]
     return distanceMatrix
     
 def testFunctions():
@@ -39,6 +43,7 @@ def testFunctions():
     string = serializeServerToCgi([[10,6,5]])
     distanceMatrix = deserializeServerToCgi(string)
     print(distanceMatrix)
+
 
 
 #if __name__ == '__main__':
