@@ -14,17 +14,19 @@ def senddata(message):
     try:
         # Send data
         #print('sending "%s"' % message)
-        sock.sendall(message.encode('utf-8'))
+        sock.sendall(message)
         #print('done sending')
 
         # Wait for the response
+        received = b''
         while True:
-            data = sock.recv(256)
-            if len(data)<256 or data[-1]==10 :
-                print('received "%s"' % data)
+            data = sock.recv(8)
+            received += data
+            if len(data)<8 or data[-1]==10 :
+                #print('received "%s"' % data)
                 break
                 
-        return data
+        return received
     
     finally:
         print('closing socket')
