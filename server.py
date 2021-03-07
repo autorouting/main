@@ -11,7 +11,7 @@ def handle_message(message):
     global G
     coorpairs = message.split(';') # '3,1;1,3' -> ['3,1', '1,3']
     for each in coorpairs: # ['3,1', '1,3'] -> [[3, 1], [1, 3]]
-        each = each.split(',')
+        each = [float(each.split(',')[0]), float(each.split(',')[1])]
     return str(distancematrix_web.generate_distance_matrix(coorpairs, G))
 
 # Create a TCP/IP socket
