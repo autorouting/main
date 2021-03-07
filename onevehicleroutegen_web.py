@@ -2,105 +2,88 @@ from __future__ import print_function
 from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
 import networkx as nx
-import osmnx as ox
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import string
 import random
 import pickle
 import math
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
+#import time
+import database
+import distancematrix_web
 
-def take_inputs(api_key, fakeinputfile):
-
-    geolocator = gmaps.Client(key=api_key)
-
+def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
+    try:
+        geolocator = gmaps.Client(key=api_key)
+        testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
+    except:
+        raise ValueError("The following API key may be problematic: " + api_key)
     # get inputs
     inputs = fakeinputfile.split("\n")
-
-    # initiate vars
+    for i in range(len(inputs)):
+        inputs[i] = inputs[i].strip() # remove unnecessary spaces or return characters (\r) from input
+    """
+    inputs_first_thread = []
+    inputs_second_thread = []
+    for i in range(len(inputs)):
+        if inputs[i] != "" and inputs[i] != " ":
+            if i%2 == 0:
+                inputs_first_thread.append(inputs[i])
+    """
+    #print(inputs)
+    #print(inputs_first_thread)
+    #print(inputs_subthread)
+    #print(geocode_input(api_key, inputs_first_thread, geolocator))
+    futures = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers) as executer:
+        for address in inputs:
+            #print(address)
+            future = executer.submit(geocode_input, api_key, address, geolocator, G)
+            futures.append(future)
+    # Wait until all are finished
+    concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
+    results = [future.result() for future in futures]
+    #print(results)
+    faulty_addresses = []
     addresses = []
-    locations = []
-    coords = []
-    faultyAddress = []
-    lessThanOneInt = True
-    
+    coordpairs = []
+    for i in range(len(results)):
+        if results[i][1] != None: 
+            addresses.append(results[i][1])
+            coordpairs.append(results[i][2])
+        else:
+            faulty_addresses.append(results[i][0]) 
+            addresses.append(None)
+            coordpairs.append(None)
+    return (faulty_addresses, addresses, coordpairs)
+
+def geocode_input(api_key, input, geolocator, G):
+    #lessThanOneInt = True
+    #time.sleep(1)
+    #print(input)
+    faultyAddress = None
+    coords = None
+    address = None
+    #print('1')
     # for every line of input, generate location object
-    for i in range(0, len(inputs)):
+    placeid = database.fetch_placeid(input)
+    if len(placeid) == 0:
         try:
-            location = geolocator.geocode(inputs[i])
-            #print("inputs[i]:", inputs[i])
-            if len(location) == 0:
-                raise "errorerrorerror"
-            addresses.append(inputs[i])
-            locations.append(location)
+            location = geolocator.geocode(input)
+            coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
+            address = location[0]["formatted_address"]
+            database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address, str(6969))
         except:
-            if i == 0:
-                faultyAddress.append("Destination Address(s): ")
-            elif i == 1:
-                faultyAddress.append("Origin Address(s): ")
-            elif lessThanOneInt:
-               faultyAddress.append("Intermediate Address(s): ")
-               lessThanOneInt = False
-            faultyAddress.append(inputs[i])
-
-    # generate coords & nodes
-    if len(faultyAddress) == 0:
-        i = 0
-        for i in range(len(locations)):
-            coords.append((locations[i][0]['geometry']['location']['lat'], locations[i][0]['geometry']['location']['lng']))
-
-
-    # output data
-    #print(coords)
-    return (faultyAddress, addresses, coords)
-
-def fast_mode_distance(coords1, coords2):
-    # convert coords to meters
-    lon1 = coords1[1] * 111132.954 * math.cos(coords1[0] * math.pi / 180)
-    lon2 = coords2[1] * 111132.954 * math.cos(coords2[0] * math.pi / 180)
-    lat1 = coords1[0] * (111132.954  - 559.822 * math.cos(2 * coords1[0] * math.pi / 180) + 1.175 * math.cos(4 * coords1[0] * math.pi / 180))
-    lat2 = coords2[0] * (111132.954  - 559.822 * math.cos(2 * coords2[0] * math.pi / 180) + 1.175 * math.cos(4 * coords2[0] * math.pi / 180))
-    return ((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2) ** 0.5
-
-def generate_distance_matrix(coords, fast_mode_toggled):
-    MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
-
-    # initiate vars
-    if not fast_mode_toggled:
-        # load previously saved graph; unneeded if not fast mode
-        G = pickle.load(open("graph", "rb"))
+            faultyAddress = "<B>Address(es): </B>" + str(input)
+            #print(faultyAddress)
     else:
-        G = "who cares really (if fast mode is off)? this is just to prevent error"
-
-    # create 2d array with distances of node i -> node j
-    if fast_mode_toggled:
-        output_list = []
-        for i in range(len(coords)):
-            output_list.append([])
-            for j in range(len(coords)):
-                output_list[i].append(fast_mode_distance(coords[i], coords[j]))
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(output_list)):
-            output_list[i][1] = MAX_DISTANCE
-    else:
-        # Generate nodes
-        nodes = []
-        for i in range(len(coords)):
-            nodes.append(ox.get_nearest_node(G, coords[i]))
-
-        output_list = []
-        
-        for i in range(len(nodes)):
-            output_list.append([])
-            for j in range(len(nodes)):
-                output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
-    
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(output_list)):
-            output_list[i][1] = MAX_DISTANCE
-    
+        out_data = database.fetch_output_data(placeid[0][0])
+        address = out_data[0][2]
+        coords = [float(out_data[0][0]), float(out_data[0][1])]
     # output data
-    return (output_list)
+    return (faultyAddress, address, coords)
 
 def create_data_model(distancematrix):
     # initiate ORTools
@@ -134,12 +117,14 @@ def print_solution(manager, routing, solution, addresses):
     #print(plan_output)
     return plan_output, textfileoutput
 
-def main(api_key, fakeinputfile, fast_mode_toggled):
+def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
-    faultyAddress, addresses, coords = take_inputs(api_key, fakeinputfile)
+    #start_time = time.perf_counter_ns()
+    G = pickle.load( open("graph", "rb") )
+    faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = generate_distance_matrix(coords, fast_mode_toggled)
+        distancematrix = distancematrix_web.generate_distance_matrix(coordpairs, G)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -156,12 +141,16 @@ def main(api_key, fakeinputfile, fast_mode_toggled):
         route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
         if solution:
             route_solution
-        #print(route_solution)
+        #end_time = time.perf_counter_ns()
+        #print((end_time - start_time) / 10 ** 9)
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
         output = "<h1>Incorrect address(es)</h1>"
         for address in faultyAddress:
+            #print(address)
             output += "<p style=\"color:Tomato;\">" + address + "</p>"
+            #print('\n' + output)
+        #print(1)
         return(output, "")
 
 if __name__ == '__main__':
@@ -169,4 +158,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    main(input("API key:\n "), open("locations.txt", "r").read(), True)
+    print(main(input("API key:\n "), open("locations.txt", "r").read())[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))

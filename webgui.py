@@ -12,7 +12,7 @@ Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
 """
 
-cgitb.enable() # comment out after usage
+cgitb.enable(False, "/var/log/httpd/error_log") # Write errors to error log but don't display to users. Replace second argument with your error log file.
 
 # allow unicode strings
 import sys
@@ -24,7 +24,6 @@ form = cgi.FieldStorage()
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
-fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
  
 # create big input string
@@ -43,7 +42,7 @@ stylesheet = open("/var/www/html/delivery/style.css", "r")
 print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
-route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
+route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
 
 if stringoutput != "":
     route_link = genmapslink_web.maps_link(stringoutput, -1)
@@ -62,4 +61,11 @@ if stringoutput != "":
     + "</div>")
     
 else:
-    print(route_solution)
+    print("<div id='containerbox'>" + route_solution + "</div>")
+    if str(user_email) != 'None':
+        credentials = str(open("email_config.txt", "r").read())
+        credentials = credentials.split('\n')
+        send_email.send_error_email(credentials[0], credentials[1], user_email, route_solution)
+
+# add translate
+print("<div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); }</script><script type=\"text/javascript\" src=\"https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>")
