@@ -1,15 +1,9 @@
 from __future__ import print_function
-from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
-import networkx as nx
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-import string
-import random
 import pickle
-import math
 import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
 #import time
 import database
 import client1
