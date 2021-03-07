@@ -53,9 +53,9 @@ while True:
         # Receive the data in small chunks and retransmit it
         received = b''
         while True:
-            data = sock.recv(8)
+            data = sock.recv(256)
             received += data
-            if len(data)<8 or data[-1]==10 :
+            if len(data)<256 or data[-1]==10 :
                 #print('received "%s"' % data)
                 break
         
