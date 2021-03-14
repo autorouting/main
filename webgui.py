@@ -69,3 +69,35 @@ else:
 
 # add translate
 print("<div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); }</script><script type=\"text/javascript\" src=\"https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>")
+
+# feedback form
+print("""
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+    <script>
+        window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+        formbutton("create", {
+            action: "https://formspree.io/f/xdopqwzj",
+            title: "Send in some feedback!", 
+            description: "Comments?",
+            fields: [{
+                name: "name",
+                type: "text",
+                label: "Your Name",
+                required: true,
+            },
+            {
+                name: "email",
+                type: "email",
+                label: "Your Email",
+                required: true
+            },
+            {
+                name: "Message",
+                type: "textarea"
+            },
+            {
+                type: "submit"
+            }]
+        });
+    </script>
+""")
