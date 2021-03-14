@@ -1,3 +1,5 @@
+# THIS IS THE CODE THAT CONSTANTLY RUNS IN THE BACKGROUND ON THE SERVER.
+
 import sys
 import time
 import pickle
