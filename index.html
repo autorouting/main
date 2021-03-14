@@ -39,6 +39,7 @@
                 <source src="routing.mp4"/>
             </video>
         </div>
+        <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
         <script>
 			function toggle(){
 				var content = document.getElementById("content");
@@ -79,6 +80,31 @@
                 document.querySelector("form").style.height = "auto";
                 document.querySelector("form").style.position = "static";
                 document.querySelector("form").style.transform = "scale(1)";
+            });
+            window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+            formbutton("create", {
+                action: "https://formspree.io/f/xdopqwzj",
+                title: "Send in some feedback!", 
+                description: "Comments?",
+                fields: [{
+                    name: "name",
+                    type: "text",
+                    label: "Your Name",
+                    required: true,
+                },
+                {
+                    name: "email",
+                    type: "email",
+                    label: "Your Email",
+                    required: true
+                },
+                {
+                    name: "Message",
+                    type: "textarea"
+                },
+                {
+                    type: "submit"
+                }]
             });
         </script>
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
