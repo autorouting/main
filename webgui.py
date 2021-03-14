@@ -77,8 +77,8 @@ print("""
         window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
         formbutton("create", {
             action: "https://formspree.io/f/xdopqwzj",
-            title: "Send in some feedback!", 
-            description: "Comments?",
+            title: "Comments?", 
+            description: "Send 'em in!",
             fields: [{
                 name: "name",
                 type: "text",
