@@ -11,6 +11,7 @@ import socket
 G = pickle.load(open('graph', 'rb'))
 
 def generate_distance_matrix(coordpairs, G):
+    print(coordpairs)
     # get nodes
     nodes = []
     for coords in coordpairs:
@@ -28,8 +29,6 @@ def generate_distance_matrix(coordpairs, G):
         output_list[i][1] = MAX_DISTANCE
     # output data
     return (output_list)
-
-    import socket
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,17 +52,22 @@ while True:
         # Receive the data in small chunks and retransmit it
         received = b''
         while True:
-            data = sock.recv(256)
+            print('start recieving')
+            data = connection.recv(256)
+            print(data)
             received += data
             if len(data)<256 or data[-1]==10 :
-                #print('received "%s"' % data)
+                print('received "%s"' % data)
                 break
         
         time.sleep(1)
-        #print("send reply")
-        message=generate_distance_matrix(serialize.deserializeServerToCgi(received), G)
+        print("send reply")
+        message=generate_distance_matrix(serialize.deserializeCgiToServer(received), G)
         connection.sendall(serialize.serializeServerToCgi(message))
         print("done sending")
+
+    except Exception as err:
+        print(err)
             
     finally:
         # Clean up the connection

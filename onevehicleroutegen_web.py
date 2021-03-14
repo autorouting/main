@@ -118,7 +118,7 @@ def main(api_key, fakeinputfile):
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = serialize.deserializeCgiToServer(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+        distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
