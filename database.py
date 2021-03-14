@@ -29,7 +29,7 @@ def fetch_placeid(InputAddress):
 
     return myresult
 
-def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
+def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress):
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -42,7 +42,7 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
     mycursor = mydb.cursor()
 
     input_code = "INSERT INTO userinput (inputaddress, placeid) VALUES (%s, %s)"
-    output_code = "INSERT INTO maptable (placeid, coorx, coory, googleaddresses, openmnode) VALUES (%s, %s, %s, %s, %s)"
+    output_code = "INSERT INTO maptable (placeid, coorx, coory, googleaddresses) VALUES (%s, %s, %s, %s)"
 
     try:
         mycursor.execute(input_code, (InputAddress, PlaceID,))
@@ -50,7 +50,7 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress, OSMnode):
         # print("Something went wrong: " + str(err))
         l = "l"
     try:
-        mycursor.execute(output_code, (PlaceID, lon, lat, FormattedAddress, OSMnode))
+        mycursor.execute(output_code, (PlaceID, lon, lat, FormattedAddress))
     except mysql.connector.Error as err:
         # print("Something went wrong: " + str(err))
         l = "l"

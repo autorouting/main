@@ -1,20 +1,15 @@
 from __future__ import print_function
-from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
-import networkx as nx
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-import string
-import random
 import pickle
-import math
 import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
 #import time
 import database
-import distancematrix_web
+import client1
+import serialize
 
-def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
+def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     try:
         geolocator = gmaps.Client(key=api_key)
         testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
@@ -40,7 +35,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executer:
         for address in inputs:
             #print(address)
-            future = executer.submit(geocode_input, api_key, address, geolocator, G)
+            future = executer.submit(geocode_input, api_key, address, geolocator)
             futures.append(future)
     # Wait until all are finished
     concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
@@ -59,7 +54,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, G, max_workers = 2):
             coordpairs.append(None)
     return (faulty_addresses, addresses, coordpairs)
 
-def geocode_input(api_key, input, geolocator, G):
+def geocode_input(api_key, input, geolocator):
     #lessThanOneInt = True
     #time.sleep(1)
     #print(input)
@@ -74,7 +69,7 @@ def geocode_input(api_key, input, geolocator, G):
             location = geolocator.geocode(input)
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
             address = location[0]["formatted_address"]
-            database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address, str(6969))
+            database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
         except:
             faultyAddress = "<B>Address(es): </B>" + str(input)
             #print(faultyAddress)
@@ -120,11 +115,10 @@ def print_solution(manager, routing, solution, addresses):
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
-    G = pickle.load( open("graph", "rb") )
-    faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, G, 4)
+    faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        distancematrix = distancematrix_web.generate_distance_matrix(coordpairs, G)
+        distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
