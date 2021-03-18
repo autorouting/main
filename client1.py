@@ -29,7 +29,7 @@ def senddata(message):
         return received
     
     finally:
-        print('closing socket')
+        #print('closing socket')
         sock.close()
 
 if __name__ == '__main__':
