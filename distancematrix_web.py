@@ -16,8 +16,17 @@ def generate_distance_matrix(coordpairs, G):
     print(coordpairs)
     # get nodes
     nodes = []
+
+    start_time = time.perf_counter()
+    
     for coords in coordpairs:
         nodes.append(ox.get_nearest_node(G, coords))
+
+    end_time = time.perf_counter()
+    print("Nodes generation time: " + str(end_time - start_time))
+
+    start_time = time.perf_counter()
+
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
     output_list = []
@@ -25,11 +34,18 @@ def generate_distance_matrix(coordpairs, G):
     for i in range(len(nodes)):
         output_list.append([])
         for j in range(len(nodes)):
+            calc_start_time = time.perf_counter()
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
+            calc_end_time = time.perf_counter()
+            print("Shortest path calculation time: " + str(calc_end_time - calc_start_time))
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
     # output data
+
+    end_time = time.perf_counter()
+    print("Distance calculation time: " + str(end_time - start_time))
+
     return (output_list)
 
 # Create a TCP/IP socket
@@ -53,6 +69,9 @@ while True:
 
         # Receive the data in small chunks and retransmit it
         received = b''
+
+        start_time = time.perf_counter()
+    
         while True:
             print('start recieving')
             data = connection.recv(256)
@@ -61,12 +80,21 @@ while True:
             if len(data)<256 or data[-1]==10 :
                 print('received "%s"' % data)
                 break
-        
-        time.sleep(1)
+
+        end_time = time.perf_counter()
+        print("Recieve message time: " + str(end_time - start_time))
+            
+        #time.sleep(1)
         print("send reply")
         message=generate_distance_matrix(serialize.deserializeCgiToServer(received), G)
+
+        start_time = time.perf_counter()
+    
         connection.sendall(serialize.serializeServerToCgi(message))
         print("done sending")
+
+        end_time = time.perf_counter()
+        print("Send message time: " + str(end_time - start_time))
 
     except Exception as err:
         print(err)
