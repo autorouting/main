@@ -120,7 +120,7 @@ def main(api_key, fakeinputfile):
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
 
     end_time = time.perf_counter()
-    print("Geocoding split: " + str(end_time - start_time))
+    #print("Geocoding split: " + str(end_time - start_time))
 
     if len(faultyAddress) == 0:
 
@@ -130,7 +130,7 @@ def main(api_key, fakeinputfile):
         distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
 
         end_time = time.perf_counter()
-        print("Distancematrix split: " + str(end_time - start_time))
+        #print("Distancematrix split: " + str(end_time - start_time))
 
         start_time = time.perf_counter()
 
@@ -152,7 +152,7 @@ def main(api_key, fakeinputfile):
             route_solution
 
         end_time = time.perf_counter()
-        print("Optimization split: " + str(end_time - start_time))
+        #print("Optimization split: " + str(end_time - start_time))
 
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
