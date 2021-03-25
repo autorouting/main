@@ -4,7 +4,7 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import pickle
 import concurrent.futures
-#import time
+import time
 import database
 import client1
 import serialize
@@ -114,11 +114,26 @@ def print_solution(manager, routing, solution, addresses):
 
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
-    #start_time = time.perf_counter_ns()
+
+    start_time = time.perf_counter()
+
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
+
+    end_time = time.perf_counter()
+    #print("Geocoding split: " + str(end_time - start_time))
+
     if len(faultyAddress) == 0:
+
+        start_time = time.perf_counter()
+
         # run ORTools
         distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+
+        end_time = time.perf_counter()
+        #print("Distancematrix split: " + str(end_time - start_time))
+
+        start_time = time.perf_counter()
+
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -135,8 +150,10 @@ def main(api_key, fakeinputfile):
         route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
         if solution:
             route_solution
-        #end_time = time.perf_counter_ns()
-        #print((end_time - start_time) / 10 ** 9)
+
+        end_time = time.perf_counter()
+        #print("Optimization split: " + str(end_time - start_time))
+
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
         output = "<h1>Incorrect address(es)</h1>"
