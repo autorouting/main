@@ -44,8 +44,6 @@ input[type=checkbox]:focus {
 }
 
 form, #containerbox {
-    position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
     border-radius: 10px;
     background-color: white;
     padding: 20px;
@@ -55,9 +53,7 @@ form, #containerbox {
 }
 
 #containerbox {
-    position: static!important;
     display: inline-block;
-    transform: unset!important;
 }
 
 table {
