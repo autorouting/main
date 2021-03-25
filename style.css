@@ -54,6 +54,17 @@ form, #containerbox {
     text-align: center;
 }
 
+#containerbox {
+    position: static!important;
+    display: inline-block;
+    transform: unset!important;
+}
+
+table {
+    width: 100%;
+    height: 100%;
+}
+
 form {
     width: 100%;
     height: 100%;
