@@ -29,8 +29,8 @@ def generate_distance_matrix(coordpairs, G):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     """
     output_list = networkx.algorithms.shortest_paths.floyd_warshall_numpy(G, nodelist=nodes, weight='length')
-    output_list = output_list.tolist()
     output_list = output_list[0:len(nodes), 0:len(nodes)]
+    output_list = output_list.tolist()
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
