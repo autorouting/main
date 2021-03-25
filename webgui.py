@@ -24,6 +24,7 @@ form = cgi.FieldStorage()
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
+fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
  
 # create big input string
@@ -42,7 +43,7 @@ stylesheet = open("/var/www/html/delivery/style.css", "r")
 print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
-route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
+route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
 
 if stringoutput != "":
     route_link = genmapslink_web.maps_link(stringoutput, -1)
@@ -54,14 +55,14 @@ if stringoutput != "":
         send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
     
     # Display routes
-    print("<div id='containerbox'>"
+    print("<table><tr><td><center><div id='containerbox'>"
     + route_solution.replace(" -> ", " -><br/>")
     + "<br/><a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
     + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
-    + "</div>")
+    + "</div></center></td></tr></table>")
     
 else:
-    print("<div id='containerbox'>" + route_solution + "</div>")
+    print("<table><tr><td><center><div id='containerbox'>" + route_solution + "</div></center></td></tr></table>")
     if str(user_email) != 'None':
         credentials = str(open("email_config.txt", "r").read())
         credentials = credentials.split('\n')
