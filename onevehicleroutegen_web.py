@@ -97,6 +97,7 @@ def fast_mode_distance_matrix(coordpairs):
     theMatrix = []
     # create 2d array with distances of node i -> node j
     for i in range(len(coordpairs)):
+        theMatrix.append([])
         for j in range(len(coordpairs)):
             theMatrix[i].append(fast_mode_distance(coordpairs[i], coordpairs[j]))
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
