@@ -4,10 +4,11 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import pickle
 import concurrent.futures
-import time
+#import time
 import database
 import client1
 import serialize
+import math
 
 def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     try:
@@ -80,6 +81,30 @@ def geocode_input(api_key, input, geolocator):
     # output data
     return (faultyAddress, address, coords)
 
+def fast_mode_distance(coords1, coords2):
+    DEGREE_TO_RAD = math.pi / 180
+    DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
+    # convert coords to meters
+    lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
+    lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
+    lat1 = coords1[0] * DEGREE_LATITUDE
+    lat2 = coords2[0] * DEGREE_LATITUDE
+    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+
+def fast_mode_distance_matrix(coordpairs):
+    MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+    # initiate vars
+    theMatrix = []
+    # create 2d array with distances of node i -> node j
+    for i in range(len(coordpairs)):
+        for j in range(len(coordpairs)):
+            theMatrix[i].append(fast_mode_distance(coordpairs[i], coordpairs[j]))
+    # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+    for i in range(2, len(theMatrix)):
+        theMatrix[i][1] = MAX_DISTANCE
+    # output data
+    return theMatrix
+
 def create_data_model(distancematrix):
     # initiate ORTools
     data = {}
@@ -112,28 +137,16 @@ def print_solution(manager, routing, solution, addresses):
     #print(plan_output)
     return plan_output, textfileoutput
 
-def main(api_key, fakeinputfile):
+def main(api_key, fakeinputfile, fast_mode_toggled):
     #process addresses and check for faulty ones
-
-    start_time = time.perf_counter()
-
+    #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
-
-    end_time = time.perf_counter()
-    #print("Geocoding split: " + str(end_time - start_time))
-
     if len(faultyAddress) == 0:
-
-        start_time = time.perf_counter()
-
         # run ORTools
-        distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
-
-        end_time = time.perf_counter()
-        #print("Distancematrix split: " + str(end_time - start_time))
-
-        start_time = time.perf_counter()
-
+        if fast_mode_toggled:
+            distancematrix = fast_mode_distance_matrix(coordpairs)
+        else:
+            distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -150,10 +163,8 @@ def main(api_key, fakeinputfile):
         route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
         if solution:
             route_solution
-
-        end_time = time.perf_counter()
-        #print("Optimization split: " + str(end_time - start_time))
-
+        #end_time = time.perf_counter_ns()
+        #print((end_time - start_time) / 10 ** 9)
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
         output = "<h1>Incorrect address(es)</h1>"
@@ -169,4 +180,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read())[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), False)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
