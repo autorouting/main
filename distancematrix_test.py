@@ -13,7 +13,6 @@ import socket
 G = pickle.load(open('graph', 'rb'))
 
 def generate_distance_matrix(coordpairs, G):
-    print(coordpairs)
     # get nodes
     nodes = []
     for coords in coordpairs:
@@ -27,21 +26,36 @@ def generate_distance_matrix(coordpairs, G):
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     """
+    start_time = time.perf_counter()
     theMatrix = nx.algorithms.shortest_paths.floyd_warshall_numpy(G, weight='length')
+    end_time = time.perf_counter()
+    print("Floyd Warshall: " + str(end_time - start_time))
+    start_time = time.perf_counter()
     theMatrix = theMatrix.tolist() # Useable array
+    end_time = time.perf_counter()
+    print("Convert to array: " + str(end_time - start_time))
     # get the positions of the nodes
+    start_time = time.perf_counter()
     all_nodes = []
     for x in G.nodes.keys():
         all_nodes.append(x)
+    end_time = time.perf_counter()
+    print("Put all the nodes in a list: " + str(end_time - start_time))
+    start_time = time.perf_counter()
     nodes_indices = []
     for node in nodes:
         nodes_indices.append(nodes.index(node))
+    end_time = time.perf_counter()
+    print("get node indices: " + str(end_time - start_time))
+    start_time = time.perf_counter()
     # crop the matrix
     output_list = []
     for i in range(len(nodes)):
         output_list.append([])
         for j in range(len(nodes)):
             output_list[i].append(theMatrix[nodes_indices[i]][nodes_indices[j]])
+    end_time = time.perf_counter()
+    print("Crop the matrix: " + str(end_time - start_time))
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
