@@ -20,7 +20,6 @@ def generate_distance_matrix(coordpairs, G):
         nodes.append(ox.get_nearest_node(G, coords))
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
-    output_list = []
     """
     # create 2d array with distances of node i -> node j
     for i in range(len(nodes)):
@@ -28,8 +27,21 @@ def generate_distance_matrix(coordpairs, G):
         for j in range(len(nodes)):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     """
-    output_list = nx.algorithms.shortest_paths.floyd_warshall_numpy(G, nodelist=nodes, weight='length')
-    output_list = output_list.tolist()
+    theMatrix = nx.algorithms.shortest_paths.floyd_warshall_numpy(G, weight='length')
+    theMatrix = theMatrix.tolist() # Useable array
+    # get the positions of the nodes
+    all_nodes = []
+    for x in G.nodes.keys():
+        all_nodes.append(x)
+    nodes_indices = []
+    for node in nodes:
+        nodes_indices.append(nodes.index(node))
+    # crop the matrix
+    output_list = []
+    for i in range(len(nodes)):
+        output_list.append([])
+        for j in range(len(nodes)):
+            output_list[i].append(theMatrix[nodes_indices[i]][nodes_indices[j]])
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
