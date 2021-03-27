@@ -2,7 +2,6 @@ from __future__ import print_function
 import googlemaps as gmaps
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-import pickle
 import concurrent.futures
 #import time
 import database
