@@ -3,7 +3,6 @@
 import sys
 import time
 import pickle
-import distancematrix_web
 import networkx as nx
 import osmnx as ox
 import serialize
@@ -11,6 +10,8 @@ import socket
 
 # Read graph file
 G = pickle.load(open('graph', 'rb'))
+
+coordpairs = [[35.9623853, -79.0666462], [35.9990792, -78.9473769], [35.9671747, -79.0581526], [35.924653, -79.053304], [35.9066678, -79.0225777], [35.8365496, -79.0911263], [35.9115302, -79.0604793], [35.9247045, -79.0536672], [35.932558, -79.0265775], [35.927587, -79.0267177], [35.9109776, -79.0687867], [35.9105367, -79.071545], [35.9130305, -79.0577084], [35.9538476, -79.0662379], [35.8103522, -78.7022034], [36.0293105, -78.8992776], [35.7821681, -78.6392531]]
 
 def generate_distance_matrix(coordpairs, G):
     # get nodes
@@ -27,11 +28,11 @@ def generate_distance_matrix(coordpairs, G):
             output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
     """
     start_time = time.perf_counter()
-    theMatrix = nx.algorithms.shortest_paths.floyd_warshall_numpy(G, weight='length')
+    theMatrix = nx.shortest_path_length(G, weight="length")
     end_time = time.perf_counter()
     print("Floyd Warshall: " + str(end_time - start_time))
     start_time = time.perf_counter()
-    theMatrix = theMatrix.tolist() # Useable array
+    theMatrix = list(theMatrix) # Useable array
     end_time = time.perf_counter()
     print("Convert to array: " + str(end_time - start_time))
     # get the positions of the nodes
@@ -61,6 +62,8 @@ def generate_distance_matrix(coordpairs, G):
         output_list[i][1] = MAX_DISTANCE
     # output data
     return (output_list)
+
+generate_distance_matrix(coordpairs, G)
 
 """
 # Create a TCP/IP socket
