@@ -137,16 +137,13 @@ def print_solution(manager, routing, solution, addresses):
     #print(plan_output)
     return plan_output, textfileoutput
 
-def main(api_key, fakeinputfile, fast_mode_toggled):
+def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
         # run ORTools
-        if fast_mode_toggled:
-            distancematrix = fast_mode_distance_matrix(coordpairs)
-        else:
-            distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+        distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -180,4 +177,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read(), False)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
+    print(main(input("API key:\n "), open("locations.txt", "r").read())[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))

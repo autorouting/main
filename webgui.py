@@ -24,7 +24,6 @@ form = cgi.FieldStorage()
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
-fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
  
 # create big input string
@@ -43,7 +42,7 @@ stylesheet = open("/var/www/html/delivery/style.css", "r")
 print("<style>" + stylesheet.read() + "</style>")
 stylesheet.close()
 
-route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, bool(fast_mode_toggled))
+route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
 
 if stringoutput != "":
     route_link = genmapslink_web.maps_link(stringoutput, -1)
