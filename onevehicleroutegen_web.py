@@ -144,12 +144,12 @@ def main(api_key, fakeinputfile):
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
         # Create a function to run as a process
-        def message(coordpairs: list, ret_dict):
+        def worker(coordpairs: list, ret_dict):
             ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         # Start process
         manager = multiprocessing.Manager()
         returned_values = manager.dict() # Get values coming out of multiprocessing
-        p = multiprocessing.Process(target=message, name="My thing", args=(coordpairs, returned_values))
+        p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
         p.start()
         # Give program 3s to finish processing
         WAIT_TIME = 3
@@ -164,7 +164,7 @@ def main(api_key, fakeinputfile):
         else:
             distancematrix = returned_values["distancematrix"]
         p.join()
-        
+
         # run ORTools
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
