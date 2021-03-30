@@ -163,7 +163,7 @@ def main(api_key, fakeinputfile):
             distancematrix = fast_mode_distance_matrix(coordpairs)
         else:
             distancematrix = returned_values["distancematrix"]
-        p.join()
+        p.join() # Clean up multiprocessing
 
         # run ORTools
         data = create_data_model(distancematrix)
