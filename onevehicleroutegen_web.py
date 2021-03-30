@@ -3,11 +3,12 @@ import googlemaps as gmaps
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import concurrent.futures
-#import time
+import time
 import database
 import client1
 import serialize
 import math
+import multiprocessing
 
 def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     try:
@@ -142,11 +143,28 @@ def main(api_key, fakeinputfile):
     #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
-        # use fastmode if many addresses
-        if len(coordpairs) > 15:
+        # Create a function to run as a process
+        def worker(coordpairs: list, ret_dict):
+            ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+        # Start process
+        manager = multiprocessing.Manager()
+        returned_values = manager.dict() # Get values coming out of multiprocessing
+        p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
+        p.start()
+        # Give program 3s to finish processing
+        MAX_PROCESSING_TIME = 3
+        time.sleep(MAX_PROCESSING_TIME)
+        # If thread is active
+        if p.is_alive():
+            #print("killing process!!!!!!!!!!!!!!!!!")
+            # Terminate
+            p.terminate()
+            # Use fast mode
             distancematrix = fast_mode_distance_matrix(coordpairs)
         else:
-            distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+            distancematrix = returned_values["distancematrix"]
+        p.join() # Clean up multiprocessing
+
         # run ORTools
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
