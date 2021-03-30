@@ -164,6 +164,7 @@ def main(api_key, fakeinputfile):
         else:
             distancematrix = returned_values["distancematrix"]
         p.join()
+        
         # run ORTools
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
