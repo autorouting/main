@@ -152,8 +152,8 @@ def main(api_key, fakeinputfile):
         p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
         p.start()
         # Give program 3s to finish processing
-        WAIT_TIME = 3
-        time.sleep(WAIT_TIME)
+        MAX_PROCESSING_TIME = 3
+        time.sleep(MAX_PROCESSING_TIME)
         # If thread is active
         if p.is_alive():
             #print("killing process!!!!!!!!!!!!!!!!!")
