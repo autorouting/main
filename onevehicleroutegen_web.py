@@ -72,7 +72,7 @@ def geocode_input(api_key, input, geolocator):
             address = location[0]["formatted_address"]
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
         except:
-            faultyAddress = "<B>Addresses: </B>" + str(input)
+            faultyAddress = str(input)
             #print(faultyAddress)
     else:
         out_data = database.fetch_output_data(placeid[0][0])
