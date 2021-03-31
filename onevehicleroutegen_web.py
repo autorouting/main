@@ -72,7 +72,7 @@ def geocode_input(api_key, input, geolocator):
             address = location[0]["formatted_address"]
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
         except:
-            faultyAddress = "<B>Address(es): </B>" + str(input)
+            faultyAddress = "<B>Addresses: </B>" + str(input)
             #print(faultyAddress)
     else:
         out_data = database.fetch_output_data(placeid[0][0])
@@ -186,7 +186,7 @@ def main(api_key, fakeinputfile):
         #print((end_time - start_time) / 10 ** 9)
         return (route_solution.replace("->", " -><br>"), stringoutput)
     else:
-        output = "<h1>Incorrect address(es)</h1>"
+        output = "<h1>Incorrect addresses</h1>"
         for address in faultyAddress:
             #print(address)
             output += "<p style=\"color:Tomato;\">" + address + "</p>"
