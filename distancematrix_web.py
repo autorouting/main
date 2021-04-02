@@ -13,7 +13,6 @@ import socket
 G = pickle.load(open('graph', 'rb'))
 
 def generate_distance_matrix(coordpairs, G):
-    print(coordpairs)
     # get nodes
     nodes = []
 
@@ -29,15 +28,15 @@ def generate_distance_matrix(coordpairs, G):
 
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
-    output_list = []
-    # create 2d array with distances of node i -> node j
+    output_list = [[None for j in range(len(nodes))] for i in range(len(nodes))]
     for i in range(len(nodes)):
-        output_list.append([])
         for j in range(len(nodes)):
-            calc_start_time = time.perf_counter()
-            output_list[i].append(nx.shortest_path_length(G, nodes[i], nodes[j], weight='length'))
-            calc_end_time = time.perf_counter()
-            print("Shortest path calculation time: " + str(calc_end_time - calc_start_time))
+            #assumes i -> j is equal to j -> i
+            if output_list[i][j] == None:
+                output_list[j][i] = nx.shortest_path_length(G, nodes[j], nodes[i], weight='length')
+ 
+            else:
+                output_list[j][i] = output_list[i][j]
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
