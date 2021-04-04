@@ -8,7 +8,7 @@ import networkx as nx
 import osmnx as ox
 import serialize
 import socket
-import multiprocessing
+#import multiprocessing
 
 # Read graph file
 G = pickle.load(open('graph', 'rb'))
