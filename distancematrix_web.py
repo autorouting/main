@@ -3,7 +3,6 @@
 import sys
 import time
 import pickle
-import distancematrix_web
 import networkx as nx
 import osmnx as ox
 import serialize
