@@ -48,12 +48,18 @@
 					content.style.display = "none";
 					collapsible.innerHTML = "Instruction Video";
                     document.querySelector("video").pause();
+                    document.querySelector("video").removeEventListener("blur", function() {
+                        document.querySelector("video").focus();
+                    });
 					
 				} else {
 					content.style.display = "block";
                     collapsible.blur();
 					document.querySelector("video").focus();
                     document.querySelector("video").play();
+                    document.querySelector("video").addEventListener("blur", function() {
+                        document.querySelector("video").focus();
+                    });
                     
                     greywall = document.createElement("div");
                     greywall.style.backgroundColor = "#141414";

@@ -33,7 +33,7 @@ input[type=submit]:hover {
     background-color: #a3a3a3;
 }
 
-input:focus, textarea:focus, a:focus, select:focus, button:focus {
+input:focus, textarea:focus, a:focus, select:focus, button:focus, video:focus {
     outline: none!important;
     box-shadow: 0 0 0 2px rgba(54, 95, 199, 0.5);
 }
