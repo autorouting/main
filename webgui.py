@@ -79,25 +79,34 @@ print("""
             action: "https://formspree.io/f/xdopqwzj",
             title: "Comments?", 
             description: "Send 'em in!",
-            fields: [{
-                name: "name",
-                type: "text",
-                label: "Your Name",
+            fields: [
+            { 
+                type: "email", 
+                label: "Email:",
+                name: "_replyto",
                 required: true,
+                placeholder: "joshswain@example.com"
             },
             {
-                name: "email",
-                type: "email",
-                label: "Your Email",
-                required: true
+                type: "textarea",
+                label: "Message:",
+                name: "message",
+                required: true,
+                placeholder: "I found a bug!",
             },
-            {
-                name: "Message",
-                type: "textarea"
-            },
-            {
-                type: "submit"
-            }]
+            { type: "submit" }      
+            ],
+            styles: {
+                title: {
+                    backgroundColor: "#222222"
+                },
+                description: {
+                    backgroundColor: "#222222"
+                },
+                button: {
+                    backgroundColor: "#222222"
+                }
+            }
         });
     </script>
 """)
