@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 import cgi, cgitb
+from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 import onevehicleroutegen_web
 import genmapslink_web
 import send_email
+import urllib
 import api_key
 import json
 
@@ -48,8 +50,8 @@ if stringoutput != "":
     
     # Display routes
     output_dict["status"] = "made_route"
-    output_dict["route_solution"] = route_solution
-    output_dict["route_link"] = route_link
+    output_dict["route_solution"] = route_solution.replace("\n", "<br />")
+    output_dict["route_link"] = urllib.parse.quote_plus(route_link)
     
 else:
     output_dict["status"] = "invalid_address"
