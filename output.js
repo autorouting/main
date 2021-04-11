@@ -19,10 +19,12 @@ $(document).ready(function() {
                 document.querySelector("#containerbox").appendChild(qrcode);
                 break;
             case ("invalid_address"):
+              console.log(data);
               document.querySelector("#containerbox").innerHTML = "";
               var solution_display = document.createElement("p");
-              solution_display.innerHTML = data.route_solution;
+              solution_display.innerHTML = data.errorMessage;
               document.querySelector("#containerbox").appendChild(solution_display);
+              break;
         }
     });
 });
