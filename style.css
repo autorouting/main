@@ -137,12 +137,12 @@ select {
 }
 
 #progress100 {
-    width: 100%;
+    width: 100px;
     background-color: lightgrey;
   }
   
   #loadingBar {
-    width: 0%;
-    height: 30px;
+    width: 0;
+    height: 10px;
     background: linear-gradient(to right,green,#4CAF50, #a7ed4d);
   }

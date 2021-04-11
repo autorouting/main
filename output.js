@@ -37,7 +37,7 @@ function startLoadingBar() {
       
       else {
         width += (100 - width) ** 1.2 / 90 ** 1.2;
-        elem.style.width = width + "%";
+        elem.style.width = width + "px";
                 
       }
     }
