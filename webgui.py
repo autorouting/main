@@ -3,9 +3,9 @@
 import cgi, cgitb
 import onevehicleroutegen_web
 import genmapslink_web
-import urllib
 import send_email
 import api_key
+import json
 
 """
 Make a file called api_key.py with the following text:
@@ -29,20 +29,13 @@ user_email = form.getvalue("user_email")
 # create big input string
 locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
 
-# change to HTML display
-print("Content-Type: text/html;charset=utf-8")
+# change to text display
+print("Content-Type: application/json;charset=utf-8")
 print()
-print()
-
-# add doc title
-print("<title>Autorouting App (Solutions)</title>")
-
-# add stylesheet
-stylesheet = open("/var/www/html/delivery/style.css", "r")
-print("<style>" + stylesheet.read() + "</style>")
-stylesheet.close()
 
 route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
+
+output_dict = {}
 
 if stringoutput != "":
     route_link = genmapslink_web.maps_link(stringoutput, -1)
@@ -54,59 +47,16 @@ if stringoutput != "":
         send_email.send_email_async(credentials[0], credentials[1], user_email, route_link)
     
     # Display routes
-    print("<table><tr><td><center><div id='containerbox'>"
-    + route_solution.replace(" -> ", " -><br/>")
-    + "<br/><a target='_blank' href=\"" + route_link + "\">Open Google Maps link</a>"
-    + "<br/>Or scan this QR code:<br/><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + urllib.parse.quote_plus(route_link) + "\" />"
-    + "</div></center></td></tr></table>")
+    output_dict["status"] = "made_route"
+    output_dict["route_solution"] = route_solution
+    output_dict["route_link"] = route_link
     
 else:
-    print("<table><tr><td><center><div id='containerbox'>" + route_solution + "</div></center></td></tr></table>")
+    output_dict["status"] = "invalid_address"
+    output_dict["errorMessage"] = route_solution
     if str(user_email) != 'None':
         credentials = str(open("email_config.txt", "r").read())
         credentials = credentials.split('\n')
         send_email.send_error_email(credentials[0], credentials[1], user_email, route_solution)
 
-# add translate
-print("<div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); }</script><script type=\"text/javascript\" src=\"https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>")
-
-# feedback form
-print("""
-    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
-    <script>
-        window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
-        formbutton("create", {
-            action: "https://formspree.io/f/xdopqwzj",
-            title: "Comments?", 
-            description: "Send 'em in!",
-            fields: [
-            { 
-                type: "email", 
-                label: "Email:",
-                name: "_replyto",
-                required: true,
-                placeholder: "joshswain@example.com"
-            },
-            {
-                type: "textarea",
-                label: "Message:",
-                name: "message",
-                required: true,
-                placeholder: "I found a bug!",
-            },
-            { type: "submit" }      
-            ],
-            styles: {
-                title: {
-                    backgroundColor: "#222222"
-                },
-                description: {
-                    backgroundColor: "#222222"
-                },
-                button: {
-                    backgroundColor: "#222222"
-                }
-            }
-        });
-    </script>
-""")
+print(json.dumps(output_dict))
