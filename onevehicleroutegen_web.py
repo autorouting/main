@@ -136,27 +136,30 @@ def main(api_key, fakeinputfile):
     #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
-        # Create a function to run as a process
-        def worker(coordpairs: list, ret_dict):
-            ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
-        # Start process
-        manager = multiprocessing.Manager()
-        returned_values = manager.dict() # Get values coming out of multiprocessing
-        p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
-        p.start()
-        # Give program 3s to finish processing
-        MAX_PROCESSING_TIME = 3
-        time.sleep(MAX_PROCESSING_TIME)
-        # If thread is active
-        if p.is_alive():
-            #print("killing process!!!!!!!!!!!!!!!!!")
-            # Terminate
-            p.terminate()
-            # Use fast mode
-            distancematrix = fast_mode_distance_matrix(coordpairs)
+        if len(addresses) > 10:
+            # Create a function to run as a process
+            def worker(coordpairs: list, ret_dict):
+                ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+            # Start process
+            manager = multiprocessing.Manager()
+            returned_values = manager.dict() # Get values coming out of multiprocessing
+            p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
+            p.start()
+            # Give program 3s to finish processing
+            MAX_PROCESSING_TIME = 3
+            time.sleep(MAX_PROCESSING_TIME)
+            # If thread is active
+            if p.is_alive():
+                #print("killing process!!!!!!!!!!!!!!!!!")
+                # Terminate
+                p.terminate()
+                # Use fast mode
+                distancematrix = fast_mode_distance_matrix(coordpairs)
+            else:
+                distancematrix = returned_values["distancematrix"]
+            p.join() # Clean up multiprocessing
         else:
-            distancematrix = returned_values["distancematrix"]
-        p.join() # Clean up multiprocessing
+            distancematrix = fast_mode_distance_matrix(coordpairs)
 
         # run ORTools
         data = create_data_model(distancematrix)
