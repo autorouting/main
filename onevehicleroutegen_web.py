@@ -20,14 +20,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     inputs = fakeinputfile.split("\n")
     for i in range(len(inputs)):
         inputs[i] = inputs[i].strip() # remove unnecessary spaces or return characters (\r) from input
-    """
-    inputs_first_thread = []
-    inputs_second_thread = []
-    for i in range(len(inputs)):
-        if inputs[i] != "" and inputs[i] != " ":
-            if i%2 == 0:
-                inputs_first_thread.append(inputs[i])
-    """
+
     #print(inputs)
     #print(inputs_first_thread)
     #print(inputs_subthread)
