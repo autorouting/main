@@ -135,3 +135,14 @@ select {
     left: 5px;
     z-index: 100;
 }
+
+#progress100 {
+    width: 100%;
+    background-color: lightgrey;
+  }
+  
+  #loadingBar {
+    width: 0%;
+    height: 30px;
+    background: linear-gradient(to right,green,#4CAF50, #a7ed4d);
+  }
