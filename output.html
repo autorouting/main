@@ -2,9 +2,55 @@
 <html>
     <head>
         <title></title>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
+        <div id="google_translate_element"></div>
+        <table><tr><td><center><div id="containerbox">
+            Loading...
+        </div></center></td></tr></table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="output.js"></script>
+        <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+        <script>
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+            }
+                        window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+            formbutton("create", {
+                action: "https://formspree.io/f/xdopqwzj",
+                title: "Comments?", 
+                description: "Send 'em in!",
+                fields: [
+                { 
+                    type: "email", 
+                    label: "Email:",
+                    name: "_replyto",
+                    required: true,
+                    placeholder: "joshswain@example.com"
+                },
+                {
+                    type: "textarea",
+                    label: "Message:",
+                    name: "message",
+                    required: true,
+                    placeholder: "I found a bug!",
+                },
+                { type: "submit" }      
+                ],
+                styles: {
+                    title: {
+                        backgroundColor: "#222222"
+                    },
+                    description: {
+                        backgroundColor: "#222222"
+                    },
+                    button: {
+                        backgroundColor: "#222222"
+                    }
+                }
+            });
+        </script>
+        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     </body>
 </html>
