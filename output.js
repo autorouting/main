@@ -18,6 +18,11 @@ $(document).ready(function() {
                 qrcode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + data.route_link;
                 document.querySelector("#containerbox").appendChild(qrcode);
                 break;
+            case ("invalid_address"):
+              document.querySelector("#containerbox").innerHTML = "";
+              var solution_display = document.createElement("p");
+              solution_display.innerHTML = data.route_solution;
+              document.querySelector("#containerbox").appendChild(solution_display);
         }
     });
 });
