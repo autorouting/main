@@ -21,3 +21,27 @@ $(document).ready(function() {
         }
     });
 });
+
+var i = 0;
+function startLoadingBar() {
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("loadingBar");
+    var width = 1;
+    var id = setInterval(move, 8);
+    function move() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } 
+      
+      else {
+        width += (100 - width) ** 1.2 / 90 ** 1.2;
+        elem.style.width = width + "%";
+                
+      }
+    }
+  }
+}
+
+startLoadingBar()
