@@ -1,5 +1,5 @@
 import send_email
-user_email = 'jaden.mu@gmail.com'
+user_email = input('What is the recipients email?  ')
 route_link = 'google.com'
 
 if len(str(user_email)) != 0 and user_email != None:
