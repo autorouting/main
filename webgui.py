@@ -51,7 +51,7 @@ if stringoutput != "":
     # Display routes
     output_dict["status"] = "made_route"
     output_dict["route_solution"] = route_solution.replace("\n", "<br />")
-    output_dict["route_link"] = urllib.parse.quote_plus(route_link)
+    output_dict["route_link"] = route_link
     
 else:
     output_dict["status"] = "invalid_address"
