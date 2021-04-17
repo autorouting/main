@@ -7,9 +7,18 @@
     <body>
         <div id="google_translate_element"></div>
         <table><tr><td><center><div id="containerbox">
-            Calculating...
-            <div id="progress100">
-                <div id="loadingBar"></div>
+            <div id="loadingscreen">
+                Calculating...
+                <div id="progress100">
+                    <div id="loadingBar"></div>
+                </div>
+            </div>
+            <div id="finalscreen" style="display: none;">
+                <p id="solution_display"></p>
+                <b><a id="route_link">Open Google Maps link</a></b>
+                <br />
+                Or scan with a mobile device:<br />
+                <img id="qrcode" alt="This was supposed to be a QR code" />
             </div>
         </div></center></td></tr></table>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

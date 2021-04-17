@@ -2,22 +2,16 @@ $(document).ready(function() {
     $.getJSON(location.origin + "/cgi-bin/webgui.py" + location.search, function(data) {
         switch (data.status) {
             case ("made_route"):
-                document.querySelector("#containerbox").innerHTML = "";
+                document.querySelector("#loadingscreen").remove();
+                document.querySelector("#finalscreen").style.display = "block";
                 console.log(data);
-                var solution_display = document.createElement("p");
+                var solution_display = document.getElementById("solution_display");
                 solution_display.innerHTML = data.route_solution;
-                document.querySelector("#containerbox").appendChild(solution_display);
                 var route_link = data.route_link;
-                var a = document.createElement("a");
+                var a = document.getElementById("route_link");
                 a.href = route_link;
-                a.innerText = "Open Google Maps link";
-                a.style.fontWeight = "bold";
-                document.querySelector("#containerbox").appendChild(a);
-                var br = document.createElement("br");
-                document.querySelector("#containerbox").appendChild(br);
-                var qrcode = new Image();
+                var qrcode = document.getElementById("qrcode");
                 qrcode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(route_link);
-                document.querySelector("#containerbox").appendChild(qrcode);
                 break;
             case ("invalid_address"):
               console.log(data);
