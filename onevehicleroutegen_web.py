@@ -69,7 +69,7 @@ def geocode_input(api_key, input, geolocator):
             #print(faultyAddress)
     else:
         out_data = database.fetch_output_data(placeid[0][0])
-        address = out_data[0][2]
+        address = "<td>" + input + "</td><td>" + out_data[0][2] + "</td>"
         coords = [float(out_data[0][0]), float(out_data[0][1])]
     # output data
     return (faultyAddress, address, coords)
@@ -111,19 +111,21 @@ def print_solution(manager, routing, solution, addresses):
     # create ORTools solution
     #print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
-    plan_output = '<B>Route for vehicle 0:</B><br>'
+    plan_output = ""
     route_distance = 0
     textfileoutput = ""
+    count = 0
     while not routing.IsEnd(index):
         if index:
-            plan_output += ' {} ->'.format(addresses[manager.IndexToNode(index)])
-            textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)])
+            plan_output += '<tr><td>{}</td>{}</tr>'.format(count, addresses[manager.IndexToNode(index)])
+            textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)].split("<td>")[2].replace("</td>", ""))
         previous_index = index
         index = solution.Value(routing.NextVar(index))
         if index:
             route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
-    plan_output += ' {}\n'.format(addresses[manager.IndexToNode(index)])
-    textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)])
+        count += 1
+    plan_output += '<tr><td>{}</td>{}</tr>'.format(count, addresses[manager.IndexToNode(index)])
+    textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)].split("<td>")[2].replace("</td>", ""))
     #outputfile = open("route.txt", "w")
     #outputfile.write(textfileoutput)
     #outputfile.close()
