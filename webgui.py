@@ -35,12 +35,12 @@ locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + c
 print("Content-Type: application/json;charset=utf-8")
 print()
 
-route_solution, stringoutput = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
+route_solution, ordered_coords, route_solution_nonformatted = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
 
 output_dict = {}
 
-if stringoutput != "":
-    route_link = genmapslink_web.maps_link(stringoutput, -1)
+if ordered_coords != "":
+    route_link = genmapslink_web.maps_link(" -> ".join(ordered_coords), -1)
     
     # read sender and password from email config file
     if str(user_email) != 'None':
@@ -50,7 +50,8 @@ if stringoutput != "":
     
     # Display routes
     output_dict["status"] = "made_route"
-    output_dict["route_solution"] = route_solution.replace("\n", "<br />")
+    output_dict["route_solution"] = route_solution
+    output_dict["route_solution_nonformatted"] = route_solution_nonformatted
     output_dict["route_link"] = route_link
     
 else:

@@ -6,7 +6,9 @@ $(document).ready(function() {
                 document.querySelector("#finalscreen").style.display = "block";
                 console.log(data);
                 var solution_display = document.getElementById("solution_display");
-                solution_display.innerHTML = data.route_solution;
+                for (var i = 0; i < data.route_solution.length; i++) {
+                  solution_display.innerHTML += `<tr><td>${i + 1}</td><td>${data.route_solution_nonformatted[i]}</td><td>${data.route_solution[i]}</td>`;
+                }
                 var route_link = data.route_link;
                 var a = document.getElementById("route_link");
                 a.href = route_link;
