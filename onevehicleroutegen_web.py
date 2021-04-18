@@ -46,7 +46,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
             faulty_addresses.append(results[i][0]) 
             addresses.append(None)
             coordpairs.append(None)
-    return (faulty_addresses, addresses, coordpairs)
+    return (faulty_addresses, addresses, coordpairs, inputs)
 
 def geocode_input(api_key, input, geolocator):
     #lessThanOneInt = True
@@ -62,17 +62,17 @@ def geocode_input(api_key, input, geolocator):
         try:
             location = geolocator.geocode(input + " NC")
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
-            address = "<td>" + input + "</td><td>" + location[0]["formatted_address"] + "</td>"
+            address = location[0]["formatted_address"]
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
         except:
             faultyAddress = str(input)
             #print(faultyAddress)
     else:
         out_data = database.fetch_output_data(placeid[0][0])
-        address = "<td>" + input + "</td><td>" + out_data[0][2] + "</td>"
+        address = out_data[0][2]
         coords = [float(out_data[0][0]), float(out_data[0][1])]
     # output data
-    return (faultyAddress, address, coords)
+    return (faultyAddress, address, coords, input)
 
 def fast_mode_distance(coords1, coords2):
     DEGREE_TO_RAD = math.pi / 180
@@ -111,32 +111,22 @@ def print_solution(manager, routing, solution, addresses):
     # create ORTools solution
     #print('Objective: {} meters'.format(solution.ObjectiveValue()))
     index = routing.Start(0)
-    plan_output = ""
+    plan_output = []
     route_distance = 0
-    textfileoutput = ""
-    count = 0
     while not routing.IsEnd(index):
         if index:
-            plan_output += '<tr><td>{}</td>{}</tr>'.format(count, addresses[manager.IndexToNode(index)])
-            textfileoutput += ' {} NC ->'.format(addresses[manager.IndexToNode(index)].split("<td>")[1].replace("</td>", ""))
+            plan_output.append(manager.IndexToNode(index))
         previous_index = index
         index = solution.Value(routing.NextVar(index))
         if index:
             route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
-        count += 1
-    plan_output += '<tr><td>{}</td>{}</tr>'.format(count, addresses[manager.IndexToNode(index)])
-    textfileoutput += ' {}\n'.format(addresses[manager.IndexToNode(index)].split("<td>")[2].replace("</td>", ""))
-    #outputfile = open("route.txt", "w")
-    #outputfile.write(textfileoutput)
-    #outputfile.close()
-    #plan_output += '<P><B>Route distance: {} meters</B></P>'.format(route_distance)
-    #print(plan_output)
-    return plan_output, textfileoutput
+    plan_output.append(manager.IndexToNode(index))
+    return plan_output
 
 def main(api_key, fakeinputfile):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
-    faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
+    faultyAddress, addresses, coordpairs, inputs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
         if len(addresses) < 10:
             # Create a function to run as a process
@@ -177,12 +167,19 @@ def main(api_key, fakeinputfile):
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
         search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         solution = routing.SolveWithParameters(search_parameters)
-        route_solution, stringoutput = print_solution(manager, routing, solution, addresses)
+        ordered_indeces = print_solution(manager, routing, solution, addresses)
         if solution:
-            route_solution
+            ordered_indeces
+        route_solution = []
+        route_solution_nonformatted = []
+        ordered_coords = []
+        for x in ordered_indeces:
+            route_solution.append(addresses[x])
+            route_solution_nonformatted.append(inputs[x])
+            ordered_coords.append(str(coordpairs[x][0]) + "," + str(coordpairs[x][1]))
         #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
-        return (route_solution.replace("->", " -><br>"), stringoutput)
+        return (route_solution, ordered_coords, route_solution_nonformatted)
     else:
         output = "<h1>Incorrect addresses</h1>"
         for address in faultyAddress:
@@ -190,7 +187,7 @@ def main(api_key, fakeinputfile):
             output += "<p style=\"color:Tomato;\">" + address + "</p>"
             #print('\n' + output)
         #print(1)
-        return(output, "")
+        return(output, "", "yee")
 
 if __name__ == '__main__':
     # run the main script
