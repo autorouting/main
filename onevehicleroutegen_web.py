@@ -62,7 +62,7 @@ def geocode_input(api_key, input, geolocator):
         try:
             location = geolocator.geocode(input + " NC")
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
-            address = location[0]["formatted_address"]
+            address = "<td>" + input + "</td><td>" + location[0]["formatted_address"] + "</td>"
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
         except:
             faultyAddress = str(input)
@@ -118,7 +118,7 @@ def print_solution(manager, routing, solution, addresses):
     while not routing.IsEnd(index):
         if index:
             plan_output += '<tr><td>{}</td>{}</tr>'.format(count, addresses[manager.IndexToNode(index)])
-            textfileoutput += ' {} ->'.format(addresses[manager.IndexToNode(index)].split("<td>")[2].replace("</td>", ""))
+            textfileoutput += ' {} NC ->'.format(addresses[manager.IndexToNode(index)].split("<td>")[1].replace("</td>", ""))
         previous_index = index
         index = solution.Value(routing.NextVar(index))
         if index:
