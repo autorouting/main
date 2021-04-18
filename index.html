@@ -8,31 +8,27 @@
     <body>
         <div id="google_translate_element"></div>
         <form action="output.html" target="_blank">
-            <div id="beforeflex">
-                <toptitle><b>Autorouting</b></toptitle>
-                <br />
-                Research Triangle Area, NC
-                <br />
-                <br />
-                <button type="button" id="collapsible" onclick="toggle();">Instruction Video</button>
-                <br /><a href="usageguide.pdf">Or read instructions</a>
-                <br />
-                <p>To avoid confusion, please specify the city and state of every address.</p>
-                <br />
-                <!--<label for="api_key">Google Geocoding API key</label>
-                <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
-                <label for="restaurant">Starting address</label>
-                <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-                <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
-            </div>
-            <textarea name="consumer" id="consumer" rows="5" placeholder="Intermediate addresses" required></textarea>
-            <div id="afterflex">
-                <label for="driver">Ending address</label>
-                <input type="text" id="driver" name="driver" placeholder="Ending address" required>
-                <label for="user_email">Your Email (Optional)  We'll use this to send you your results.</label>
-                <input type="email" id="user_email" name="user_email" placeholder="me@example.com">
-                <input type="submit" value="Launch program">
-            </div>
+            <toptitle><b>Autorouting</b></toptitle>
+            <br />
+            Research Triangle Area, NC
+            <br />
+            <br />
+            <button type="button" id="collapsible" onclick="toggle();">Instruction Video</button>
+            <br /><a href="usageguide.pdf">Or read instructions</a>
+            <br />
+            <p>To avoid confusion, please specify the city and state of every address.</p>
+            <br />
+            <!--<label for="api_key">Google Geocoding API key</label>
+            <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
+            <label for="restaurant">Starting address</label>
+            <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
+            <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
+            <textarea name="consumer" id="consumer" placeholder="Intermediate addresses" required></textarea>
+            <label for="driver">Ending address</label>
+            <input type="text" id="driver" name="driver" placeholder="Ending address" required>
+            <label for="user_email">Your Email (Optional)  We'll use this to send you your results.</label>
+            <input type="email" id="user_email" name="user_email" placeholder="me@example.com">
+            <input type="submit" value="Launch program">
         </form>
         <div id="content">
             <br />
@@ -80,23 +76,10 @@
                 this.value = this.value.split("\n").slice(0, 50).join("\n");
             };
             window.addEventListener("load", function() {
-                document.querySelector("textarea").style.height = document.querySelector("textarea").getBoundingClientRect().height.toString() + "px";
-                document.querySelector("form").style.display = "block";
-                document.querySelector("form").style.height = "auto";
-                document.querySelector("form").style.position = "static";
-                document.querySelector("form").style.transform = "scale(1)";
-
-                var parentElement = document.querySelector("#beforeflex");
-                while (parentElement.childNodes.length) {
-                    parentElement.before(parentElement.childNodes[0]);
+                document.querySelector("textarea").style.height = "0";
+                while (document.body.scrollHeight < window.innerHeight - 15) {
+                    document.querySelector("textarea").style.height = (parseFloat(document.querySelector("textarea").style.height) + 1).toString() + "px";
                 }
-                parentElement.remove();
-
-                var parentElement = document.querySelector("#afterflex");
-                while (parentElement.childNodes.length) {
-                    parentElement.before(parentElement.childNodes[0]);
-                }
-                parentElement.remove();
             });
         </script>
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
