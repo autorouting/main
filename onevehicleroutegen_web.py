@@ -60,7 +60,7 @@ def geocode_input(api_key, input, geolocator):
     placeid = database.fetch_placeid(input)
     if len(placeid) == 0:
         try:
-            location = geolocator.geocode(input)
+            location = geolocator.geocode(input + " NC")
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
             address = location[0]["formatted_address"]
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
@@ -138,7 +138,7 @@ def main(api_key, fakeinputfile):
     #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
-        if len(addresses) > 10:
+        if len(addresses) < 10:
             # Create a function to run as a process
             def worker(coordpairs: list, ret_dict):
                 ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
