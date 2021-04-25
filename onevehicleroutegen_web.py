@@ -123,37 +123,16 @@ def print_solution(manager, routing, solution, addresses):
     plan_output.append(manager.IndexToNode(index))
     return plan_output
 
-def main(api_key, fakeinputfile):
+def main(api_key, fakeinputfile, fast_mode_toggled):
     #process addresses and check for faulty ones
     #start_time = time.perf_counter_ns()
     faultyAddress, addresses, coordpairs, inputs = parallel_geocode_inputs(api_key, fakeinputfile, 4)
     if len(faultyAddress) == 0:
-        if len(addresses) < 10:
-            # Create a function to run as a process
-            def worker(coordpairs: list, ret_dict):
-                ret_dict["distancematrix"] = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
-            # Start process
-            manager = multiprocessing.Manager()
-            returned_values = manager.dict() # Get values coming out of multiprocessing
-            p = multiprocessing.Process(target=worker, name="My thing", args=(coordpairs, returned_values))
-            p.start()
-            # Give program 3s to finish processing
-            MAX_PROCESSING_TIME = 3
-            time.sleep(MAX_PROCESSING_TIME)
-            # If thread is active
-            if p.is_alive():
-                #print("killing process!!!!!!!!!!!!!!!!!")
-                # Terminate
-                p.terminate()
-                # Use fast mode
-                distancematrix = fast_mode_distance_matrix(coordpairs)
-            else:
-                distancematrix = returned_values["distancematrix"]
-            p.join() # Clean up multiprocessing
-        else:
-            distancematrix = fast_mode_distance_matrix(coordpairs)
-
         # run ORTools
+        if fast_mode_toggled:
+            distancematrix = fast_mode_distance_matrix(coordpairs)
+        else:
+            distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
@@ -194,4 +173,4 @@ if __name__ == '__main__':
     # locations.txt: line 1: destination?
     # locations.txt: line 2: origin?
     # locations.txt: line 3-: intermediate addresses
-    print(main(input("API key:\n "), open("locations.txt", "r").read())[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
+    print(main(input("API key:\n "), open("locations.txt", "r").read(), False)[0].replace("<br>", "\n").replace("<B>", "\n\t").replace("</B>", "\t").replace("<h1>", "\n\t").replace("</h1>", "\t\n").replace("<p style=\"color:Tomato;\">", " ").replace("</p>", "\t\n"))
