@@ -26,6 +26,7 @@ form = cgi.FieldStorage()
 driver_address = form.getvalue("driver")
 restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
+fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
  
 # create big input string
@@ -35,7 +36,7 @@ locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + c
 print("Content-Type: application/json;charset=utf-8")
 print()
 
-route_solution, ordered_coords, route_solution_nonformatted = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent)
+route_solution, ordered_coords, route_solution_nonformatted = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
 
 output_dict = {}
 

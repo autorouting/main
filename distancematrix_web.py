@@ -38,8 +38,6 @@ def generate_distance_matrix(coordpairs, G):
             else:
                 output_list[j][i] = output_list[i][j]
             
-            if time.perf_counter() - start_time >= 3.14: # Terminate if processing time over 3.14 seconds
-                raise Exception("too much time; ending process")
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
