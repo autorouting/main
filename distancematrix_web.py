@@ -31,13 +31,8 @@ def generate_distance_matrix(coordpairs, G):
     output_list = [[None for j in range(len(nodes))] for i in range(len(nodes))]
     for i in range(len(nodes)):
         for j in range(len(nodes)):
-            #assumes i -> j is equal to j -> i
-            if output_list[i][j] == None:
-                output_list[j][i] = nx.shortest_path_length(G, nodes[j], nodes[i], weight='length')
- 
-            else:
-                output_list[j][i] = output_list[i][j]
-            
+            output_list[i][j] = nx.shortest_path_length(G, nodes[i], nodes[j], weight='length')
+
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
