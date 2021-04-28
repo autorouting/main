@@ -7,7 +7,7 @@ import networkx as nx
 import osmnx as ox
 import serialize
 import socket
-#import multiprocessing
+import concurrent.futures
 
 # Read graph file
 G = pickle.load(open('graph', 'rb'))
@@ -29,9 +29,19 @@ def generate_distance_matrix(coordpairs, G):
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
     # initiate vars
     output_list = [[None for j in range(len(nodes))] for i in range(len(nodes))]
+
+    # Execute a function to fill each cell; store workers in an array so as to check when all are done
+    def fill_cell(G, nodes, i, j):
+        nonlocal output_list
+        output_list[i][j] = nx.shortest_path_length(G, nodes[i], nodes[j], weight='length')
+        return "done"
+    workers = []
+    executer = concurrent.futures.ThreadPoolExecutor(3)
     for i in range(len(nodes)):
         for j in range(len(nodes)):
-            output_list[i][j] = nx.shortest_path_length(G, nodes[i], nodes[j], weight='length')
+            workers.append(executer.submit(fill_cell, G, nodes, i, j))
+
+    concurrent.futures.wait(workers, return_when=concurrent.futures.ALL_COMPLETED)
 
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
