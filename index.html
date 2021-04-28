@@ -22,7 +22,7 @@
             <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
             <label for="restaurant">Starting address</label>
             <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required>
-            <label for="intermediate">Intermediate addresses (one address per line, fifty lines max)</label>
+            <label for="intermediate">Intermediate addresses (one address per line, 18 lines max)</label>
             <textarea name="consumer" id="consumer" placeholder="Intermediate addresses" required></textarea>
             <label for="driver">Ending address</label>
             <input type="text" id="driver" name="driver" placeholder="Ending address" required>
@@ -73,9 +73,9 @@
                     greywall.addEventListener("click", function() { toggle(); this.remove(); });
 				}
 			}
-            document.getElementsByTagName("textarea")[0].onkeyup = function() {
-                this.value = this.value.split("\n").slice(0, 50).join("\n");
-            };
+            document.getElementsByTagName("textarea")[0].addEventListener("keyup", function() {
+                this.value = this.value.split("\n").slice(0, 18).join("\n");
+            });
             window.addEventListener("load", function() {
                 document.querySelector("textarea").style.height = "0";
                 while (document.body.scrollHeight < window.innerHeight - 15) {
