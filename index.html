@@ -14,7 +14,7 @@
             <br />
             <br />
             <button type="button" id="collapsible" onclick="toggle();">Instruction Video</button>
-            <br /><a href="usageguide.pdf" target="_blank">Or read instructions</a>
+            <br /><a id="pdflink" href="usageguide.pdf" target="_blank">Or read instructions</a>
             <br />
             <p>To avoid confusion, please specify the city and state of every address.</p>
             <br />
@@ -84,6 +84,7 @@
                 while (document.body.scrollHeight < window.innerHeight - 15) {
                     document.querySelector("textarea").style.height = (parseFloat(document.querySelector("textarea").style.height) + 1).toString() + "px";
                 }
+                document.querySelector("#pdflink").href = `https://drive.google.com/viewerng/viewer?url=${encodeURIComponent(location.origin + "/delivery/usageguide.pdf")}`;
             });
         </script>
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
