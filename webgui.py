@@ -54,6 +54,10 @@ if ordered_coords != "":
     output_dict["route_solution"] = route_solution
     output_dict["route_solution_nonformatted"] = route_solution_nonformatted
     output_dict["route_link"] = route_link
+
+    # Dev data
+    output_dict["dev_data"] = {}
+    output_dict["dev_data"]["unordered_maps_link"] = genmapslink_web.maps_link(restaurant_address + "\n" + consumer_addresses + "\n" + driver_address).replace("\n", " -> ")
     
 else:
     output_dict["status"] = "invalid_address"
