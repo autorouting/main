@@ -22,7 +22,7 @@
             <input type="password" id="api_key" name="api_key" placeholder="API key" required>-->
             <label for="restaurant" title="The starting point of the route">Starting address</label>
             <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required  title="The starting point of the route" />
-            <label for="intermediate" title="All of the addresses to cover in between the beginning and the end">Intermediate addresses (one address per line, 18 lines max)</label>
+            <label for="intermediate" title="All of the addresses to cover in between the beginning and the end">Intermediate addresses (one address per line, 21 lines max)</label>
             <textarea name="consumer" id="consumer" placeholder="Intermediate addresses" required title="All of the addresses to cover in between the beginning and the end"></textarea>
             <label for="driver" title="The place for the driver to return to">Ending address</label>
             <input type="text" id="driver" name="driver" placeholder="Ending address" required title="The place for the driver to return to" />
@@ -77,7 +77,7 @@
 				}
 			}
             document.getElementsByTagName("textarea")[0].addEventListener("keyup", function() {
-                this.value = this.value.split("\n").slice(0, 18).join("\n");
+                this.value = this.value.split("\n").slice(0, 21).join("\n");
             });
             window.addEventListener("load", function() {
                 document.querySelector("textarea").style.height = "0";
