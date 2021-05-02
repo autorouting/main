@@ -61,7 +61,7 @@ def geocode_input(api_key, input, geolocator):
     placeid = database.fetch_placeid(input)
     if len(placeid) == 0:
         try:
-            location = geolocator.geocode(input + " NC")
+            location = geolocator.geocode(input + " NC") # IMPORTANT: NC must be changed for usage in different states.
             coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
             address = location[0]["formatted_address"]
             database.insert_data(input, location[0]['place_id'], coords[0], coords[1], address)
