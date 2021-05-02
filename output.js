@@ -4,7 +4,7 @@ $(document).ready(function() {
             case ("made_route"):
                 document.querySelector("#loadingscreen").remove();
                 document.querySelector("#finalscreen").style.display = "block";
-                console.log(data);
+                //console.log(data);
                 var solution_display = document.getElementById("solution_display");
                 for (var i = 0; i < data.route_solution.length; i++) {
                   solution_display.innerHTML += `<tr><td>${i + 1}</td><td>${data.route_solution_nonformatted[i]}</td><td>${data.route_solution[i]}</td>`;
@@ -14,6 +14,7 @@ $(document).ready(function() {
                 a.href = route_link;
                 var qrcode = document.getElementById("qrcode");
                 qrcode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(route_link);
+                console.log("Maps link for before optimization:\n\t" + data.dev_data.unordered_maps_link)
                 break;
             case ("invalid_address"):
               console.log(data);
