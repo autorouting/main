@@ -9,6 +9,7 @@ import client1
 import serialize
 import math
 import multiprocessing
+import re
 
 def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     try:
@@ -17,7 +18,7 @@ def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     except:
         raise ValueError("The following API key may be problematic: " + api_key)
     # get inputs
-    inputs = fakeinputfile.split("\n")
+    inputs = re.split(r"[\n\r]+", fakeinputfile)
     for i in range(len(inputs)):
         inputs[i] = inputs[i].strip() # remove unnecessary spaces or return characters (\r) from input
 
