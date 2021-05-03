@@ -1,5 +1,5 @@
 import pickle
 import osmnx as ox
-G = ox.graph_from_place(input("place of which to generate graph (ex.: Orange County, NC, USA):\n "), network_type='drive')
-pickle.dump(G, open("graph", "wb"))
-print("process completed")
+point = (35.8972385, -78.8627028)
+streets_graph = ox.graph.graph_from_point(point, dist=80000, network_type='drive', simplify=False)
+pickle.dump(streets_graph, open("graph", "wb"))
