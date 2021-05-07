@@ -159,7 +159,7 @@ def main(api_key, fakeinputfile, fast_mode_toggled):
             ordered_coords.append(str(coordpairs[x][0]) + "," + str(coordpairs[x][1]))
         #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
-        return (route_solution, ordered_coords, route_solution_nonformatted)
+        return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
     else:
         output = "<h1>Incorrect addresses</h1>"
         for address in faultyAddress:
