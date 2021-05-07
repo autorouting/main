@@ -7,7 +7,7 @@ $(document).ready(function() {
                 //console.log(data);
                 var solution_display = document.getElementById("solution_display");
                 for (var i = 0; i < data.route_solution.length; i++) {
-                  solution_display.innerHTML += `<tr><td>${data.number_sequence[i]}</td><td>${data.route_solution_nonformatted[i]}</td><td>${data.route_solution[i]}</td>`;
+                  solution_display.innerHTML += `<tr><td>${(data.number_sequence[i] == 0)?data.number_sequence.length:data.number_sequence[i]}</td><td>${data.route_solution_nonformatted[i]}</td><td>${data.route_solution[i]}</td>`;
                 }
                 var route_link = data.route_link;
                 var a = document.getElementById("route_link");
