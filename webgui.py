@@ -36,7 +36,7 @@ locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + c
 print("Content-Type: application/json;charset=utf-8")
 print()
 
-route_solution, ordered_coords, route_solution_nonformatted = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
+route_solution, ordered_coords, route_solution_nonformatted, numsequence = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
 
 output_dict = {}
 
@@ -54,6 +54,7 @@ if ordered_coords != "":
     output_dict["route_solution"] = route_solution
     output_dict["route_solution_nonformatted"] = route_solution_nonformatted
     output_dict["route_link"] = route_link
+    output_dict["number_sequence"] = numsequence
 
     # Dev data
     output_dict["dev_data"] = {}
