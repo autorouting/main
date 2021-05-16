@@ -1,4 +1,4 @@
-# Autorouting
+<h1 align="center">Autorouting</h1>
 
 The official codebase for Autorouting
 
@@ -6,4 +6,4 @@ Autorouting is an application to help generate the optimal route from a list of 
 
 [Access our web application here](http://www.techworldconnect.com/delivery/)
 
-Our codebase is written in Python.  To setup yourself, look at the setup folder and also check our wiki.
+Our codebase is written in Python.  To setup yourself, look at the setup folder and also check our [wiki](https://github.com/autorouting/main/wiki/Instructions).
