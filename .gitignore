@@ -10,3 +10,4 @@ cgi-bin/database_config.json
 
 # Self-install
 cgi-bin/graph
+local_app/graph
