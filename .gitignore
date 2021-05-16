@@ -7,3 +7,7 @@
 cgi-bin/api_key.py
 cgi-bin/email_config.txt
 cgi-bin/database_config.json
+
+# Self-install
+cgi-bin/graph
+local_app/graph
