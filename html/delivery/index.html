@@ -23,7 +23,7 @@
             <label for="restaurant" title="The starting point of the route">Starting address</label>
             <input type="text" id="restaurant" name="restaurant" placeholder="Starting address" required  title="The starting point of the route" />
             <label for="intermediate" title="All of the addresses to cover in between the beginning and the end">Intermediate addresses (one address per line, 21 lines max)</label>
-            <textarea name="consumer" id="consumer" placeholder="Intermediate addresses" required title="All of the addresses to cover in between the beginning and the end"></textarea>
+            <textarea name="consumer" id="consumer" placeholder="Intermediate addresses" required title="All of the addresses to cover in between the beginning and the end" rows="5"></textarea>
             <label for="driver" title="The place for the driver to return to">Ending address</label>
             <input type="text" id="driver" name="driver" placeholder="Ending address" required title="The place for the driver to return to" />
             <label for="user_email" title="We'll use this to send you your results.">Your Email (Optional)</label>
@@ -80,8 +80,8 @@
                 this.value = this.value.split("\n").slice(0, 21).join("\n");
             });
             window.addEventListener("load", function() {
-                document.querySelector("textarea").style.height = "0";
-                while (document.body.scrollHeight < window.innerHeight - 15) {
+                document.querySelector("textarea").style.height = document.querySelector("textarea").getBoundingClientRect().height.toString() + "px";
+                while (document.querySelector("form").getBoundingClientRect().height < window.innerHeight - 15) {
                     document.querySelector("textarea").style.height = (parseFloat(document.querySelector("textarea").style.height) + 1).toString() + "px";
                 }
                 document.querySelector("#pdflink").href = `https://drive.google.com/viewerng/viewer?url=${encodeURIComponent(location.origin + "/delivery/usageguide.pdf")}`;
