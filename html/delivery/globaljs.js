@@ -9,9 +9,9 @@ formbutton("create", {
     fields: [
     { 
         type: "email", 
-        label: "Email:",
+        label: "Your Email (Optional):",
         name: "_replyto",
-        required: true,
+        required: false,
         placeholder: "joshswain@example.com"
     },
     {
