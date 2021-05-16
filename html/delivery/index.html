@@ -36,9 +36,8 @@
         </form>
         <div id="content">
             <br />
-            <video class="tab" height="500px" controls>Your browser does not support the &lt;video&gt; tag.
-                <source src="routing.mp4"/>
-            </video>
+            <!-- Replace with own Youtube embed if needed -->
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/g239pxCRPaM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
         <script src="globaljs.js"></script>
@@ -49,19 +48,11 @@
 				if (content.style.display === "block") {
 					content.style.display = "none";
 					collapsible.innerHTML = "Instruction Video";
-                    document.querySelector("video").pause();
-                    document.querySelector("video").removeEventListener("blur", function() {
-                        document.querySelector("video").focus();
-                    });
+                    content.innerHTML = content.innerHTML; // reset state
 					
 				} else {
 					content.style.display = "block";
                     collapsible.blur();
-					document.querySelector("video").focus();
-                    document.querySelector("video").play();
-                    document.querySelector("video").addEventListener("blur", function() {
-                        document.querySelector("video").focus();
-                    });
                     
                     var greywall = document.createElement("div");
                     greywall.style.backgroundColor = "#141414";
