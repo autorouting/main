@@ -58,7 +58,10 @@ if ordered_coords != "":
 
     # Dev data
     output_dict["dev_data"] = {}
-    output_dict["dev_data"]["unordered_maps_link"] = genmapslink_web.maps_link(restaurant_address + "\n" + consumer_addresses + "\n" + driver_address).replace("\n", " -> ")
+    unordered = [None for i in range(len(numsequence))]
+    for i in range(len(numsequence)):
+        unordered[numsequence[i] - 1] = ordered_coords[i]
+    output_dict["dev_data"]["unordered_maps_link"] = genmapslink_web.maps_link(" -> ".join(unordered)).replace("\n", " -> ")
     
 else:
     output_dict["status"] = "invalid_address"
