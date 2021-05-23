@@ -40,13 +40,17 @@ def fetch_placeid(InputAddress):
 
 def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress):
     """
-    Fetch corresponding placeid from database
+    Add row to data base
 
     Parameters:
     InputAddress (string): The address inputed by user.
+    PlaceID (string): The placeid address inputed by user.
+    lon (integer): The longitude of the address.
+    lat (integer): The latitude of the address.
+    FormattedAddress (string): The address produced by google maps.
 
     Returns:
-    string: The corresponding id for address in databse.
+    No return.
     """
     config = json.load(open("database_config.json"))
 
@@ -80,10 +84,10 @@ def fetch_output_data(PlaceID):
     Fetch corresponding coordinate and address.
 
     Parameters:
-    InputAddress (string): The address inputed by user.
+    placeid (string): The placeid of the address inputed by user.
 
     Returns:
-    string: The corresponding id for address in databse.
+    list: The corresponding longitude, latitude, and address from google maps
     """
     config = json.load(open("database_config.json"))
 
