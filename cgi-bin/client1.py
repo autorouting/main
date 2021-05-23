@@ -2,7 +2,15 @@ import socket
 import sys
 
 def senddata(message):
+    """
+    Send message to matrix server socket
 
+    Parameters:
+    message (string): The string sent to server.
+
+    Returns:
+    binary string: The response from server in binary string.
+    """
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

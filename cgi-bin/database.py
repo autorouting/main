@@ -12,6 +12,15 @@ CREATE THE FOLLOWING database_config.json
 """
 
 def fetch_placeid(InputAddress):
+    """
+    Fetch corresponding placeid from database
+
+    Parameters:
+    InputAddress (string): The address inputed by user.
+
+    Returns:
+    string: The corresponding id for address in databse.
+    """
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -30,6 +39,15 @@ def fetch_placeid(InputAddress):
     return myresult
 
 def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress):
+    """
+    Fetch corresponding placeid from database
+
+    Parameters:
+    InputAddress (string): The address inputed by user.
+
+    Returns:
+    string: The corresponding id for address in databse.
+    """
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -58,6 +76,15 @@ def insert_data(InputAddress, PlaceID, lon, lat, FormattedAddress):
     mydb.commit()
 
 def fetch_output_data(PlaceID):
+    """
+    Fetch corresponding coordinate and address.
+
+    Parameters:
+    InputAddress (string): The address inputed by user.
+
+    Returns:
+    string: The corresponding id for address in databse.
+    """
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(
@@ -76,6 +103,15 @@ def fetch_output_data(PlaceID):
     return myresult
 
 def purge_data(no_of_year):
+    """
+    Purge data in database
+
+    Parameters:
+    no_of_year (integer): How many years worth of data to delete.
+
+    Returns:
+    No return
+    """
     config = json.load(open("database_config.json"))
 
     mydb = mysql.connector.connect(

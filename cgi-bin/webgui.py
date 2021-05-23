@@ -12,6 +12,8 @@ import json
 """
 Make a file called api_key.py with the following text:
 google_geocoding_api = "API_KEY"
+
+Calls functions of other files to generate and display optimal route
 """
 
 cgitb.enable(False, "/var/log/httpd/error_log") # Write errors to error log but don't display to users. Replace second argument with your error log file.
