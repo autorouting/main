@@ -113,10 +113,6 @@ def launch():
 root = Tk()
 root.title("Autorouting app")
 
-#pad empty space between objects
-labelSpace = Label(root, pady=3)
-labelSpace.pack()
-
 label2 = Label(root, text="Depot:")
 label2.pack()
 
