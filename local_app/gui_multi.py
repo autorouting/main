@@ -123,7 +123,7 @@ label2.pack()
 restaurantaddressbox = Entry(root, width=50)
 restaurantaddressbox.pack()
 
-label4 = Label(root, text="Consumer addresses:")
+label4 = Label(root, text="Intermediate addresses:")
 label4.pack()
 
 consumeraddressbox = ScrolledText(root, width=50,height=8)
@@ -139,7 +139,7 @@ no = Button(root, text="No", command=no)
 no.pack()
 
 
-label3 = Label(root, text="Driver addresses:")
+label3 = Label(root, text="Ending addresses:")
 label3.pack()
 
 driveraddressbox = ScrolledText(root, width=50, height = 8)
