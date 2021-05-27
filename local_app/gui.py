@@ -63,7 +63,11 @@ def launch():
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
 
-bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")
+# Github link
+def open_repo(useless_parameter):
+    webbrowser.open_new_tab("https://github.com/autorouting/main")
+bottomtext = Label(root, text="Fork us on Github!", fg="blue", cursor="hand2")
 bottomtext.pack()
+bottomtext.bind("<Button-1>", open_repo)
 
 root.mainloop() # required for Tkinter
