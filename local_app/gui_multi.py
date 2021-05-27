@@ -30,7 +30,7 @@ def no():
     
 #Verify if textboxes on the gui are empty or not
 def validate():
-    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0 or len(apikeybox.get())== 0: return False
+    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
     else: return True
 
 #Launch routing 
