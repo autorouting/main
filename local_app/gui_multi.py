@@ -129,14 +129,8 @@ label4.pack()
 consumeraddressbox = ScrolledText(root, width=50,height=8)
 consumeraddressbox.pack()
 
-label2 = Label(root, text="Use depot as endpoints for route?  After you click, follow the instructions that will appear at the bottom of your screen")
+label2 = Label(root, text="If you would like to end all routes at the starting address, \nenter number of drivers and leave ending addresses blank.\nOtherwise, enter ending addresses and leave number of drivers blank.")
 label2.pack()
-
-yes = Button(root, text="Yes", command=yes)
-yes.pack()
-
-no = Button(root, text="No", command=no)
-no.pack()
 
 
 label3 = Label(root, text="Ending addresses:")
