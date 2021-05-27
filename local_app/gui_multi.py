@@ -113,7 +113,7 @@ def launch():
 root = Tk()
 root.title("Autorouting app")
 
-label2 = Label(root, text="Depot:")
+label2 = Label(root, text="Starting address:")
 label2.pack()
 
 restaurantaddressbox = Entry(root, width=50)
@@ -135,7 +135,7 @@ label3.pack()
 driveraddressbox = ScrolledText(root, width=50, height = 8)
 driveraddressbox.pack()
 
-label5 = Label(root, text="Number of drivers")
+label5 = Label(root, text="Number of drivers:")
 label5.pack()
 num_drivers = Entry(root, width=50)
 num_drivers.pack()
