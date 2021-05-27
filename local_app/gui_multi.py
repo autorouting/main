@@ -8,6 +8,7 @@ import webbrowser
 import genmapslink
 from functools import partial
 import validator
+import api_key
 # [END import]
 
 #How to setup API Key button
@@ -18,18 +19,18 @@ def yes():
     global endpoint
     global label6
     endpoint = no
-    label6 = Label(root, text="Please input number of drivers and leave driver addresses blank")
+    label6 = Label(root, text="Please input number of drivers and leave ending addresses blank")
     label6.pack()
 def no():
     global endpoint
     global label6
     endpoint = yes
-    label6 = Label(root, text="Please input driver addresses and leave number of drivers blank")
+    label6 = Label(root, text="Please input ending addresses and leave number of drivers blank")
     label6.pack()
-	
+    
 #Verify if textboxes on the gui are empty or not
 def validate():
-    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0 or len(apikeybox.get())== 0: return False
+    if restaurantaddressbox.get()=="" or len(driveraddressbox.get("1.0", END)) == 0 or len(consumeraddressbox.get("1.0", END))== 0: return False
     else: return True
 
 #Launch routing 
@@ -46,13 +47,13 @@ def launch():
     if validate():
         global activation
         activation = [True]
-        if endpoint == yes:
+        if len(driveraddressbox.get("1.0", END).strip()) > 0:
             driveroutput = driveraddressbox.get("1.0", END)
 
         newroot = Tk()
         newroot.title("Solution")
 
-        if endpoint == no:
+        if len(driveraddressbox.get("1.0", END).strip()) <= 0:
             driveroutput = ''
             for i in range(int(num_drivers.get())):
                 driveroutput = driveroutput + restaurantaddressbox.get() + "\n"
@@ -64,7 +65,7 @@ def launch():
         with open("driver_home_addresses.txt", "w") as drivertextfile: drivertextfile.write(driveroutput)
         
         #save api key
-        apikey = apikeybox.get()
+        apikey = api_key.google_geocoding_api
 
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
@@ -112,48 +113,29 @@ def launch():
 root = Tk()
 root.title("Autorouting app")
 
-label1 = Label(root, text="Google Geocoding API key:")
-label1.pack()
-
-apikeybox = Entry(root, width=50)
-apikeybox.pack()
-
-apiButton = Button(root, text="How to setup API Key", command=displayAPI)
-apiButton.pack()
-
-#pad empty space between objects
-labelSpace = Label(root, pady=3)
-labelSpace.pack()
-
-label2 = Label(root, text="Depot:")
+label2 = Label(root, text="Starting address:")
 label2.pack()
 
 restaurantaddressbox = Entry(root, width=50)
 restaurantaddressbox.pack()
 
-label4 = Label(root, text="Consumer addresses:")
+label4 = Label(root, text="Intermediate addresses:")
 label4.pack()
 
 consumeraddressbox = ScrolledText(root, width=50,height=8)
 consumeraddressbox.pack()
 
-label2 = Label(root, text="Use depot as endpoints for route?  After you click, follow the instructions that will appear at the bottom of your screen")
+label2 = Label(root, text="If you would like to end all routes at the starting address, \nenter number of drivers and leave ending addresses blank.\nOtherwise, enter ending addresses and leave number of drivers blank.")
 label2.pack()
 
-yes = Button(root, text="Yes", command=yes)
-yes.pack()
 
-no = Button(root, text="No", command=no)
-no.pack()
-
-
-label3 = Label(root, text="Driver addresses:")
+label3 = Label(root, text="Ending addresses:")
 label3.pack()
 
 driveraddressbox = ScrolledText(root, width=50, height = 8)
 driveraddressbox.pack()
 
-label5 = Label(root, text="Number of drivers")
+label5 = Label(root, text="Number of drivers:")
 label5.pack()
 num_drivers = Entry(root, width=50)
 num_drivers.pack()
@@ -161,8 +143,12 @@ num_drivers.pack()
 myButton = Button(root, text="Launch program", command=launch)
 myButton.pack()
 
-bottomtext = Label(root, text="Find us on GitHub: https://github.com/autorouting/main")
+# Github link
+def open_repo(useless_parameter):
+    webbrowser.open_new_tab("https://github.com/autorouting/main")
+bottomtext = Label(root, text="Fork us on Github!", fg="blue", cursor="hand2")
 bottomtext.pack()
+bottomtext.bind("<Button-1>", open_repo)
 # [END input form objects]
 
 # call the main function
