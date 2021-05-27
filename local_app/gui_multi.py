@@ -47,13 +47,13 @@ def launch():
     if validate():
         global activation
         activation = [True]
-        if endpoint == yes:
+        if len(driveraddressbox.get("1.0", END).strip()) > 0:
             driveroutput = driveraddressbox.get("1.0", END)
 
         newroot = Tk()
         newroot.title("Solution")
 
-        if endpoint == no:
+        if len(driveraddressbox.get("1.0", END).strip()) <= 0:
             driveroutput = ''
             for i in range(int(num_drivers.get())):
                 driveroutput = driveroutput + restaurantaddressbox.get() + "\n"
