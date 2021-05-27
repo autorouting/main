@@ -8,6 +8,7 @@ import webbrowser
 import genmapslink
 from functools import partial
 import validator
+import api_key
 # [END import]
 
 #How to setup API Key button
@@ -64,7 +65,7 @@ def launch():
         with open("driver_home_addresses.txt", "w") as drivertextfile: drivertextfile.write(driveroutput)
         
         #save api key
-        apikey = apikeybox.get()
+        apikey = api_key.google_geocoding_api
 
         #save consumer
         with open("locations.txt", "w") as locationstextfile: locationstextfile.write(restaurantaddressbox.get().replace("\n", "") + "\n" + consumeroutput)
