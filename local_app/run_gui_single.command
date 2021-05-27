@@ -1,5 +1,5 @@
 cd "$(dirname "$BASH_SOURCE")";
 echo Launching Routing GUI ...
-python gui.py
+python3 gui.py
 echo done
 exit;
