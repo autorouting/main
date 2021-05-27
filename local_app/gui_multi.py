@@ -19,13 +19,13 @@ def yes():
     global endpoint
     global label6
     endpoint = no
-    label6 = Label(root, text="Please input number of drivers and leave driver addresses blank")
+    label6 = Label(root, text="Please input number of drivers and leave ending addresses blank")
     label6.pack()
 def no():
     global endpoint
     global label6
     endpoint = yes
-    label6 = Label(root, text="Please input driver addresses and leave number of drivers blank")
+    label6 = Label(root, text="Please input ending addresses and leave number of drivers blank")
     label6.pack()
     
 #Verify if textboxes on the gui are empty or not
