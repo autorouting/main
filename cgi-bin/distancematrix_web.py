@@ -13,6 +13,17 @@ import concurrent.futures
 G = pickle.load(open('graph', 'rb'))
 
 def generate_distance_matrix(coordpairs, G):
+    """
+    Given coordinates, calculate driving distance between every pair of locations
+
+    Parameters:
+    coordpairs (list): the coordinates of every location
+    G (NetworkX graph): the network containing the locations
+
+    Returns:
+    list: a 2D matrix; each cell contains the distance from the location corresponding to the row to the location corresponding to the column.
+    """
+
     # get nodes
     nodes = []
 
