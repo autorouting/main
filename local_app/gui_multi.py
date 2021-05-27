@@ -113,15 +113,6 @@ def launch():
 root = Tk()
 root.title("Autorouting app")
 
-label1 = Label(root, text="Google Geocoding API key:")
-label1.pack()
-
-apikeybox = Entry(root, width=50)
-apikeybox.pack()
-
-apiButton = Button(root, text="How to setup API Key", command=displayAPI)
-apiButton.pack()
-
 #pad empty space between objects
 labelSpace = Label(root, pady=3)
 labelSpace.pack()
