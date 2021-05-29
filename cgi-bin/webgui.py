@@ -43,7 +43,7 @@ route_solution, ordered_coords, route_solution_nonformatted, numsequence = oneve
 output_dict = {}
 
 if ordered_coords != "":
-    route_link = genmapslink_web.maps_link(" -> ".join(ordered_coords), -1)
+    route_link = genmapslink_web.maps_link(" -> ".join(route_solution), -1)
     
     # read sender and password from email config file
     if str(user_email) != 'None':
@@ -62,7 +62,7 @@ if ordered_coords != "":
     output_dict["dev_data"] = {}
     unordered = [None for i in range(len(numsequence))]
     for i in range(len(numsequence)):
-        unordered[numsequence[i] - 1] = ordered_coords[i]
+        unordered[numsequence[i] - 1] = route_solution[i]
     output_dict["dev_data"]["unordered_maps_link"] = genmapslink_web.maps_link(" -> ".join(unordered)).replace("\n", " -> ")
     
 else:

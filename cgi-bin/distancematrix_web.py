@@ -9,11 +9,22 @@ import serialize
 import socket
 import concurrent.futures
 
-# Read graph file
+# Load network into memory
 G = pickle.load(open('graph', 'rb'))
 
 def generate_distance_matrix(coordpairs, G):
-    # get nodes
+    """
+    Given coordinates, calculate driving distance between every pair of locations
+
+    Parameters:
+    coordpairs (list): the coordinates of every location
+    G (NetworkX graph): the network containing the locations
+
+    Returns:
+    list: a 2D matrix; each cell contains the distance from the location corresponding to the row to the location corresponding to the column.
+    """
+
+    # get nodes for each location
     nodes = []
 
     start_time = time.perf_counter()
@@ -27,7 +38,7 @@ def generate_distance_matrix(coordpairs, G):
     start_time = time.perf_counter()
 
     MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
-    # initiate vars
+    # initiate output matrix
     output_list = [[None for j in range(len(nodes))] for i in range(len(nodes))]
 
     # Execute a function to fill each cell; store workers in an array so as to check when all are done
@@ -46,6 +57,7 @@ def generate_distance_matrix(coordpairs, G):
     # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
     for i in range(2, len(output_list)):
         output_list[i][1] = MAX_DISTANCE
+        
     # output data
 
     end_time = time.perf_counter()
