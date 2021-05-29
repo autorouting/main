@@ -1,3 +1,6 @@
+"""
+Database operations
+"""
 import mysql.connector
 import json
 
