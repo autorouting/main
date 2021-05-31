@@ -1,13 +1,9 @@
 from __future__ import print_function
-from geopy.geocoders import GoogleV3
 import googlemaps as gmaps
 import networkx as nx
 import osmnx as ox
-from ortools.constraint_solver import routing_enums_pb2
-from ortools.constraint_solver import pywrapcp
-import string
-import random
 import pickle
+import concurrent.futures
 
 
 def getdistancematrix(coordinates, option=0):
