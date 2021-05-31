@@ -76,7 +76,10 @@ def getcoordinate(addresses, googleapikey):
 
 if __name__ == '__main__':
     # test something here
-    print(getcoordinate("""jade palace, chapel hill, NC
+    SYSTEM_TO_TEST = "geocode"
+    
+    if SYSTEM_TO_TEST == "geocode":
+        print(getcoordinate("""jade palace, chapel hill, NC
 1101 mason farm	Chapel Hill
 Timber Hollow court 	Chapel Hill
 1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
