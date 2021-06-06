@@ -4,6 +4,7 @@ import networkx as nx
 # import osmnx as ox
 import pickle
 import concurrent.futures
+import math
 
 
 def getdistancematrix(coordinates, option=0):
@@ -12,7 +13,7 @@ def getdistancematrix(coordinates, option=0):
     '''
     Args:
         coordinates: list of coordinates for N addresses
-        option: 0 = Euclidean Distances; 1 = Driving Time from OpenStreetMap; 2 = ...
+        option: 0 = Euclidean Distances; 1 = Driving Time from OSRM API; 2 = ...
 
     Returns:
         the N by N distance matrix of based on the coordinates
@@ -42,11 +43,34 @@ def getdistancematrix(coordinates, option=0):
             theMatrix[i][1] = MAX_DISTANCE
         # output data
         return theMatrix
+    
+    def osrm_distance_matrix(coordpairs: list):
+        MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+        rstring = "http://router.project-osrm.org/table/v1/driving/"
+        coordsstring = []
+        for coords in coordpairs:
+            coordsstring.append(str(coords[1]) + "," + str(coords[0]))
+            # lat/long seems to be reversed???
+        rstring += ";".join(coordsstring)
+        r = requests.get(rstring)
+        theMatrix = r.json()["durations"]
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(2, len(theMatrix)):
+            theMatrix[i][1] = MAX_DISTANCE
+        return theMatrix
+    
+    def create_data_model(distancematrix):
+        # initiate ORTools
+        data = {}
+        data['distance_matrix'] = distancematrix
+        data['num_vehicles'] = 1
+        data['depot'] = 0
+        return (data)
 
     if option == 0:
         return fast_mode_distance_matrix(coordinates)
     elif option == 1:
-        return serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+        return osrm_distance_matrix(coordinates)
 
 
 def getpairdistance(coordinates):
