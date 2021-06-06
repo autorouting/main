@@ -7,6 +7,8 @@ import concurrent.futures
 
 
 def getdistancematrix(coordinates, option=0):
+    import client1
+    import serialize
     '''
     Args:
         coordinates: list of coordinates for N addresses
@@ -15,7 +17,35 @@ def getdistancematrix(coordinates, option=0):
     Returns:
         the N by N distance matrix of based on the coordinates
     '''
+    def fast_mode_distance(coords1, coords2):
+        DEGREE_TO_RAD = math.pi / 180
+        DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
+        # convert coords to meters
+        lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
+        lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
+        lat1 = coords1[0] * DEGREE_LATITUDE
+        lat2 = coords2[0] * DEGREE_LATITUDE
+        return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
 
+    def fast_mode_distance_matrix(coordpairs):
+        MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+        # initiate vars
+        theMatrix = []
+        # create 2d array with distances of node i -> node j
+        for i in range(len(coordpairs)):
+            theMatrix.append([])
+            for j in range(len(coordpairs)):
+                theMatrix[i].append(fast_mode_distance(coordpairs[i], coordpairs[j]))
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(2, len(theMatrix)):
+            theMatrix[i][1] = MAX_DISTANCE
+        # output data
+        return theMatrix
+        
+    if option == 0:
+        return fast_mode_distance_matrix(coordinates)
+    elif option == 1:
+        return serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
 
 def getpairdistance(coordinates):
     '''
