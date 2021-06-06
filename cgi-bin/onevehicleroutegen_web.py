@@ -9,6 +9,7 @@ import client1
 import serialize
 import math
 import multiprocessing
+import requests
 
 def parallel_geocode_inputs(api_key, fakeinputfile, max_workers = 2):
     """
@@ -142,6 +143,21 @@ def fast_mode_distance_matrix(coordpairs):
         theMatrix[i][1] = MAX_DISTANCE
     # output data
     return theMatrix
+
+def osrm_distance_matrix(coordpairs: list):
+    MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+    rstring = "http://router.project-osrm.org/table/v1/driving/"
+    coordsstring = []
+    for coords in coordpairs:
+        coordsstring.append(str(coords[1]) + "," + str(coords[0]))
+        # lat/long seems to be reversed???
+    rstring += ";".join(coordsstring)
+    r = requests.get(rstring)
+    theMatrix = r.json()["durations"]
+    # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+    for i in range(2, len(theMatrix)):
+        theMatrix[i][1] = MAX_DISTANCE
+    return theMatrix
     
 def create_data_model(distancematrix):
     """
@@ -197,7 +213,7 @@ def main(api_key, fakeinputfile, fast_mode_toggled):
         if fast_mode_toggled:
             distancematrix = fast_mode_distance_matrix(coordpairs)
         else:
-            distancematrix = serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
+            distancematrix = osrm_distance_matrix(coordpairs)
         data = create_data_model(distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
