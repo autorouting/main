@@ -149,7 +149,8 @@ def osrm_distance_matrix(coordpairs: list):
     rstring = "http://router.project-osrm.org/table/v1/driving/"
     coordsstring = []
     for coords in coordpairs:
-        coordsstring.append(str(coords[0]) + "," + str(coords[1]))
+        coordsstring.append(str(coords[1]) + "," + str(coords[0]))
+        # lat/long seems to be reversed???
     rstring += ";".join(coordsstring)
     r = requests.get(rstring)
     theMatrix = r.json()["durations"]
