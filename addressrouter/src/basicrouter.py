@@ -12,16 +12,14 @@ class BasicRouter():
 
     """
 
-    def __init__(self, addresses, drivers, apikey):
+    def __init__(self, addresses, apikey):
         '''
 
         Args:
-            addresses: list of all addresses
-            drivers: list of 2-d arrays, containing the indices (in addresses) of the origin and destination of each driver
+            addresses: list of all addresses (first address is origin, last address is destination)
             apikey: key for google map api, used to get coordinates of addresses
         '''
         self._addresses = addresses
-        self._drivers = drivers
         self._apikey = apikey
 
         #Construct self._coordinates
