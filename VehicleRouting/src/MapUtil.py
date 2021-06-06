@@ -7,6 +7,8 @@ import concurrent.futures
 
 
 def getdistancematrix(coordinates, option=0):
+    import client1
+    import serialize
     '''
     Args:
         coordinates: list of coordinates for N addresses
@@ -39,15 +41,11 @@ def getdistancematrix(coordinates, option=0):
             theMatrix[i][1] = MAX_DISTANCE
         # output data
         return theMatrix
-    
-    def create_data_model(distancematrix):
-        # initiate ORTools
-        data = {}
-        data['distance_matrix'] = distancematrix
-        data['num_vehicles'] = 1
-        data['depot'] = 0
-        return (data)
-
+        
+    if option == 0:
+        return fast_mode_distance_matrix(coordinates)
+    elif option == 1:
+        return serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
 
 def getpairdistance(coordinates):
     '''
