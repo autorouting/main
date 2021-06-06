@@ -133,7 +133,7 @@ def getcoordinate(addresses, googleapikey):
 
 if __name__ == '__main__':
     # test something here
-    SYSTEM_TO_TEST = "geocode"
+    SYSTEM_TO_TEST = "distancematrix"
 
     if SYSTEM_TO_TEST == "geocode":
         print(getcoordinate("""jade palace, chapel hill, NC
@@ -155,3 +155,8 @@ kingswood r9	Chapel Hill
 108 Shadowood Drive, Chapel Hill	Chapel Hill
 1600 Baity Hill Dr	Chapel Hill
 Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > ")))
+    elif SYSTEM_TO_TEST == "distancematrix":
+        print(getdistancematrix(
+            [(35.910535, -79.07153699999999), (35.8993755, -79.0496993), (35.9407471, -79.055622), (35.8986969, -79.06878669999999), (35.918677, -79.0535469), (35.9528053, -79.0117215), (35.9305954, -79.0309678), (35.901634, -79.000045), (35.9538476, -79.06623789999999), (35.9187031, -79.0535469), (35.9333937, -79.03179519999999), (35.9317503, -79.029698), (35.9333937, -79.03179519999999), (35.9309288, -79.031252), (35.8980829, -79.0398685), (35.9317503, -79.029698), (35.9378711, -79.05453159999999), (35.8980563, -79.04115209999999), (35.89944070000001, -79.06600180000001)],
+            option=1
+        ))
