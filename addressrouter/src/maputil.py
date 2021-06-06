@@ -1,12 +1,14 @@
 from __future__ import print_function
 import googlemaps as gmaps
 import networkx as nx
-#import osmnx as ox
+# import osmnx as ox
 import pickle
 import concurrent.futures
 
 
 def getdistancematrix(coordinates, option=0):
+    import client1
+    import serialize
     '''
     Args:
         coordinates: list of coordinates for N addresses
@@ -15,9 +17,10 @@ def getdistancematrix(coordinates, option=0):
     Returns:
         the N by N distance matrix of based on the coordinates
     '''
+
     def fast_mode_distance(coords1, coords2):
         DEGREE_TO_RAD = math.pi / 180
-        DEGREE_LATITUDE = 111132.954 # 1 degree of longitude at the equator, in meters
+        DEGREE_LATITUDE = 111132.954  # 1 degree of longitude at the equator, in meters
         # convert coords to meters
         lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
         lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
@@ -26,7 +29,7 @@ def getdistancematrix(coordinates, option=0):
         return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
 
     def fast_mode_distance_matrix(coordpairs):
-        MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
+        MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
         # initiate vars
         theMatrix = []
         # create 2d array with distances of node i -> node j
@@ -39,14 +42,11 @@ def getdistancematrix(coordinates, option=0):
             theMatrix[i][1] = MAX_DISTANCE
         # output data
         return theMatrix
-    
-    def create_data_model(distancematrix):
-        # initiate ORTools
-        data = {}
-        data['distance_matrix'] = distancematrix
-        data['num_vehicles'] = 1
-        data['depot'] = 0
-        return (data)
+
+    if option == 0:
+        return fast_mode_distance_matrix(coordinates)
+    elif option == 1:
+        return serialize.deserializeServerToCgi(client1.senddata(serialize.serializeCgiToServer(coordpairs)))
 
 
 def getpairdistance(coordinates):
@@ -59,6 +59,7 @@ def getpairdistance(coordinates):
 
     '''
 
+
 def getcoordinate(addresses, googleapikey):
     '''
 
@@ -70,7 +71,7 @@ def getcoordinate(addresses, googleapikey):
         a list of coordinates (each coordinate contains a 2-d array)
     '''
 
-    #Yikuan
+    # Yikuan
     def geocode_input(api_key, input, geolocator):
         location = geolocator.geocode(input)
         coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
@@ -87,29 +88,30 @@ def getcoordinate(addresses, googleapikey):
         if (len(line.strip()) > 0):
             inputs.append(line.strip())
 
-    #print(inputs)
-    #print(inputs_first_thread)
-    #print(inputs_subthread)
-    #print(geocode_input(api_key, inputs_first_thread, geolocator))
+    # print(inputs)
+    # print(inputs_first_thread)
+    # print(inputs_subthread)
+    # print(geocode_input(api_key, inputs_first_thread, geolocator))
     futures = []
     with concurrent.futures.ThreadPoolExecutor(4) as executer:
         for address in inputs:
-            #print(address)
+            # print(address)
             future = executer.submit(geocode_input, googleapikey, address, geolocator)
             futures.append(future)
     # Wait until all are finished
     concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
     results = [future.result() for future in futures]
-    #print(results)
+    # print(results)
     coordpairs = []
     for i in range(len(results)):
         coordpairs.append(results[i])
     return coordpairs
 
+
 if __name__ == '__main__':
     # test something here
     SYSTEM_TO_TEST = "geocode"
-    
+
     if SYSTEM_TO_TEST == "geocode":
         print(getcoordinate("""jade palace, chapel hill, NC
 1101 mason farm	Chapel Hill
