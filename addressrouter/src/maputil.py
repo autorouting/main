@@ -5,11 +5,10 @@ import networkx as nx
 import pickle
 import concurrent.futures
 import math
+import requests
 
 
 def getdistancematrix(coordinates, option=0):
-    import client1
-    import serialize
     '''
     Args:
         coordinates: list of coordinates for N addresses
