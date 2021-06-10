@@ -4,9 +4,6 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import concurrent.futures
 import time
-#import database
-#import client1
-#import serialize
 import math
 import multiprocessing
 import requests
