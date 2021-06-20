@@ -13,32 +13,24 @@ class BasicRouter():
 
     """
 
-    def __init__(self, addresses, apikey):
+    def __init__(self, addresses: list, apikey: str, distancematrixoption=1):
         '''
 
         Args:
             addresses: list of all addresses (first address is origin, last address is destination)
             apikey: key for google map api, used to get coordinates of addresses
         '''
-        self._addresses = addresses
+        self._addresses = addresses.copy()
         self._apikey = apikey
 
         #Construct self._coordinates
         self._coordinates = maputil.getcoordinate(self._addresses, apikey)
 
         #Construct distance matrix via Euclidean distance
-        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=1)
+        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
 
-    def update_distancematrix(self, newdistancematrix):
-        '''
-
-        Args:
-            newdistancematrix:
-
-        Returns:
-
-        '''
-        self._distancematrix = newdistancematrix
+    def addIntermediateAddress():
+        pass
 
     def routeOneVehicle(self):
         '''
