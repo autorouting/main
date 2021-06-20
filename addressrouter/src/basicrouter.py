@@ -4,6 +4,7 @@ import string
 import random
 import pickle
 import numpy as np
+import maputil
 
 
 class BasicRouter():
@@ -23,11 +24,10 @@ class BasicRouter():
         self._apikey = apikey
 
         #Construct self._coordinates
-        pass
-        self._coordinates = null
+        self._coordinates = maputil.getcoordinate(self._addresses, apikey)
 
         #Construct distance matrix via Euclidean distance
-        #self._distancematrix = null
+        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=1)
 
     def update_distancematrix(self, newdistancematrix):
         '''
