@@ -4,47 +4,34 @@ import string
 import random
 import pickle
 import numpy as np
+import maputil
 
 
 class BasicRouter():
     """
     The BasicRouter creates a routes using real world address.
-
     """
 
-    def __init__(self, addresses, apikey):
+    def __init__(self, addresses: list, apikey: str, distancematrixoption=1):
         '''
-
         Args:
             addresses: list of all addresses (first address is origin, last address is destination)
             apikey: key for google map api, used to get coordinates of addresses
-            
         '''
-        self._addresses = addresses
+        self._addresses = addresses.copy()
         self._apikey = apikey
 
         #Construct self._coordinates
-        pass
-        self._coordinates = null
+        self._coordinates = maputil.getcoordinate(self._addresses, apikey)
 
         #Construct distance matrix via Euclidean distance
-        #self._distancematrix = null
+        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
 
-    def update_distancematrix(self, newdistancematrix):
-        '''
-
-        Args:
-            newdistancematrix:
-
-        Returns:
-
-        '''
-        self._distancematrix = newdistancematrix
+    def addIntermediateAddress():
+        pass
 
     def routeOneVehicle(self):
         '''
-
         Returns: the optimized route assuming only the first driver is available
-
         '''
         pass
