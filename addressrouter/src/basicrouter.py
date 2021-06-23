@@ -18,6 +18,7 @@ class BasicRouter():
         Args:
             addresses: list of all addresses (first address is origin, last address is destination)
             apikey: key for google map api, used to get coordinates of addresses
+            
         '''
         self._addresses = addresses
         self._apikey = apikey
