@@ -55,16 +55,16 @@ class BasicRouter():
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
         search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         solution = routing.SolveWithParameters(search_parameters)
-        ordered_indeces = self.print_solution(manager, routing, solution, addresses)
+        ordered_indeces = self.print_solution(manager, routing, solution, self._addresses)
         if solution:
             ordered_indeces
         route_solution = []
         route_solution_nonformatted = []
         ordered_coords = []
         for x in ordered_indeces:
-            route_solution.append(addresses[x])
-            route_solution_nonformatted.append(inputs[x])
-            ordered_coords.append(str(coordpairs[x][0]) + "," + str(coordpairs[x][1]))
+            route_solution.append(self._addresses[x])
+            route_solution_nonformatted.append(self._addresses[x])
+            ordered_coords.append(str(self._coordinates[x][0]) + "," + str(self._coordinates[x][1]))
         #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
         return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
