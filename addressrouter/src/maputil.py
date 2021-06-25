@@ -57,14 +57,6 @@ def getdistancematrix(coordinates, option=0):
         for i in range(2, len(theMatrix)):
             theMatrix[i][1] = MAX_DISTANCE
         return theMatrix
-    
-    def create_data_model(distancematrix):
-        # initiate ORTools
-        data = {}
-        data['distance_matrix'] = distancematrix
-        data['num_vehicles'] = 1
-        data['depot'] = 0
-        return (data)
 
     if option == 0:
         return fast_mode_distance_matrix(coordinates)
