@@ -69,14 +69,6 @@ class BasicRouter():
         #print((end_time - start_time) / 10 ** 9)
         return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
     
-    def create_data_model(distancematrix):
-        # initiate ORTools
-        data = {}
-        data['distance_matrix'] = distancematrix
-        data['num_vehicles'] = 1
-        data['depot'] = 0
-        return (data)
-    
     def print_solution(manager, routing, solution, addresses):
         """
         Creates a displayable version of the solution
