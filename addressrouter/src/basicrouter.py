@@ -96,3 +96,26 @@ class BasicRouter():
                 route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
         plan_output.append(manager.IndexToNode(index))
         return plan_output
+
+if __name__ == "__main__":
+    # This code tests the module
+    myRouter = BasicRouter("""jade palace, chapel hill, NC
+1101 mason farm	Chapel Hill
+Timber Hollow court 	Chapel Hill
+1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
+602 Martin Luther King Jr BLVD	Chapel Hill
+10104 Drew Hill Ln	Chapel Hill
+214 Conner Dr Apt (Sunstone Apartment)	Chapel Hill
+kingswood r9	Chapel Hill
+117 Cabernet Dr, Chapel Hill	Chapel Hill
+602 MLK Blv (lark chapel hill)	Chapel Hill
+1521 E Franklin St, Chapel Hill	Chapel Hill
+213 Conner Drive, Chapel Hill	Chapel Hill
+1521 E Franklin St, Chapel Hill	Chapel Hill
+203 Conner Dr Apt 5	Chapel Hill
+1700 Baity Hill Dr Apt.110	Chapel Hill
+213 Conner Drive, Apt 18	Chapel Hill
+108 Shadowood Drive, Chapel Hill	Chapel Hill
+1600 Baity Hill Dr	Chapel Hill
+Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > "))
+    print(myRouter.routeOneVehicle())
