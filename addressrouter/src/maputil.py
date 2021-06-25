@@ -18,16 +18,6 @@ def getdistancematrix(coordinates, option=0):
         the N by N distance matrix of based on the coordinates
     '''
 
-    def fast_mode_distance(coords1, coords2):
-        DEGREE_TO_RAD = math.pi / 180
-        DEGREE_LATITUDE = 111132.954  # 1 degree of longitude at the equator, in meters
-        # convert coords to meters
-        lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
-        lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
-        lat1 = coords1[0] * DEGREE_LATITUDE
-        lat2 = coords2[0] * DEGREE_LATITUDE
-        return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
-
     def fast_mode_distance_matrix(coordpairs):
         MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
         # initiate vars
@@ -36,7 +26,7 @@ def getdistancematrix(coordinates, option=0):
         for i in range(len(coordpairs)):
             theMatrix.append([])
             for j in range(len(coordpairs)):
-                theMatrix[i].append(fast_mode_distance(coordpairs[i], coordpairs[j]))
+                theMatrix[i].append(getpairdistance([coordpairs[i], coordpairs[j]], 0))
         # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
         for i in range(2, len(theMatrix)):
             theMatrix[i][1] = MAX_DISTANCE
@@ -64,15 +54,31 @@ def getdistancematrix(coordinates, option=0):
         return osrm_distance_matrix(coordinates)
 
 
-def getpairdistance(coordinates):
+def getpairdistance(coordinates, option=0):
     '''
 
     Args:
         coordinates: list of coordinates for 2 addresses
+        option: 0 = Euclidean Distances; 1 = Driving Time from OSRM API; 2 = ...
 
     Returns:
-
+        Calculated distance from coordinate 1 to coordinate 2
     '''
+
+    def fast_mode_distance(coords1, coords2):
+        DEGREE_TO_RAD = math.pi / 180
+        DEGREE_LATITUDE = 111132.954  # 1 degree of longitude at the equator, in meters
+        # convert coords to meters
+        lon1 = coords1[1] * DEGREE_LATITUDE * math.cos(coords1[0] * DEGREE_TO_RAD)
+        lon2 = coords2[1] * DEGREE_LATITUDE * math.cos(coords2[0] * DEGREE_TO_RAD)
+        lat1 = coords1[0] * DEGREE_LATITUDE
+        lat2 = coords2[0] * DEGREE_LATITUDE
+        return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+    
+    if option == 0:
+        return fast_mode_distance(coordinates[0], coordinates[1])
+    elif option == 1:
+        pass
 
 
 def getcoordinate(addresses, googleapikey):
@@ -150,5 +156,5 @@ Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > ")
     elif SYSTEM_TO_TEST == "distancematrix":
         print(getdistancematrix(
             [(35.910535, -79.07153699999999), (35.8993755, -79.0496993), (35.9407471, -79.055622), (35.8986969, -79.06878669999999), (35.918677, -79.0535469), (35.9528053, -79.0117215), (35.9305954, -79.0309678), (35.901634, -79.000045), (35.9538476, -79.06623789999999), (35.9187031, -79.0535469), (35.9333937, -79.03179519999999), (35.9317503, -79.029698), (35.9333937, -79.03179519999999), (35.9309288, -79.031252), (35.8980829, -79.0398685), (35.9317503, -79.029698), (35.9378711, -79.05453159999999), (35.8980563, -79.04115209999999), (35.89944070000001, -79.06600180000001)],
-            option=1
+            option=0
         ))
