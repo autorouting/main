@@ -55,7 +55,7 @@ class BasicRouter():
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
         search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         solution = routing.SolveWithParameters(search_parameters)
-        ordered_indeces = print_solution(manager, routing, solution, addresses)
+        ordered_indeces = self.print_solution(manager, routing, solution, addresses)
         if solution:
             ordered_indeces
         route_solution = []
