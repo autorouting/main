@@ -38,7 +38,11 @@ class BasicRouter():
         Returns: the optimized route assuming only the first driver is available
 
         '''
-        data = create_data_model(distancematrix)
+        data = {
+            "distance_matrix": self._distancematrix,
+            "num_vehicles": 1,
+            "depot": 0
+        }
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['depot'])
         routing = pywrapcp.RoutingModel(manager)
