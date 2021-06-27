@@ -83,7 +83,7 @@ def getpairdistance(coordinates):
     '''
 
 
-def getcoordinate(addresses, googleapikey):
+def getcoordinates(addresses, googleapikey):
     '''
 
     Args:
@@ -94,7 +94,6 @@ def getcoordinate(addresses, googleapikey):
         a list of coordinates (each coordinate contains a 2-d array)
     '''
 
-    # Yikuan
     def geocode_input(api_key, input, geolocator):
         location = geolocator.geocode(input)
         coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
