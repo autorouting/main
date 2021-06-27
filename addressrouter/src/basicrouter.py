@@ -1,5 +1,5 @@
-from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+from ortools.constraint_solver import routing_enums_pb2
 import string
 import random
 import pickle
@@ -12,20 +12,26 @@ class BasicRouter():
     The BasicRouter creates a routes using real world address.
     """
 
-    def __init__(self, addresses: list, apikey: str, distancematrixoption=1):
+    def __init__(self, addresses: list, apikey: str, distancematrixoption=1, from_multi=False):
         '''
         Args:
             addresses: list of all addresses (first address is origin, last address is destination)
             apikey: key for google map api, used to get coordinates of addresses
         '''
-        self._addresses = addresses.copy()
-        self._apikey = apikey
+        self.input_addresses = addresses
+        self.api_key = apikey
 
-        #Construct self._coordinates
-        self._coordinates = maputil.getcoordinate(self._addresses, apikey)
+        if not from_multi:
+            #Construct self._coordinates
+            self._coordinates = maputil.getcoordinates(self.input_addresses, apikey)
 
-        #Construct distance matrix via Euclidean distance
-        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
+            #Construct distance matrix via Euclidean distance
+            self.distance_matrix = self.distance_matrix(self._coordinates, option=distancematrixoption)
+
+    def distance_matrix(self, coordpairs, distancematrixoption):
+        self.distance_matrix = maputil.getdistancematrix(coordpairs, distancematrixoption)
+        print(self.distance_matrix)
+        return self.distance_matrix
 
     def addIntermediateAddress():
         pass
