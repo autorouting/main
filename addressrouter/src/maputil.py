@@ -19,7 +19,6 @@ def getdistancematrix(coordinates, option=0):
     '''
 
     def fast_mode_distance_matrix(coordpairs):
-        MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
         # initiate vars
         theMatrix = []
         # create 2d array with distances of node i -> node j
@@ -27,14 +26,10 @@ def getdistancematrix(coordinates, option=0):
             theMatrix.append([])
             for j in range(len(coordpairs)):
                 theMatrix[i].append(getpairdistance([coordpairs[i], coordpairs[j]], 0))
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(theMatrix)):
-            theMatrix[i][1] = MAX_DISTANCE
         # output data
         return theMatrix
     
     def osrm_distance_matrix(coordpairs: list):
-        MAX_DISTANCE = 7666432.01 # a constant rigging distance matrix to force the optimizer to go to origin first
         rstring = "http://router.project-osrm.org/table/v1/driving/"
         coordsstring = []
         for coords in coordpairs:
@@ -43,9 +38,6 @@ def getdistancematrix(coordinates, option=0):
         rstring += ";".join(coordsstring)
         r = requests.get(rstring)
         theMatrix = r.json()["durations"]
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(theMatrix)):
-            theMatrix[i][1] = MAX_DISTANCE
         return theMatrix
 
     if option == 0:

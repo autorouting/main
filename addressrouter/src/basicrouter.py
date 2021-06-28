@@ -29,6 +29,11 @@ class BasicRouter():
         #Construct distance matrix via Euclidean distance
         self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
 
+        MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(2, len(self._distancematrix)):
+            self._distancematrix[i][1] = MAX_DISTANCE
+
     def addIntermediateAddress():
         pass
 
