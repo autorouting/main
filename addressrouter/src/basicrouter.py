@@ -31,8 +31,9 @@ class BasicRouter():
 
         MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
         # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(2, len(self._distancematrix)):
-            self._distancematrix[i][1] = MAX_DISTANCE
+        for i in range(1, len(self._distancematrix) - 1):
+            self._distancematrix[i][0] = MAX_DISTANCE
+        #np.savetxt("foo.csv", np.asarray(self._distancematrix), delimiter=",") # save distance matrix to file
 
     def addIntermediateAddress():
         pass
@@ -75,7 +76,7 @@ class BasicRouter():
         data = {}
         data['distance_matrix'] = distancematrix
         data['num_vehicles'] = 1
-        data['depot'] = 0
+        data['depot'] = len(distancematrix) - 1
         return (data)
 
     def print_solution(self, manager, routing, solution, addresses):
@@ -97,13 +98,15 @@ class BasicRouter():
         plan_output = []
         route_distance = 0
         while not routing.IsEnd(index):
-            if index:
-                plan_output.append(manager.IndexToNode(index))
+            plan_output.append(manager.IndexToNode(index))
             previous_index = index
             index = solution.Value(routing.NextVar(index))
-            if index:
-                route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
+            route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
         plan_output.append(manager.IndexToNode(index))
+
+        # Make sure origin is first, not depot
+        plan_output.pop(0)
+
         return plan_output
 
 if __name__ == "__main__":
