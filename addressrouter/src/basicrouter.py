@@ -29,6 +29,12 @@ class BasicRouter():
         #Construct distance matrix via Euclidean distance
         self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
 
+        MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
+        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
+        for i in range(1, len(self._distancematrix) - 1):
+            self._distancematrix[i][0] = MAX_DISTANCE
+        #np.savetxt("foo.csv", np.asarray(self._distancematrix), delimiter=",") # save distance matrix to file
+
     def addIntermediateAddress():
         pass
 
@@ -70,7 +76,7 @@ class BasicRouter():
         data = {}
         data['distance_matrix'] = distancematrix
         data['num_vehicles'] = 1
-        data['depot'] = 0
+        data['depot'] = len(distancematrix) - 1
         return (data)
 
     def print_solution(self, manager, routing, solution, addresses):
@@ -92,34 +98,27 @@ class BasicRouter():
         plan_output = []
         route_distance = 0
         while not routing.IsEnd(index):
-            if index:
-                plan_output.append(manager.IndexToNode(index))
+            plan_output.append(manager.IndexToNode(index))
             previous_index = index
             index = solution.Value(routing.NextVar(index))
-            if index:
-                route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
+            route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
         plan_output.append(manager.IndexToNode(index))
+
+        # Make sure origin is first, not depot
+        plan_output.pop(0)
+
         return plan_output
 
 if __name__ == "__main__":
     # This code tests the module
-    myRouter = BasicRouter("""jade palace, chapel hill, NC
-1101 mason farm	Chapel Hill
-Timber Hollow court 	Chapel Hill
-1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
-602 Martin Luther King Jr BLVD	Chapel Hill
-10104 Drew Hill Ln	Chapel Hill
-214 Conner Dr Apt (Sunstone Apartment)	Chapel Hill
-kingswood r9	Chapel Hill
-117 Cabernet Dr, Chapel Hill	Chapel Hill
-602 MLK Blv (lark chapel hill)	Chapel Hill
-1521 E Franklin St, Chapel Hill	Chapel Hill
-213 Conner Drive, Chapel Hill	Chapel Hill
-1521 E Franklin St, Chapel Hill	Chapel Hill
-203 Conner Dr Apt 5	Chapel Hill
-1700 Baity Hill Dr Apt.110	Chapel Hill
-213 Conner Drive, Apt 18	Chapel Hill
-108 Shadowood Drive, Chapel Hill	Chapel Hill
-1600 Baity Hill Dr	Chapel Hill
-Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > "))
+    myRouter = BasicRouter("""li ming’s global market
+100 Manora Ln, Chapel Hill, NC 27516
+101 Palafox Dr, Chapel Hill, NC 27516
+311 Palafox Dr, Chapel Hill, NC 27516
+118 Dixie Dr, Chapel Hill, NC 27514
+1220 M.L.K. Jr Blvd, Chapel Hill, NC 27514
+100 Burnwood Ct, Chapel Hill, NC
+390 Erwin Rd, Chapel Hill, NC
+532 Lena Cir, Chapel Hill, NC
+213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "))
     print(myRouter.routeOneVehicle())
