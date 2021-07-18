@@ -39,6 +39,11 @@ class BasicRouter():
         #np.savetxt("foo.csv", np.asarray(self._distancematrix), delimiter=",") # save distance matrix to file
 
     def addIntermediateAddress(self, address: str):
+        """
+        
+        Args:
+            address: string, intermediate address to add to the route
+        """
         # Add address to end of addresses
         self._addresses.insert(-1, address)
 
