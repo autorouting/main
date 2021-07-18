@@ -24,6 +24,7 @@ class BasicRouter():
         self._addresses = addresses.copy()
         self._apikey = apikey
         self._numvehicles = 1
+        self._distancematrixoption = distancematrixoption
 
         #Construct self._coordinates
         self._coordinates = maputil.getcoordinate(self._addresses, apikey)
@@ -37,8 +38,23 @@ class BasicRouter():
             self._distancematrix[i][0] = MAX_DISTANCE
         #np.savetxt("foo.csv", np.asarray(self._distancematrix), delimiter=",") # save distance matrix to file
 
-    def addIntermediateAddress():
-        pass
+    def addIntermediateAddress(self, address: str):
+        """
+        
+        Args:
+            address: string, intermediate address to add to the route
+        """
+        # Add address to end of addresses
+        self._addresses.insert(-1, address)
+
+        #Remake self._coordinates
+        self._coordinates = maputil.getcoordinate(self._addresses, self._apikey)
+        
+        #Construct distance matrix via Euclidean distance
+        self._distancematrix = maputil.getdistancematrix(self._coordinates, option=self._distancematrixoption)
+        MAX_DISTANCE = 7666432.01
+        for i in range(1, len(self._distancematrix) - 1):
+            self._distancematrix[i][0] = MAX_DISTANCE
 
     def routeOneVehicle(self):
         '''
@@ -123,4 +139,5 @@ if __name__ == "__main__":
 390 Erwin Rd, Chapel Hill, NC
 532 Lena Cir, Chapel Hill, NC
 213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "))
+    myRouter.addIntermediateAddress("3603 Witherspoon Blvd Suite 101, Durham, NC 27707")
     print(myRouter.routeOneVehicle())
