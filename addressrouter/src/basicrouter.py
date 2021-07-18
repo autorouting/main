@@ -22,6 +22,7 @@ class BasicRouter():
         '''
         self._addresses = addresses.copy()
         self._apikey = apikey
+        self._numvehicles = 1
 
         #Construct self._coordinates
         self._coordinates = maputil.getcoordinate(self._addresses, apikey)
@@ -75,7 +76,7 @@ class BasicRouter():
         # initiate ORTools
         data = {}
         data['distance_matrix'] = distancematrix
-        data['num_vehicles'] = 1
+        data['num_vehicles'] = self._numvehicles
         data['depot'] = len(distancematrix) - 1
         return (data)
 
