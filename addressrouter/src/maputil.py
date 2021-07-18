@@ -121,12 +121,53 @@ def getcoordinate(addresses, googleapikey):
     return coordpairs
 
 
+def getmappedaddresses(addresses, googleapikey):
+    '''
+
+    Args:
+        addresses: a list of strings (each string is an address)
+        googleapikey: string of google api key
+
+    Returns:
+        a list of the formal addresses corresponding to addresses
+    '''
+
+    def geocode_input(api_key, input, geolocator):
+        location = geolocator.geocode(input)
+        address = location[0]["formatted_address"]
+        return address
+
+    try:
+        geolocator = gmaps.Client(key=googleapikey)
+        testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
+    except:
+        raise ValueError("The following API key may be problematic: " + googleapikey)
+    # get inputs
+    inputs = []
+    for line in addresses:
+        if (len(line.strip()) > 0):
+            inputs.append(line.strip())
+
+    futures = []
+    with concurrent.futures.ThreadPoolExecutor(4) as executer:
+        for address in inputs:
+            future = executer.submit(geocode_input, googleapikey, address, geolocator)
+            futures.append(future)
+    # Wait until all are finished
+    concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
+    results = [future.result() for future in futures]
+    mapped = []
+    for i in range(len(results)):
+        mapped.append(results[i])
+    return mapped
+
+
 if __name__ == '__main__':
     # test something here
-    SYSTEM_TO_TEST = "distancematrix"
+    SYSTEM_TO_TEST = "geocode"
 
     if SYSTEM_TO_TEST == "geocode":
-        print(getcoordinate("""jade palace, chapel hill, NC
+        print(getmappedaddresses("""jade palace, chapel hill, NC
 1101 mason farm	Chapel Hill
 Timber Hollow court 	Chapel Hill
 1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
