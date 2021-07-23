@@ -41,7 +41,7 @@ class solve_multi(basicrouter.BasicRouter):
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
-                                            data['num_vehicles'], data['depot'])
+                                            data['num_vehicles'], data['starts'], data['ends'])
 
         # Create Routing Model.
         routing = pywrapcp.RoutingModel(manager)
