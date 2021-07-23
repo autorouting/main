@@ -83,8 +83,8 @@ class BasicRouter():
         data = {}
         data['distance_matrix'] = distancematrix
         data['num_vehicles'] = self._numvehicles
-        data['starts'] = [0]
-        data['ends'] = [len(distancematrix) - 1]
+        data['starts'] = [0 for i in range(self._numvehicles)]
+        data['ends'] = [len(distancematrix) - 1 for i in range(self._numvehicles)]
         return (data)
 
     def print_solution(self, manager, routing, solution, addresses):
