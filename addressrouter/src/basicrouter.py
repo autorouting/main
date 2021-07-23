@@ -1,10 +1,6 @@
 #Import libraries
-from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-import string
-import random
-import pickle
-import numpy as np
+from ortools.constraint_solver import routing_enums_pb2
 import maputil
 
 
@@ -32,10 +28,6 @@ class BasicRouter():
         #Construct distance matrix via Euclidean distance
         self._distancematrix = maputil.getdistancematrix(self._coordinates, option=distancematrixoption)
 
-        MAX_DISTANCE = 7666432.01  # a constant rigging distance matrix to force the optimizer to go to origin first
-        # rig distance so that optimization algorithm chooses to go to origin asap (after depot)
-        for i in range(1, len(self._distancematrix) - 1):
-            self._distancematrix[i][0] = MAX_DISTANCE
         #np.savetxt("foo.csv", np.asarray(self._distancematrix), delimiter=",") # save distance matrix to file
 
     def addIntermediateAddress(self, address: str):
@@ -52,9 +44,6 @@ class BasicRouter():
         
         #Construct distance matrix via Euclidean distance
         self._distancematrix = maputil.getdistancematrix(self._coordinates, option=self._distancematrixoption)
-        MAX_DISTANCE = 7666432.01
-        for i in range(1, len(self._distancematrix) - 1):
-            self._distancematrix[i][0] = MAX_DISTANCE
 
     def routeOneVehicle(self):
         '''
@@ -64,7 +53,7 @@ class BasicRouter():
         '''
         data = self.create_data_model(self._distancematrix)
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
-                                                data['num_vehicles'], data['depot'])
+                                                data['num_vehicles'], data['starts'], data['ends'])
         routing = pywrapcp.RoutingModel(manager)
         def distance_callback(from_index, to_index):
             from_node = manager.IndexToNode(from_index)
@@ -94,7 +83,8 @@ class BasicRouter():
         data = {}
         data['distance_matrix'] = distancematrix
         data['num_vehicles'] = self._numvehicles
-        data['depot'] = len(distancematrix) - 1
+        data['starts'] = [0]
+        data['ends'] = [len(distancematrix) - 1]
         return (data)
 
     def print_solution(self, manager, routing, solution, addresses):
@@ -121,9 +111,6 @@ class BasicRouter():
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
         plan_output.append(manager.IndexToNode(index))
-
-        # Make sure origin is first, not depot
-        plan_output.pop(0)
 
         return plan_output
 
