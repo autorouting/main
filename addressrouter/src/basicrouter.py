@@ -87,6 +87,10 @@ class BasicRouter():
             ordered_coords.append(str(self._coordinates[x][0]) + "," + str(self._coordinates[x][1]))
         #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
+
+        # Format route_solution
+        route_solution = maputil.getmappedaddresses(route_solution, self._apikey)
+
         return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
     
     def create_data_model(self, distancematrix):

@@ -6,6 +6,7 @@ import pickle
 import concurrent.futures
 import math
 import requests
+import urllib
 
 
 def getdistancematrix(coordinates, option=0):
@@ -121,12 +122,71 @@ def getcoordinate(addresses, googleapikey):
     return coordpairs
 
 
+def getmappedaddresses(addresses, googleapikey):
+    '''
+
+    Args:
+        addresses: a list of strings (each string is an address)
+        googleapikey: string of google api key
+
+    Returns:
+        a list of the formal addresses corresponding to addresses
+    '''
+
+    def geocode_input(api_key, input, geolocator):
+        location = geolocator.geocode(input)
+        address = location[0]["formatted_address"]
+        return address
+
+    try:
+        geolocator = gmaps.Client(key=googleapikey)
+        testgeocode = geolocator.geocode("this is to check if the API key is configured to allow Geocoding.")
+    except:
+        raise ValueError("The following API key may be problematic: " + googleapikey)
+    # get inputs
+    inputs = []
+    for line in addresses:
+        if (len(line.strip()) > 0):
+            inputs.append(line.strip())
+
+    futures = []
+    with concurrent.futures.ThreadPoolExecutor(4) as executer:
+        for address in inputs:
+            future = executer.submit(geocode_input, googleapikey, address, geolocator)
+            futures.append(future)
+    # Wait until all are finished
+    concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
+    results = [future.result() for future in futures]
+    mapped = []
+    for i in range(len(results)):
+        mapped.append(results[i])
+    return mapped
+
+
+def genmapslink(route: list):
+    '''
+    
+    Args:
+        route: a list of strings for every address in the route
+
+    Returns:
+        Google Maps directions link
+    '''
+
+    outstring = "https://www.google.com/maps/dir/"
+
+    for address in route:
+        outstring += urllib.parse.quote_plus(address) + "/"
+
+    return outstring
+
+
 if __name__ == '__main__':
     # test something here
-    SYSTEM_TO_TEST = "distancematrix"
+    SYSTEM_TO_TEST = "mapslink"
 
     if SYSTEM_TO_TEST == "geocode":
-        print(getcoordinate("""jade palace, chapel hill, NC
+        print(getmappedaddresses("""jade palace, chapel hill, NC
 1101 mason farm	Chapel Hill
 Timber Hollow court 	Chapel Hill
 1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
@@ -150,3 +210,9 @@ Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > ")
             [(35.910535, -79.07153699999999), (35.8993755, -79.0496993), (35.9407471, -79.055622), (35.8986969, -79.06878669999999), (35.918677, -79.0535469), (35.9528053, -79.0117215), (35.9305954, -79.0309678), (35.901634, -79.000045), (35.9538476, -79.06623789999999), (35.9187031, -79.0535469), (35.9333937, -79.03179519999999), (35.9317503, -79.029698), (35.9333937, -79.03179519999999), (35.9309288, -79.031252), (35.8980829, -79.0398685), (35.9317503, -79.029698), (35.9378711, -79.05453159999999), (35.8980563, -79.04115209999999), (35.89944070000001, -79.06600180000001)],
             option=0
         ))
+    elif SYSTEM_TO_TEST == "mapslink":
+        print(
+            genmapslink(
+                ['li ming’s global market', '390 Erwin Rd, Chapel Hill, NC', '100 Burnwood Ct, Chapel Hill, NC', '101 Palafox Dr, Chapel Hill, NC 27516', '311 Palafox Dr, Chapel Hill, NC 27516', '100 Manora Ln, Chapel Hill, NC 27516', '532 Lena Cir, Chapel Hill, NC', '1220 M.L.K. Jr Blvd, Chapel Hill, NC 27514', '118 Dixie Dr, Chapel Hill, NC 27514', '213 W Franklin St, Chapel Hill, NC 27516']
+            )
+        )
