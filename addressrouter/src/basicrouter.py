@@ -101,7 +101,7 @@ class BasicRouter():
         data['depot'] = len(distancematrix) - 1
         return (data)
 
-    def print_solution(self, manager, routing, solution, addresses):
+    def get_format(manager, routing, solution, addresses):
         """
         Creates a displayable version of the solution
         
