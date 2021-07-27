@@ -91,7 +91,7 @@ class BasicRouter():
         data['ends'] = [len(distancematrix) - 1 for i in range(self._numvehicles)]
         return (data)
 
-    def print_solution(manager, routing, solution, addresses):
+    def print_solution(self, manager, routing, solution, addresses):
         """
         Creates a displayable version of the solution
         
