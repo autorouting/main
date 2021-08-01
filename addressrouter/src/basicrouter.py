@@ -84,6 +84,9 @@ class BasicRouter():
     
     def create_data_model(self, distancematrix):
         # initiate ORTools
+        """
+            Create data for the Google OR Tool
+        """
         data = {}
         data['distance_matrix'] = distancematrix
         data['num_vehicles'] = self._numvehicles
