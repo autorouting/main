@@ -51,7 +51,7 @@ class BasicRouter():
         Returns: the optimized route assuming only the first driver is available
 
         '''
-        data = self.create_data_model(self._distancematrix)
+        data = self.create_data_model()
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                                 data['num_vehicles'], data['starts'], data['ends'])
         routing = pywrapcp.RoutingModel(manager)
@@ -82,16 +82,16 @@ class BasicRouter():
 
         return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
     
-    def create_data_model(self, distancematrix):
+    def create_data_model(self):
         # initiate ORTools
         """
             Create data for the Google OR Tool
         """
         data = {}
-        data['distance_matrix'] = distancematrix
+        data['distance_matrix'] = self._distancematrix
         data['num_vehicles'] = self._numvehicles
         data['starts'] = [0 for i in range(self._numvehicles)]
-        data['ends'] = [len(distancematrix) - 1 for i in range(self._numvehicles)]
+        data['ends'] = [len(self._addresses) - 1 for i in range(self._numvehicles)]
         return (data)
 
     def print_solution(self, manager, routing, solution, addresses):

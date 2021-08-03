@@ -37,7 +37,7 @@ class solve_multi(basicrouter.BasicRouter):
     def main(self):
         """Entry point of the program."""
         # Instantiate the data problem.
-        data = self.create_data_model(self._distancematrix)
+        data = self.create_data_model()
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
