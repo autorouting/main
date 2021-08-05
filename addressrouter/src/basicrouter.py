@@ -61,6 +61,9 @@ class BasicRouter():
     def deleteAddresses(self, indices: list):
         for index in sorted(indices, reverse=True):
             self.deleteAddress(index)
+    
+    def getIndex(self, address: str):
+        return self._addresses.index(address)
 
     def routeOneVehicle(self):
         '''
@@ -152,4 +155,5 @@ if __name__ == "__main__":
 213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "))
     myRouter.addIntermediateAddress("3603 Witherspoon Blvd Suite 101, Durham, NC 27707")
     myRouter.deleteAddresses([1, 2, 3])
+    print(myRouter.getIndex("118 Dixie Dr, Chapel Hill, NC 27514"))
     print(myRouter.routeOneVehicle())
