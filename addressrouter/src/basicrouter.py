@@ -57,6 +57,10 @@ class BasicRouter():
         # Column
         for row in self._distancematrix:
             row.pop(index)
+    
+    def deleteAddresses(self, indices: list):
+        for index in sorted(indices, reverse=True):
+            self.deleteAddress(index)
 
     def routeOneVehicle(self):
         '''
@@ -147,5 +151,5 @@ if __name__ == "__main__":
 532 Lena Cir, Chapel Hill, NC
 213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "))
     myRouter.addIntermediateAddress("3603 Witherspoon Blvd Suite 101, Durham, NC 27707")
-    myRouter.deleteAddress(2)
+    myRouter.deleteAddresses([1, 2, 3])
     print(myRouter.routeOneVehicle())
