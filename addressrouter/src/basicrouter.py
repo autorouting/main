@@ -93,7 +93,7 @@ class BasicRouter():
             
             return plan_output
         
-        ordered_indeces = self.get_format(manager, routing, solution, self._addresses)
+        ordered_indeces = get_format(manager, routing, solution, self._addresses)
         if solution:
             ordered_indeces
         route_solution = []
