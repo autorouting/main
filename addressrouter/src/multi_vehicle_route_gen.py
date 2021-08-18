@@ -11,9 +11,9 @@ class solve_multi(basicrouter.BasicRouter):
         #force_fairness does nothing right now
         self.force_fairness = force_fairness
 
-    def print_solution(self, data, manager, routing, solution):
-        """Prints solution on console."""
-        print(f'Objective: {solution.ObjectiveValue()}')
+    def get_format(self, data, manager, routing, solution):
+        """returns solution"""
+        self.output = f'Objective: {solution.ObjectiveValue()}'
         max_route_distance = 0
         for vehicle_id in range(data['num_vehicles']):
             index = routing.Start(vehicle_id)
@@ -27,10 +27,12 @@ class solve_multi(basicrouter.BasicRouter):
                     previous_index, index, vehicle_id)
             plan_output += '{}\n'.format(manager.IndexToNode(index))
             plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-            print(plan_output)
+            self.output += plan_output
             max_route_distance = max(route_distance, max_route_distance)
         
-        print('Maximum of the route distances: {}m'.format(max_route_distance))
+        self.output += 'Maximum of the route distances: {}m'.format(max_route_distance)
+        
+        return self.output
 
 
 
@@ -82,7 +84,7 @@ class solve_multi(basicrouter.BasicRouter):
 
         # Print solution on console.
         if solution:
-            self.print_solution(data, manager, routing, solution)
+            print(self.get_format(data, manager, routing, solution))
         
         else:
             print('No solution found!')
