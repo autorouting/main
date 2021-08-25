@@ -1,7 +1,7 @@
 #Import libraries
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-import addressrouter.src.maputil as maputil
+import maputil
 
 
 class BasicRouter():
