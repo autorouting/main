@@ -1,11 +1,11 @@
-from shutil import copyfile
-from os import path, getcwd
+from os import path
 import sys
-sys.path.append(path.dirname(getcwd())+"/src")
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__)))+"/src")
 from basicrouter import BasicRouter
 
+testnum=2
 myRouter = BasicRouter(
-    open(getcwd() + "/testfiles/test1.txt").read().splitlines(),
-    open(getcwd() + "/testfiles/api.txt").read()
+    open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().splitlines(),
+    open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
 )
-print("\n".join(myRouter.routeOneVehicle()[0]))
+print("\n:".format(testnum).join(myRouter.routeOneVehicle()[0]))
