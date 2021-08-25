@@ -15,3 +15,4 @@ local_app/graph
 
 # Workspace-specific
 *.idea
+addressrouter/tests/testfiles/api.txt
