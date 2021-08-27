@@ -8,4 +8,4 @@ myRouter = BasicRouter(
     open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().splitlines(),
     open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
 )
-print("\n:".format(testnum).join(myRouter.routeOneVehicle()[0]))
+print("\n".format(testnum).join(myRouter.routeOneVehicle()[0]))
