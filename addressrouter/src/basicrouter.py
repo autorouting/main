@@ -146,7 +146,7 @@ class BasicRouter():
 
 if __name__ == "__main__":
     # This code tests the module
-    myRouter = BasicRouter("""li ming’s global market
+    myRouter = BasicRouter("""li ming’s global market, durham, NC
 100 Manora Ln, Chapel Hill, NC 27516
 101 Palafox Dr, Chapel Hill, NC 27516
 311 Palafox Dr, Chapel Hill, NC 27516
@@ -155,8 +155,8 @@ if __name__ == "__main__":
 100 Burnwood Ct, Chapel Hill, NC
 390 Erwin Rd, Chapel Hill, NC
 532 Lena Cir, Chapel Hill, NC
-213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "), distancematrixoption=0)
-    myRouter.addIntermediateAddress("3603 Witherspoon Blvd Suite 101, Durham, NC 27707")
-    myRouter.deleteAddresses([1, 2, 3])
+213 W Franklin St, Chapel Hill, NC 27516""".splitlines(), input("api key???\n > "), distancematrixoption=1)
+    #myRouter.addIntermediateAddress("3603 Witherspoon Blvd Suite 101, Durham, NC 27707")
+    #myRouter.deleteAddresses([1, 2, 3])
     print(myRouter.getIndex("118 Dixie Dr, Chapel Hill, NC 27514"))
     print(myRouter.routeOneVehicle())
