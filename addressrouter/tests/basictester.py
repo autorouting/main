@@ -13,7 +13,7 @@ else:
     f.write(input("API Key????\n > "))
     f.close()
 
-testnum=3
+testnum=2
 myRouter = BasicRouter(
     open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().splitlines(),
     open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
