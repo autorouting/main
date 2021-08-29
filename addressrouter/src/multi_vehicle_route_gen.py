@@ -4,42 +4,56 @@ from ortools.constraint_solver import routing_enums_pb2
 import basicrouter
 
 
-class solve_multi(basicrouter.BasicRouter):
-    def __init__(self, input_addresses, api_key, num_vehicles, distancematrixoption = 1, force_fairness = False):
+class MultiVehicleRouter(basicrouter.BasicRouter):
+    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
         #force_fairness does nothing right now
         self.force_fairness = force_fairness
+        self.starts = starts
+        self.ends = ends
 
-    def get_format(self, data, manager, routing, solution):
-        """returns solution"""
-        self.output = f'Objective: {solution.ObjectiveValue()}'
+    def create_data_model(self, distancematrix):
+        # initiate ORTools
+        data = {}
+        data['distance_matrix'] = distancematrix
+        data['num_vehicles'] = self._numvehicles
+        data['starts'] = self.starts
+        data['ends'] = self.ends
+        return (data)
+
+    def get_formatted_output(self, data, manager, routing, solution):
+        self.output = [[] for vehicle in range(self._numvehicles)]
+        """Prints solution on console."""
+        print(f'Objective: {solution.ObjectiveValue()}')
         max_route_distance = 0
         for vehicle_id in range(data['num_vehicles']):
             index = routing.Start(vehicle_id)
             plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
             route_distance = 0
             while not routing.IsEnd(index):
+                self.output[vehicle_id].append(manager.IndexToNode(index))
                 plan_output += ' {} -> '.format(manager.IndexToNode(index))
                 previous_index = index
                 index = solution.Value(routing.NextVar(index))
                 route_distance += routing.GetArcCostForVehicle(
                     previous_index, index, vehicle_id)
+            self.output[vehicle_id].append(manager.IndexToNode(index))
             plan_output += '{}\n'.format(manager.IndexToNode(index))
             plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-            self.output += plan_output
+            print(plan_output)
             max_route_distance = max(route_distance, max_route_distance)
         
-        self.output += 'Maximum of the route distances: {}m'.format(max_route_distance)
+        #print(self.output)
         
-        return self.output
+        print('Maximum of the route distances: {}m'.format(max_route_distance))
 
 
 
-    def main(self):
+    def routeMultiVehicle(self):
         """Entry point of the program."""
         # Instantiate the data problem.
-        data = self.create_data_model()
+        data = self.create_data_model(self._distancematrix)
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -84,19 +98,21 @@ class solve_multi(basicrouter.BasicRouter):
 
         # Print solution on console.
         if solution:
-            print(self.get_format(data, manager, routing, solution))
+            self.get_formatted_output(data, manager, routing, solution)
+            return self.output
         
         else:
-            print('No solution found!')
+            raise Exception('I know what I am doing.  This is intentional!  I did not make any mistakes.')
 
 
 
 if __name__ == '__main__':
     #the first argument is just a test case.  change to your liking, but seperate each address with \n
 
-    solve_multi = solve_multi("""103 E Main St, Carrboro, NC 27510
+    solve_multi = MultiVehicleRouter("""103 E Main St, Carrboro, NC 27510
     1129 Weaver Dairy Rd, Chapel Hill, NC 27514
     1810 Fordham Blvd, Chapel Hill, NC 27514
     1826 M.L.K. Jr Blvd, Chapel Hill, NC 27514
-    790 M.L.K. Jr Blvd, Chapel Hill, NC 27514""".splitlines(), input('API Key: '), 2)
-    solve_multi.main()
+    790 M.L.K. Jr Blvd, Chapel Hill, NC 27514""".splitlines(), input('API Key: '), 2, [0, 1], [4, 4])
+    print(solve_multi.routeMultiVehicle())
+
