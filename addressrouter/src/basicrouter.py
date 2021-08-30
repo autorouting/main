@@ -141,7 +141,7 @@ class BasicRouter():
         data['distance_matrix'] = self._distancematrix
         data['num_vehicles'] = self._numvehicles
         data['starts'] = [0]
-        data['ends'] = [len(distancematrix) - 1]
+        data['ends'] = [len(self._distancematrix) - 1]
     
         return (data)
 
