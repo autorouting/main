@@ -140,8 +140,9 @@ class BasicRouter():
         data = {}
         data['distance_matrix'] = self._distancematrix
         data['num_vehicles'] = self._numvehicles
-        data['starts'] = [0 for i in range(self._numvehicles)]
-        data['ends'] = [len(self._addresses) - 1 for i in range(self._numvehicles)]
+        data['starts'] = [0]
+        data['ends'] = [len(distancematrix) - 1]
+    
         return (data)
 
 if __name__ == "__main__":
