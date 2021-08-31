@@ -15,10 +15,10 @@ else:
     f.write(input("API Key????\n > "))
     f.close()
 
-testnum=2
+testnum=1
 myRouter = BasicRouter(
     open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().splitlines(),
-    open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
+    open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read(), distancematrixoption=1
 )
 result = myRouter.routeOneVehicle()
 print("\n".format(testnum).join(result[0]))
@@ -28,7 +28,8 @@ print(maputil.genmapslink(myRouter._addresses))
 
 #ordered coordinates need to be a list of numbers.
 #This is currently manually entered, need someone to help to automate this.
-ordered_coordinates = [[35.9661961,-78.963248], [35.9733299,-79.0508445], [35.9445544,-79.0560079], [35.9114138,-79.0590048999999]]
+#ordered_coordinates = [[35.9661961,-78.963248], [35.9733299,-79.0508445], [35.9445544,-79.0560079], [35.9114138,-79.0590048999999]]
+ordered_coordinates = result[1]
 
 x_coordinates = [row[0] for row in ordered_coordinates]
 y_coordinates = [row[1] for row in ordered_coordinates]

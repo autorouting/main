@@ -17,3 +17,4 @@ local_app/graph
 *.idea
 addressrouter/tests/testfiles/api.txt
 addressrouter/tests/testfiles/api.txt
+addressrouter/tests/.ipynb_checkpoints/basictester_notebook-checkpoint.ipynb
