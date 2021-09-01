@@ -69,9 +69,8 @@ class BasicRouter():
 
     def routeOneVehicle(self):
         '''
-
+        Yehua: description of the returns is not accruate
         Returns: the optimized route with a single vehcile
-
         '''
         data = self.create_data_model()
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -87,7 +86,7 @@ class BasicRouter():
         search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         solution = routing.SolveWithParameters(search_parameters)
         
-        
+        #Yehua: revisiting this, we are probably better off not have this function but just a few lines of code instead.
         def get_format(manager, routing, solution, addresses):
             """
             Creates a displayable version of the solution
@@ -101,10 +100,9 @@ class BasicRouter():
 
             """
             # create ORTools solution
-            #print('Objective: {} meters'.format(solution.ObjectiveValue()))
             index = routing.Start(0)
             plan_output = []
-            route_distance = 0
+            route_distance = 0  #Yehua: route distance seems to be not used.
             while not routing.IsEnd(index):
                 plan_output.append(manager.IndexToNode(index))
                 previous_index = index
@@ -114,13 +112,13 @@ class BasicRouter():
             
             return plan_output
         
-        ordered_indeces = get_format(manager, routing, solution, self._addresses)
+        ordered_indices = get_format(manager, routing, solution, self._addresses)
         if solution:
-            ordered_indeces
+            ordered_indices
         route_solution = []
-        route_solution_nonformatted = []
+        route_solution_nonformatted = []  #Yehua: I am confused here, route_solution_nonformatted seems to be exactly the same as route solution
         ordered_coords = []
-        for x in ordered_indeces:
+        for x in ordered_indices:
             route_solution.append(self._addresses[x])
             route_solution_nonformatted.append(self._addresses[x])
             ordered_coords.append((self._coordinates[x][0], self._coordinates[x][1]))
@@ -130,7 +128,7 @@ class BasicRouter():
         # Format route_solution
         route_solution = maputil.getmappedaddresses(route_solution, self._apikey)
 
-        return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indeces)
+        return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indices)
     
     def create_data_model(self):
         # initiate ORTools
