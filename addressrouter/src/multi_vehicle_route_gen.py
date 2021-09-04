@@ -25,7 +25,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
     def get_formatted_output(self, data, manager, routing, solution):
         self.output = [[] for vehicle in range(self._numvehicles)]
         """Prints solution on console."""
-        print(f'Objective: {solution.ObjectiveValue()}')
+        #print(f'Objective: {solution.ObjectiveValue()}')
         max_route_distance = 0
         for vehicle_id in range(data['num_vehicles']):
             index = routing.Start(vehicle_id)
@@ -41,12 +41,12 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             self.output[vehicle_id].append(manager.IndexToNode(index))
             plan_output += '{}\n'.format(manager.IndexToNode(index))
             plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-            print(plan_output)
+            #print(plan_output)
             max_route_distance = max(route_distance, max_route_distance)
         
         #print(self.output)
         
-        print('Maximum of the route distances: {}m'.format(max_route_distance))
+        #print('Maximum of the route distances: {}m'.format(max_route_distance))
 
 
 
