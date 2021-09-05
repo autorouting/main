@@ -69,8 +69,8 @@ class BasicRouter():
 
     def routeOneVehicle(self):
         '''
-        Yehua: description of the returns is not accruate
-        Returns: the optimized route with a single vehcile
+        Returns: the optimized single vehicle route with addresses (list of strings), coordinates (list of tuples),
+        unformated addresses (list of strings), indices (list of numbers).
         '''
         data = self.create_data_model()
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -115,20 +115,23 @@ class BasicRouter():
         ordered_indices = get_format(manager, routing, solution, self._addresses)
         if solution:
             ordered_indices
-        route_solution = []
-        route_solution_nonformatted = []  #Yehua: I am confused here, route_solution_nonformatted seems to be exactly the same as route solution
+        route_solution_nonformatted = []
         ordered_coords = []
         for x in ordered_indices:
-            route_solution.append(self._addresses[x])
             route_solution_nonformatted.append(self._addresses[x])
             ordered_coords.append((self._coordinates[x][0], self._coordinates[x][1]))
         #end_time = time.perf_counter_ns()
         #print((end_time - start_time) / 10 ** 9)
 
         # Format route_solution
-        route_solution = maputil.getmappedaddresses(route_solution, self._apikey)
+        # Yehua: we should add an option in the function routeOneVehicle to return the formatted route solution or not
 
-        return (route_solution, ordered_coords, route_solution_nonformatted, ordered_indices)
+        # if formatted:
+        #     route_solution = maputil.getmappedaddresses(route_solution_nonformatted, self._apikey)
+        # else:
+        #     route_solution = route_solution_nonformatted
+
+        return (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
     
     def create_data_model(self):
         # initiate ORTools

@@ -31,8 +31,8 @@ print(maputil.genmapslink(myRouter._addresses))
 #ordered_coordinates = [[35.9661961,-78.963248], [35.9733299,-79.0508445], [35.9445544,-79.0560079], [35.9114138,-79.0590048999999]]
 ordered_coordinates = result[1]
 
-x_coordinates = [row[0] for row in ordered_coordinates]
-y_coordinates = [row[1] for row in ordered_coordinates]
+x_coordinates = [row[1] for row in ordered_coordinates]
+y_coordinates = [row[0] for row in ordered_coordinates]
 
 #specifying the boundaries of the plot
 x_min = min(x_coordinates) - numpy.std(x_coordinates)
