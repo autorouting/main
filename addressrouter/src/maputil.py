@@ -139,6 +139,10 @@ def getmappedaddresses(addresses, googleapikey):
     def geocode_input(api_key, input, geolocator):
         location = geolocator.geocode(input)
         address = location[0]["formatted_address"]
+
+        # Cache location object
+        geocode_cache[input] = location
+
         return address
 
     try:
