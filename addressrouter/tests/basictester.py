@@ -19,9 +19,6 @@ myRouter = BasicRouter(
     open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
 )
 result = myRouter.routeOneVehicle()
-print("\n".format(testnum).join(result[0]))
-print(maputil.genmapslink(result[0]))
-print(maputil.genmapslink(myRouter._addresses))
 
 # Write outputs to file
 out_file = open(path.dirname(path.abspath(__file__)) + "/testfiles/test_output.txt", "w")
@@ -33,3 +30,4 @@ out_file.write(
     + "\nMaps link before solve: " + maputil.genmapslink(myRouter._addresses)
     + "\nMaps link after solve : " + maputil.genmapslink(result[0])
 )
+out_file.close()
