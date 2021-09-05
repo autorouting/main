@@ -9,6 +9,9 @@ import requests
 import urllib
 
 
+geocode_cache = {}
+
+
 def getdistancematrix(coordinates, option=0):
     '''
     Args:
@@ -85,6 +88,10 @@ def getcoordinate(addresses, googleapikey):
     def geocode_input(api_key, input, geolocator):
         location = geolocator.geocode(input)
         coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
+
+        # Cache location object
+        geocode_cache[input] = location
+
         return coords
 
     try:
