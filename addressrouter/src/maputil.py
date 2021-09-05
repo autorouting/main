@@ -86,7 +86,10 @@ def getcoordinate(addresses, googleapikey):
 
     # Yikuan
     def geocode_input(api_key, input, geolocator):
-        location = geolocator.geocode(input)
+        if input in geocode_cache:
+            location = geocode_cache[input]
+        else:
+            location = geolocator.geocode(input)
         coords = (location[0]['geometry']['location']['lat'], location[0]['geometry']['location']['lng'])
 
         # Cache location object
@@ -137,7 +140,10 @@ def getmappedaddresses(addresses, googleapikey):
     '''
 
     def geocode_input(api_key, input, geolocator):
-        location = geolocator.geocode(input)
+        if input in geocode_cache:
+            location = geocode_cache[input]
+        else:
+            location = geolocator.geocode(input)
         address = location[0]["formatted_address"]
 
         # Cache location object
