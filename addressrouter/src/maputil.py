@@ -196,28 +196,16 @@ def genmapslink(route: list):
 
 if __name__ == '__main__':
     # test something here
-    SYSTEM_TO_TEST = "mapslink"
+    SYSTEM_TO_TEST = "geocode"
 
     if SYSTEM_TO_TEST == "geocode":
-        print(getmappedaddresses("""jade palace, chapel hill, NC
+        myAddresses = """jade palace, chapel hill, NC
 1101 mason farm	Chapel Hill
 Timber Hollow court 	Chapel Hill
-1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill
-602 Martin Luther King Jr BLVD	Chapel Hill
-10104 Drew Hill Ln	Chapel Hill
-214 Conner Dr Apt (Sunstone Apartment)	Chapel Hill
-kingswood r9	Chapel Hill
-117 Cabernet Dr, Chapel Hill	Chapel Hill
-602 MLK Blv (lark chapel hill)	Chapel Hill
-1521 E Franklin St, Chapel Hill	Chapel Hill
-213 Conner Drive, Chapel Hill	Chapel Hill
-1521 E Franklin St, Chapel Hill	Chapel Hill
-203 Conner Dr Apt 5	Chapel Hill
-1700 Baity Hill Dr Apt.110	Chapel Hill
-213 Conner Drive, Apt 18	Chapel Hill
-108 Shadowood Drive, Chapel Hill	Chapel Hill
-1600 Baity Hill Dr	Chapel Hill
-Laurel Ridge Apartment 25E	Chapel Hill""".splitlines(), input("api key???\n > ")))
+1105 W NC Highway 54 BYP, APT R9, Chapel hill	Chapel Hill""".splitlines()
+        myKey = input("api key???\n > ")
+        print(getcoordinate(myAddresses, myKey))
+        print(getmappedaddresses(myAddresses, myKey))
     elif SYSTEM_TO_TEST == "distancematrix":
         print(getdistancematrix(
             [(35.910535, -79.07153699999999), (35.8993755, -79.0496993), (35.9407471, -79.055622), (35.8986969, -79.06878669999999), (35.918677, -79.0535469), (35.9528053, -79.0117215), (35.9305954, -79.0309678), (35.901634, -79.000045), (35.9538476, -79.06623789999999), (35.9187031, -79.0535469), (35.9333937, -79.03179519999999), (35.9317503, -79.029698), (35.9333937, -79.03179519999999), (35.9309288, -79.031252), (35.8980829, -79.0398685), (35.9317503, -79.029698), (35.9378711, -79.05453159999999), (35.8980563, -79.04115209999999), (35.89944070000001, -79.06600180000001)],
