@@ -31,3 +31,8 @@ out_file.write(
     + "\nMaps link after solve : " + maputil.genmapslink(result[0])
 )
 out_file.close()
+
+# Print output
+out_file = open(path.dirname(path.abspath(__file__)) + "/testfiles/test_output.txt", "r")
+print(out_file.read())
+out_file.close()
