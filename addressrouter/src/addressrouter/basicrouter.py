@@ -1,7 +1,8 @@
 #Import libraries
+from __future__ import absolute_import
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-import maputil
+from . import maputil
 
 
 class BasicRouter():
