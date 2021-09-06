@@ -1,0 +1,1 @@
+`cd` to this directory, then use `pip install .`
