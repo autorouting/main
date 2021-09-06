@@ -15,7 +15,7 @@ else:
 
 testnum=2
 myRouter = BasicRouter(
-    open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().splitlines(),
+    open(path.dirname(path.abspath(__file__)) + "/testfiles/test{}.txt".format(testnum)).read().split("%")[0].splitlines(),
     open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read()
 )
 result = myRouter.routeOneVehicle()
