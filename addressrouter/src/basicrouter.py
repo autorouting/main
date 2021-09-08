@@ -101,17 +101,14 @@ class BasicRouter():
             # create ORTools solution
             index = routing.Start(0)
             plan_output = []
-            route_distance = 0  #Yehua: route distance seems to be not used.
             while not routing.IsEnd(index):
                 plan_output.append(manager.IndexToNode(index))
-                previous_index = index
                 index = solution.Value(routing.NextVar(index))
-                route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
             plan_output.append(manager.IndexToNode(index))
             
             return plan_output
         
-        ordered_indices = get_format(manager, routing, solution, self._addresses)
+        ordered_indices = get_format(manager, routing, solution)
         if solution:
             ordered_indices
         route_solution_nonformatted = []
