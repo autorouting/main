@@ -112,7 +112,7 @@ class BasicRouter():
         # else:
         #     route_solution = route_solution_nonformatted
 
-        route_solution = maputil.getmappedaddresses(route_solution_nonformatted) # Temporary bug fix
+        route_solution = maputil.getmappedaddresses(route_solution_nonformatted, self._apikey) # Temporary bug fix
         self.output = (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
         return self.output
     
