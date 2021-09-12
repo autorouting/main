@@ -1,7 +1,7 @@
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-import basicrouter
+from . import basicrouter
 
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
