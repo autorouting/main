@@ -1,6 +1,6 @@
 from os import path
 from addressrouter.basicrouter import BasicRouter
-import addressrouter.maputil
+from addressrouter import maputil
 
 if path.isfile(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt"):
     # API Key file exists
