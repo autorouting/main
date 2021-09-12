@@ -113,7 +113,9 @@ class BasicRouter():
         # else:
         #     route_solution = route_solution_nonformatted
 
-        return (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
+        route_solution = maputil.getmappedaddresses(route_solution_nonformatted) # Temporary bug fix
+        self.output = (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
+        return self.output
     
     def create_data_model(self):
         # initiate ORTools
