@@ -9,6 +9,7 @@ import requests
 import urllib
 
 
+# Initiate cache
 geocode_cache = {}
 
 
@@ -86,6 +87,7 @@ def getcoordinate(addresses, googleapikey):
 
     # Yikuan
     def geocode_input(api_key, input, geolocator):
+        # Use cache data if exists; otherwise, geocode
         if input in geocode_cache:
             location = geocode_cache[input]
         else:
@@ -140,6 +142,7 @@ def getmappedaddresses(addresses, googleapikey):
     '''
 
     def geocode_input(api_key, input, geolocator):
+        # Use cache data if exists; otherwise, geocode
         if input in geocode_cache:
             location = geocode_cache[input]
         else:
