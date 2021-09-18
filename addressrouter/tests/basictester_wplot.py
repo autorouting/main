@@ -1,8 +1,6 @@
 from os import path
-import sys
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__)))+"/src")
-from basicrouter import BasicRouter
-import maputil
+from addressrouter.basicrouter import BasicRouter
+import addressrouter.maputil as maputil
 import matplotlib.pyplot as plt
 import numpy
 
