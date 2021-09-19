@@ -9,6 +9,7 @@
 4, 4
 %
 First X lines until ###: addresses
-Next line: # of drivers
-Next Y lines (Y = # of drivers): two numbers separated by ",", first number is index of origin (index starts at 0), second number is index of destination
-Note: the indices needs to be between 0 and X-1, the number of lines for indices should be equal to Y.
+Next line: numeric representing the number of drivers
+Next line: numerics separated by ",", representing the indices of the origins for all drivers
+Next line: numerics separated by ",", representing the indices of the destinations for all drivers
+Note: the indices needs to be between 0 and X-1, the number of numerics for each of the last two lines should equal to the number of drivers.
