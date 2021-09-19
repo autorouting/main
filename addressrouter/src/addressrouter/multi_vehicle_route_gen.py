@@ -23,7 +23,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         return (data)
 
     def get_formatted_output(self, data, manager, routing, solution):
-        self.output = [[] for vehicle in range(self._numvehicles)]
+        output = [[] for vehicle in range(self._numvehicles)]
         """Prints solution on console."""
         #print(f'Objective: {solution.ObjectiveValue()}')
         max_route_distance = 0
@@ -32,17 +32,19 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
             route_distance = 0
             while not routing.IsEnd(index):
-                self.output[vehicle_id].append(manager.IndexToNode(index))
+                output[vehicle_id].append(manager.IndexToNode(index))
                 plan_output += ' {} -> '.format(manager.IndexToNode(index))
                 previous_index = index
                 index = solution.Value(routing.NextVar(index))
                 route_distance += routing.GetArcCostForVehicle(
                     previous_index, index, vehicle_id)
-            self.output[vehicle_id].append(manager.IndexToNode(index))
+            output[vehicle_id].append(manager.IndexToNode(index))
             plan_output += '{}\n'.format(manager.IndexToNode(index))
             plan_output += 'Distance of the route: {}m\n'.format(route_distance)
             #print(plan_output)
             max_route_distance = max(route_distance, max_route_distance)
+            
+        return output
         
         #print(self.output)
         
@@ -98,7 +100,22 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
 
         # Print solution on console.
         if solution:
-            self.get_formatted_output(data, manager, routing, solution)
+            ordered_indices = self.get_formatted_output(data, manager, routing, solution)
+            
+            route_solution_nonformatted = []
+            ordered_coords = []
+            route_solution = []
+            for i in ordered_indices:
+                rsn_row = []
+                oc_row = []
+                for j in ordered_indices[x]:
+                    rsn_row.append(self._addresses[i][j])
+                    oc_row.append((self._coordinates[i][j][0], self._coordinates[i][j][1]))
+                route_solution_nonformatted.append(rsn_row)
+                ordered_coords.append(oc_row)
+                route_solution.append(maputil.getmappedaddresses(rsn_row, self._apikey))
+            
+            self.output = (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
             return self.output
         
         else:
