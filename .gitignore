@@ -12,3 +12,8 @@ local_app/api_key.py
 # Self-install
 cgi-bin/graph
 local_app/graph
+
+# Workspace-specific
+*.idea
+addressrouter/tests/testfiles/api.txt
+addressrouter/tests/testfiles/api.txt
