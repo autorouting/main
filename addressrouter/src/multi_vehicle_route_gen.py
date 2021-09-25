@@ -44,7 +44,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             print(plan_output)
             max_route_distance = max(route_distance, max_route_distance)
         
-        print(self.output)
+        #print(self.output)
         
         print('Maximum of the route distances: {}m'.format(max_route_distance))
 
@@ -99,7 +99,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         # Print solution on console.
         if solution:
             self.get_formatted_output(data, manager, routing, solution)
-            return solve_multi.output
+            return self.output
         
         else:
             raise Exception('I know what I am doing.  This is intentional!  I did not make any mistakes.')
