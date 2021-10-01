@@ -113,7 +113,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
                     oc_row.append((self._coordinates[i][j][0], self._coordinates[i][j][1]))
                 route_solution_nonformatted.append(rsn_row)
                 ordered_coords.append(oc_row)
-                route_solution.append(maputil.getmappedaddresses(rsn_row, self._apikey))
+                route_solution.append(basicrouter.maputil.getmappedaddresses(rsn_row, self._apikey))
             
             self.output = (route_solution_nonformatted, ordered_coords, ordered_indices, route_solution)
             return self.output
