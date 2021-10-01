@@ -2,3 +2,10 @@ li ming's global market
 207 Ashley Forest Rd, Chapel Hill, NC 27514
 8 Wedgewood Rd Chapel Hill, NC 27514
 213 W Franklin St, Chapel Hill, NC 27516
+%
+For basicrouter
+Expected Output:
+li ming's global market
+8 Wedgewood Rd Chapel Hill, NC 27514
+207 Ashley Forest Rd, Chapel Hill, NC 27514
+213 W Franklin St, Chapel Hill, NC 27516

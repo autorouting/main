@@ -1,0 +1,15 @@
+103 E Main St, Carrboro, NC 27510
+1129 Weaver Dairy Rd, Chapel Hill, NC 27514
+1810 Fordham Blvd, Chapel Hill, NC 27514
+1826 M.L.K. Jr Blvd, Chapel Hill, NC 27514
+790 M.L.K. Jr Blvd, Chapel Hill, NC 27514
+###
+2
+0, 1
+4, 4
+%
+First X lines until ###: addresses
+Next line: numeric representing the number of drivers
+Next line: numerics separated by ",", representing the indices of the origins for all drivers
+Next line: numerics separated by ",", representing the indices of the destinations for all drivers
+Note: the indices needs to be between 0 and X-1, the number of numerics for each of the last two lines should equal to the number of drivers.
