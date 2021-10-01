@@ -105,12 +105,12 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             route_solution_nonformatted = []
             ordered_coords = []
             route_solution = []
-            for i in ordered_indices:
+            for i in range(len(ordered_indices)):
                 rsn_row = []
                 oc_row = []
-                for j in ordered_indices[x]:
-                    rsn_row.append(self._addresses[i][j])
-                    oc_row.append((self._coordinates[i][j][0], self._coordinates[i][j][1]))
+                for j in ordered_indices[i]:
+                    rsn_row.append(self._addresses[j])
+                    oc_row.append(self._coordinates[j])
                 route_solution_nonformatted.append(rsn_row)
                 ordered_coords.append(oc_row)
                 route_solution.append(basicrouter.maputil.getmappedaddresses(rsn_row, self._apikey))
