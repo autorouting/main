@@ -23,13 +23,25 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         return (data)
 
     def get_formatted_output(self, data, manager, routing, solution):
+        '''
+
+        Args:
+            data: doesn't seem to be needed, to be removed later
+            manager: manager object from Google OR tools
+            routing: routing object from Google OR tools
+            solution: solution object from Google OR tools
+
+        Returns: a list of routes (represented as ordered indices of addresses) for each vehicle
+
+        '''
         output = [[] for vehicle in range(self._numvehicles)]
-        """Prints solution on console."""
-        #print(f'Objective: {solution.ObjectiveValue()}')
+
         max_route_distance = 0
-        for vehicle_id in range(data['num_vehicles']):
+        for vehicle_id in range(self._numvehicles):
             index = routing.Start(vehicle_id)
+            # plan_output is a vestigial variable, remove plan_output in the future?
             plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
+            # route_distance is also vestigial
             route_distance = 0
             while not routing.IsEnd(index):
                 output[vehicle_id].append(manager.IndexToNode(index))
@@ -45,14 +57,15 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             max_route_distance = max(route_distance, max_route_distance)
             
         return output
-        
-        #print(self.output)
-        
-        #print('Maximum of the route distances: {}m'.format(max_route_distance))
-
 
 
     def routeMultiVehicle(self):
+        '''
+
+        Returns:
+
+        '''
+
         """Entry point of the program."""
         # Instantiate the data problem.
         data = self.create_data_model(self._distancematrix)
@@ -98,7 +111,6 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         # Solve the problem.
         solution = routing.SolveWithParameters(search_parameters)
 
-        # Print solution on console.
         if solution:
             ordered_indices = self.get_formatted_output(data, manager, routing, solution)
             
