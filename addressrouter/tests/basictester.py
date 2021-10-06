@@ -26,7 +26,7 @@ out_file.write(
     + "\n\t".join(result[0])
     + "\n\n"
     + "\nMaps link before solve: " + maputil.genmapslink(myRouter._addresses)
-    + "\nMaps link after solve : " + maputil.genmapslink(result[0])
+    + "\nMaps link after solve : " + maputil.genmapslink(result[3])
 )
 out_file.close()
 
