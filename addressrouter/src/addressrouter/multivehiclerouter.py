@@ -22,7 +22,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         data['ends'] = self.ends
         return (data)
 
-    def get_formatted_output(self, data, manager, routing, solution):
+    def get_formatted_output(self, manager, routing, solution):
         '''
 
         Args:
@@ -112,7 +112,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         solution = routing.SolveWithParameters(search_parameters)
 
         if solution:
-            ordered_indices = self.get_formatted_output(data, manager, routing, solution)
+            ordered_indices = self.get_formatted_output(manager, routing, solution)
             
             route_solution_nonformatted = []
             ordered_coords = []
