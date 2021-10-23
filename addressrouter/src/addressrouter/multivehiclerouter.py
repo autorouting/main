@@ -13,10 +13,10 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         self.starts = starts
         self.ends = ends
 
-    def create_data_model(self, distancematrix):
+    def create_data_model(self):
         # initiate ORTools
         data = {}
-        data['distance_matrix'] = distancematrix
+        data['distance_matrix'] = self._distancematrix
         data['num_vehicles'] = self._numvehicles
         data['starts'] = self.starts
         data['ends'] = self.ends
@@ -68,7 +68,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
 
         """Entry point of the program."""
         # Instantiate the data problem.
-        data = self.create_data_model(self._distancematrix)
+        data = self.create_data_model()
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
