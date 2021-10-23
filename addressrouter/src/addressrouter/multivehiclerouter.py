@@ -36,25 +36,12 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         '''
         output = [[] for vehicle in range(self._numvehicles)]
 
-        max_route_distance = 0
         for vehicle_id in range(self._numvehicles):
             index = routing.Start(vehicle_id)
-            # plan_output is a vestigial variable, remove plan_output in the future?
-            plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
-            # route_distance is also vestigial
-            route_distance = 0
             while not routing.IsEnd(index):
                 output[vehicle_id].append(manager.IndexToNode(index))
-                plan_output += ' {} -> '.format(manager.IndexToNode(index))
-                previous_index = index
                 index = solution.Value(routing.NextVar(index))
-                route_distance += routing.GetArcCostForVehicle(
-                    previous_index, index, vehicle_id)
             output[vehicle_id].append(manager.IndexToNode(index))
-            plan_output += '{}\n'.format(manager.IndexToNode(index))
-            plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-            #print(plan_output)
-            max_route_distance = max(route_distance, max_route_distance)
             
         return output
 
