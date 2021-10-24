@@ -1,0 +1,20 @@
+600 Carraway Crossing, Chapel Hill, NC 27516
+121 E Chatham St, Cary, NC 27511
+910 NE Maynard Rd, Cary, NC 27513
+1138 Roxboro Rd, Haw River, NC 27258
+2038 N Church St, Burlington, NC 27217
+3153 Garden Rd #9786, Burlington, NC 27215
+919 N Harrison Ave, Cary, NC 27513
+Cha House Cary, 1319 Kildaire Farm Rd, Cary, NC 27511
+###
+2
+0, 0
+0, 0
+%
+First X lines until ###: addresses
+Next line: numeric representing the number of drivers
+Next line: numerics separated by ",", representing the indices of the origins for all drivers
+Next line: numerics separated by ",", representing the indices of the destinations for all drivers
+Note: the indices needs to be between 0 and X-1, the number of numerics for each of the last two lines should equal to the number of drivers.
+
+Expected output:

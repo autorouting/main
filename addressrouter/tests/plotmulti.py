@@ -2,7 +2,7 @@ import simplemulti
 import matplotlib.pyplot as plt
 import numpy
 
-testnum = 1
+testnum = 4
 result = simplemulti.run_multivehicle(testnum)
 
 color_spectrum = ["red", "orange", "yellow", "green", "blue", "purple"]
