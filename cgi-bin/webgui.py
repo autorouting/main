@@ -2,12 +2,15 @@
 
 import cgi, cgitb
 from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
+
+from addressrouter import basicrouter
 import onevehicleroutegen_web
 import genmapslink_web
 import send_email
 import urllib
 import api_key
 import json
+from addressrouter.basicrouter import BasicRouter
 
 """
 Make a file called api_key.py with the following text:
@@ -30,6 +33,7 @@ restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
 fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
+useAddressRouter = form.getvalue("betamode")
  
 # create big input string
 locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
@@ -38,7 +42,11 @@ locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + c
 print("Content-Type: application/json;charset=utf-8")
 print()
 
-route_solution, ordered_coords, route_solution_nonformatted, numsequence = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
+if not useAddressRouter:
+    route_solution, ordered_coords, route_solution_nonformatted, numsequence = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
+else:
+    myRouter = BasicRouter(restaurant_address + "\n" + consumer_addresses + "\n" + driver_address, api_key.google_geocoding_api)
+    route_solution, ordered_coords, route_solution_nonformatted, numsequence = myRouter.routeOneVehicle()
 
 output_dict = {}
 
