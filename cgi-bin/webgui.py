@@ -45,7 +45,7 @@ print()
 if not useAddressRouter:
     route_solution, ordered_coords, route_solution_nonformatted, numsequence = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
 else:
-    myRouter = BasicRouter(restaurant_address + "\n" + consumer_addresses + "\n" + driver_address, api_key.google_geocoding_api)
+    myRouter = BasicRouter(restaurant_address + "\n" + consumer_addresses + "\n" + driver_address, api_key.google_geocoding_api, not fast_mode_toggled)
     route_solution, ordered_coords, route_solution_nonformatted, numsequence = myRouter.routeOneVehicle()
 
 output_dict = {}
