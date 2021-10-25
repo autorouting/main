@@ -13,16 +13,16 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         self.starts = starts
         self.ends = ends
 
-    def create_data_model(self, distancematrix):
+    def create_data_model(self):
         # initiate ORTools
         data = {}
-        data['distance_matrix'] = distancematrix
+        data['distance_matrix'] = self._distancematrix
         data['num_vehicles'] = self._numvehicles
         data['starts'] = self.starts
         data['ends'] = self.ends
         return (data)
 
-    def get_formatted_output(self, data, manager, routing, solution):
+    def get_formatted_output(self, manager, routing, solution):
         '''
 
         Args:
@@ -36,25 +36,12 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         '''
         output = [[] for vehicle in range(self._numvehicles)]
 
-        max_route_distance = 0
         for vehicle_id in range(self._numvehicles):
             index = routing.Start(vehicle_id)
-            # plan_output is a vestigial variable, remove plan_output in the future?
-            plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
-            # route_distance is also vestigial
-            route_distance = 0
             while not routing.IsEnd(index):
                 output[vehicle_id].append(manager.IndexToNode(index))
-                plan_output += ' {} -> '.format(manager.IndexToNode(index))
-                previous_index = index
                 index = solution.Value(routing.NextVar(index))
-                route_distance += routing.GetArcCostForVehicle(
-                    previous_index, index, vehicle_id)
             output[vehicle_id].append(manager.IndexToNode(index))
-            plan_output += '{}\n'.format(manager.IndexToNode(index))
-            plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-            #print(plan_output)
-            max_route_distance = max(route_distance, max_route_distance)
             
         return output
 
@@ -68,7 +55,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
 
         """Entry point of the program."""
         # Instantiate the data problem.
-        data = self.create_data_model(self._distancematrix)
+        data = self.create_data_model()
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -112,7 +99,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         solution = routing.SolveWithParameters(search_parameters)
 
         if solution:
-            ordered_indices = self.get_formatted_output(data, manager, routing, solution)
+            ordered_indices = self.get_formatted_output(manager, routing, solution)
             
             route_solution_nonformatted = []
             ordered_coords = []
