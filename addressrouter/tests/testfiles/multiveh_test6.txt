@@ -1,0 +1,15 @@
+6825 Skipwith Rd, Skipwith, VA 23968
+250 Middle School Rd, Skipwith, VA 23968
+New Hope Rd, Skipwith, VA 23968
+24234-24398 VA-49, Chase City, VA 23924
+9040 Trottinridge Rd, Chase City, VA 23924
+###
+3
+0,0
+0,0
+%
+First X lines until ###: addresses
+Next line: numeric representing the number of drivers
+Next line: numerics separated by ",", representing the indices of the origins for all drivers
+Next line: numerics separated by ",", representing the indices of the destinations for all drivers
+Note: the indices needs to be between 0 and X-1, the number of numerics for each of the last two lines should equal to the number of drivers.
