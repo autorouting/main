@@ -5,6 +5,7 @@ from . import basicrouter
 
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
+    #def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, capacities = null, distancematrixoption=1, span_cost_coeff=100):
     def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
@@ -12,6 +13,9 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         self.force_fairness = force_fairness
         self.starts = starts
         self.ends = ends
+        # if capacities = null:
+        #     self.capacities = [len(input_addresses) for x in range(num_vehicles)]
+
 
     def create_data_model(self):
         # initiate ORTools
@@ -20,6 +24,10 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         data['num_vehicles'] = self._numvehicles
         data['starts'] = self.starts
         data['ends'] = self.ends
+
+        # data['demands'] = [1 for x in range(self._addresses)]
+        # data['vehicle_capacities'] = self.capacities
+
         return (data)
 
     def get_formatted_output(self, manager, routing, solution):
@@ -88,7 +96,25 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             True,  # start cumul to zero
             dimension_name)
         distance_dimension = routing.GetDimensionOrDie(dimension_name)
-        distance_dimension.SetGlobalSpanCostCoefficient(100)
+        distance_dimension.SetGlobalSpanCostCoefficient(100000)
+
+        # # Add Capacity constraint.
+        # def demand_callback(from_index):
+        #     """Returns the demand of the node."""
+        #     # Convert from routing variable Index to demands NodeIndex.
+        #     from_node = manager.IndexToNode(from_index)
+        #     return data['demands'][from_node]
+        #
+        # demand_callback_index = routing.RegisterUnaryTransitCallback(
+        #     demand_callback)
+        # routing.AddDimensionWithVehicleCapacity(
+        #     demand_callback_index,
+        #     0,  # null capacity slack
+        #     data['vehicle_capacities'],  # vehicle maximum capacities
+        #     True,  # start cumul to zero
+        #     'Capacity')
+
+
 
         # Setting first solution heuristic.
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
