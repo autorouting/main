@@ -18,7 +18,8 @@ def run_multivehicle(testnum):
         open(path.dirname(path.abspath(__file__)) + "/testfiles/api.txt").read(),
         int(testfile_read.split("###\n")[1].splitlines()[0]),
         eval("[" + testfile_read.split("###\n")[1].splitlines()[1] + "]"),
-        eval("[" + testfile_read.split("###\n")[1].splitlines()[2] + "]")
+        eval("[" + testfile_read.split("###\n")[1].splitlines()[2] + "]"),
+        span_cost_coeff=1000
     )
     result = myRouter.routeMultiVehicle()
 
