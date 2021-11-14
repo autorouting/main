@@ -5,11 +5,9 @@ from . import basicrouter
 
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
-    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False, span_cost_coeff=100, capacities:list = None):
+    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, span_cost_coeff=100, capacities:list = None):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
-        #force_fairness does nothing right now
-        self.force_fairness = force_fairness
         self._span_cost_coeff = span_cost_coeff
         self.starts = starts
         self.ends = ends
