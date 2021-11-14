@@ -5,7 +5,6 @@ from . import basicrouter
 
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
-    #def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, capacities = null, distancematrixoption=1, span_cost_coeff=100):
     def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False, span_cost_coeff=100, capacities:list = None):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
