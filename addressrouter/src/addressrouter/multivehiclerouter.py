@@ -6,7 +6,7 @@ from . import basicrouter
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
     #def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, capacities = null, distancematrixoption=1, span_cost_coeff=100):
-    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False, span_cost_coeff=100):
+    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, force_fairness = False, span_cost_coeff=100, capacities:list = None):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
         #force_fairness does nothing right now
@@ -14,8 +14,10 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         self._span_cost_coeff = span_cost_coeff
         self.starts = starts
         self.ends = ends
-        # if capacities = null:
-        #     self.capacities = [len(input_addresses) for x in range(num_vehicles)]
+        if capacities == None:
+            self._capacities = [len(input_addresses) for x in range(num_vehicles)]
+        else:
+            self._capacities = capacities
 
 
     def create_data_model(self):
@@ -26,8 +28,8 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         data['starts'] = self.starts
         data['ends'] = self.ends
 
-        # data['demands'] = [1 for x in range(self._addresses)]
-        # data['vehicle_capacities'] = self.capacities
+        data['demands'] = [1 for x in self._addresses]
+        data['vehicle_capacities'] = self._capacities
 
         return (data)
 
@@ -99,21 +101,21 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
         distance_dimension = routing.GetDimensionOrDie(dimension_name)
         distance_dimension.SetGlobalSpanCostCoefficient(self._span_cost_coeff)
 
-        # # Add Capacity constraint.
-        # def demand_callback(from_index):
-        #     """Returns the demand of the node."""
-        #     # Convert from routing variable Index to demands NodeIndex.
-        #     from_node = manager.IndexToNode(from_index)
-        #     return data['demands'][from_node]
-        #
-        # demand_callback_index = routing.RegisterUnaryTransitCallback(
-        #     demand_callback)
-        # routing.AddDimensionWithVehicleCapacity(
-        #     demand_callback_index,
-        #     0,  # null capacity slack
-        #     data['vehicle_capacities'],  # vehicle maximum capacities
-        #     True,  # start cumul to zero
-        #     'Capacity')
+        # Add Capacity constraint.
+        def demand_callback(from_index):
+            """Returns the demand of the node."""
+            # Convert from routing variable Index to demands NodeIndex.
+            from_node = manager.IndexToNode(from_index)
+            return data['demands'][from_node]
+        
+        demand_callback_index = routing.RegisterUnaryTransitCallback(
+            demand_callback)
+        routing.AddDimensionWithVehicleCapacity(
+            demand_callback_index,
+            0,  # null capacity slack
+            data['vehicle_capacities'],  # vehicle maximum capacities
+            True,  # start cumul to zero
+            'Capacity')
 
 
 
