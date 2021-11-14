@@ -18,3 +18,4 @@ local_app/graph
 addressrouter/tests/testfiles/api.txt
 addressrouter/tests/testfiles/api.txt
 addressrouter/tests/.ipynb_checkpoints/basictester_notebook-checkpoint.ipynb
+addressrouter/tests/testfiles/multiveh_test_output.txt
