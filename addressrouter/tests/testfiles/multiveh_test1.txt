@@ -2,11 +2,15 @@
 1129 Weaver Dairy Rd, Chapel Hill, NC 27514
 1810 Fordham Blvd, Chapel Hill, NC 27514
 1826 M.L.K. Jr Blvd, Chapel Hill, NC 27514
+Chapel Hill Public Library,Chapel Hill, NC
+Wholefoods, Chapel Hill, NC
+Wegmans, Chapel Hill, NC
+Coker Arboretum, Chapel Hill, NC
 790 M.L.K. Jr Blvd, Chapel Hill, NC 27514
 ###
 2
 0, 1
-4, 4
+8, 8
 %
 First X lines until ###: addresses
 Next line: numeric representing the number of drivers

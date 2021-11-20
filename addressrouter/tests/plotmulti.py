@@ -2,8 +2,10 @@ import simplemulti
 import matplotlib.pyplot as plt
 import numpy
 
-testnum = 4
+testnum = 3
 result = simplemulti.run_multivehicle(testnum)
+#result = simplemulti.run_multivehicle(testnum)
+#run_multivehicle(1, minmax_coeff=10)
 
 color_spectrum = ["red", "orange", "yellow", "green", "blue", "purple"]
 color_index = 0

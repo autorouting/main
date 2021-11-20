@@ -5,7 +5,8 @@ from os import path
 import webbrowser
 
 testnum = 1
-result = simplemulti.run_multivehicle(testnum)
+veh_capacity = 100 #the maximum capacity for each vehicle
+result = simplemulti.run_multivehicle(testnum, minmax_coeff=0, capacity=veh_capacity)
 
 m = folium.Map(location=result[1][0][0], zoom_start=15)
 

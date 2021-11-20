@@ -5,7 +5,7 @@ from . import basicrouter
 
 
 class MultiVehicleRouter(basicrouter.BasicRouter):
-    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, distancematrixoption = 1, span_cost_coeff=100, capacities:list = None):
+    def __init__(self, input_addresses, api_key, num_vehicles, starts, ends, span_cost_coeff=100, capacities:list = None, distancematrixoption=1):
         super().__init__(input_addresses, api_key, distancematrixoption)
         self._numvehicles = num_vehicles
         self._span_cost_coeff = span_cost_coeff
@@ -144,7 +144,7 @@ class MultiVehicleRouter(basicrouter.BasicRouter):
             return self.output
         
         else:
-            raise Exception('I know what I am doing.  This is intentional!  I did not make any mistakes.')
+            raise Exception('No solution is found.')
 
 
 
