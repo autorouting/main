@@ -1,12 +1,8 @@
-li ming's global market
-100 Manora Ln, Chapel Hill, NC 27516
-101 Palafox Dr, Chapel Hill, NC 27516
-311 Palafox Dr, Chapel Hill, NC 27516
-118 Dixie Dr, Chapel Hill, NC 27514
-1220 M.L.K. Jr Blvd, Chapel Hill, NC 27514
-100 Burnwood Ct, Chapel Hill, NC
-390 Erwin Rd, Chapel Hill, NC
-532 Lena Cir, Chapel Hill, NC
-213 W Franklin St, Chapel Hill, NC 27516
+li ming's global market, NC
+Museum of natural sciences, NC
+101 City Hall Plaza, Durham, NC 27701
+3116 Academy Rd, Durham, NC 27707
+North Carolina School of Science and Mathematics, NC
+North Carolina Botanical Garden, NC
 %
 For basicrouter

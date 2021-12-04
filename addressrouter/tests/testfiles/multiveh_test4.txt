@@ -1,34 +1,34 @@
-1418 NC-57, Hillsborough, NC 27278
-103 E Main St, Carrboro, NC 27510
-202 Red Mountain Rd, Rougemont, NC 27572
-50160 Governors Dr, Chapel Hill, NC 27517
-11520 US Hwy 15 501 N #205, Chapel Hill, NC 27517
-NCSU Camp Slocum, 918 State Forest Rd, Bahama, NC 27503
-Jade Palace Restaurant, 103 E Main St, Carrboro, NC 27510
-100 Rock Haven Rd, Carrboro, NC 27510
-4800 University Dr, Durham, NC 27707
-2925 NC-751, Apex, NC 27523
-125 Westside Dr, Chapel Hill, NC 27516
-400 Bayberry Dr, Chapel Hill, NC 27517
-2000 Geddy House Ln, Cary, NC 27519
-24 Gardner Rd, Apex, NC 27523
-6828 Piershill Ln, Cary, NC 27519
-8009 Wade Green Pl, Cary, NC 27519
-430 Waterstone Dr, Hillsborough, NC 27278
-131 Grantham House Way, Apex, NC 27523
-300 Prestonwood Pkwy, Cary, NC 27513
-8621 Castleberry Rd, Apex, NC 27523
-12000 Wisdom Dr, Cary, NC 27519
-1961 High House Rd, Cary, NC 27519
-200 Dominion Oak Cir, Cary, NC 27519
-509 Waverly Hills Dr, Cary, NC 27519
-12500 US Hwy 15 501 N, Chapel Hill, NC 27517
-7 Lanier Dr, Chapel Hill, NC 27517
-2092 Marthas Chapel Rd, Apex, NC 27523
-9310 NC-751, Durham, NC 27713
-205 Ashe St, Carrboro, NC 27510
-1521 E Franklin St, Chapel Hill, NC 27514
-88 Chatham Downs Dr Chatham Downs Shopping Center, Chapel Hill, NC 27517
+New York, New York
+Los Angeles, California
+Chicago, Illinois
+Houston, Texas
+Philadelphia, Pennsylvania
+Phoenix, Arizona
+San Antonio, Texas
+San Diego, California
+Dallas, Texas
+San Jose, California
+Austin, Texas
+Indianapolis, Indiana
+Jacksonville, Florida
+San Francisco, California
+Columbus, Ohio
+Charlotte, North Carolina
+Fort Worth, Texas
+Detroit, Michigan
+El Paso, Texas
+Memphis, Tennessee
+Seattle, Washington
+Denver, Colorado
+Boston, Massachusetts
+Nashville, Tennessee
+Baltimore, Maryland
+Oklahoma City, Oklahoma
+Louisville, Kentucky
+Portland, Oregon
+Las Vegas, Nevada
+Milwaukee, Wisconsin
+Albuquerque, New Mexico
 ###
 4
 0, 7, 0, 11
