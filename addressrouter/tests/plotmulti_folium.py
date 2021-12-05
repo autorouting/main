@@ -3,10 +3,15 @@ import matplotlib.pyplot as plt
 import folium
 from os import path
 import webbrowser
+import addressrouter.maputil as mu
 
-testnum = 1
-veh_capacity = 100 #the maximum capacity for each vehicle
-result = simplemulti.run_multivehicle(testnum, minmax_coeff=0, capacity=veh_capacity)
+
+testnum = 4
+veh_capacity = 100  #the maximum capacity for each vehicle
+result = simplemulti.run_multivehicle(testnum, minmax_coeff=100000, capacity=veh_capacity)
+
+for route_solution in result[3]:
+    print(mu.genmapslink(route_solution))
 
 m = folium.Map(location=result[1][0][0], zoom_start=15)
 
