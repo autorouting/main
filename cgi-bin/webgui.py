@@ -2,8 +2,8 @@
 
 import cgi, cgitb
 from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
-import onevehicleroutegen_web
-import genmapslink_web
+from addressrouter.basicrouter import BasicRouter
+from addressrouter import maputil
 import send_email
 import urllib
 import api_key
@@ -30,20 +30,22 @@ restaurant_address = form.getvalue("restaurant")
 consumer_addresses = form.getvalue("consumer")
 fast_mode_toggled = form.getvalue("fast_mode_toggled")
 user_email = form.getvalue("user_email")
- 
-# create big input string
-locationstextfilecontent = driver_address + "\n" + restaurant_address + "\n" + consumer_addresses
 
 # change to text display
 print("Content-Type: application/json;charset=utf-8")
 print()
 
-route_solution, ordered_coords, route_solution_nonformatted, numsequence = onevehicleroutegen_web.main(api_key.google_geocoding_api, locationstextfilecontent, fast_mode_toggled)
+myRouter = BasicRouter(
+    [restaurant_address] + consumer_addresses.split("\n") + [driver_address],
+    api_key.google_geocoding_api,
+    [1, 0][int(fast_mode_toggled)]
+)
+route_solution, ordered_coords, route_solution_nonformatted, numsequence = myRouter.routeOneVehicle()
 
 output_dict = {}
 
 if ordered_coords != "":
-    route_link = genmapslink_web.maps_link(" -> ".join(route_solution), -1)
+    route_link = maputil.genmapslink(route_solution)
     
     # read sender and password from email config file
     if str(user_email) != 'None':
@@ -63,7 +65,7 @@ if ordered_coords != "":
     unordered = [None for i in range(len(numsequence))]
     for i in range(len(numsequence)):
         unordered[numsequence[i] - 1] = route_solution[i]
-    output_dict["dev_data"]["unordered_maps_link"] = genmapslink_web.maps_link(" -> ".join(unordered)).replace("\n", " -> ")
+    output_dict["dev_data"]["unordered_maps_link"] = maputil.genmapslink(unordered)
     
 else:
     output_dict["status"] = "invalid_address"
