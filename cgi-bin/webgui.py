@@ -62,9 +62,7 @@ if ordered_coords != "":
 
     # Dev data
     output_dict["dev_data"] = {}
-    unordered = [None for i in range(len(numsequence))]
-    for i in range(len(numsequence)):
-        unordered[numsequence[i] - 1] = route_solution[i]
+    unordered = [restaurant_address] + consumer_addresses.split("\n") + [driver_address]
     output_dict["dev_data"]["unordered_maps_link"] = maputil.genmapslink(unordered)
     
 else:
