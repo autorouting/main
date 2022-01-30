@@ -16,7 +16,7 @@ google_geocoding_api = "API_KEY"
 Calls functions of other files to generate and display optimal route
 """
 
-cgitb.enable(False, "/var/log/httpd/error_log") # Write errors to error log but don't display to users. Replace second argument with your error log file.
+cgitb.enable(False, "/var/log/apache2/error.log") # Write errors to error log but don't display to users. Replace second argument with your error log file.
 
 # allow unicode strings
 import sys
@@ -38,9 +38,9 @@ print()
 myRouter = BasicRouter(
     [restaurant_address] + consumer_addresses.split("\n") + [driver_address],
     api_key.google_geocoding_api,
-    [1, 0][int(fast_mode_toggled)]
+    [1, 0][int(bool(fast_mode_toggled))]
 )
-route_solution, ordered_coords, route_solution_nonformatted, numsequence = myRouter.routeOneVehicle()
+route_solution_nonformatted, ordered_coords, numsequence, route_solution = myRouter.routeOneVehicle()
 
 output_dict = {}
 
