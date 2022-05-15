@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy
 
 testnum = 3
-result = simplemulti.run_multivehicle(testnum)
+result = simplemulti.run_multivehicle(testnum, minmax_coeff=100, capacity=100)
 #result = simplemulti.run_multivehicle(testnum)
 #run_multivehicle(1, minmax_coeff=10)
 
