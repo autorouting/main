@@ -29,7 +29,7 @@ def getdistancematrix(coordinates, option=0):
         for i in range(len(coordpairs)):
             theMatrix.append([])
             for j in range(len(coordpairs)):
-                theMatrix[i].append(getpairdistance([coordpairs[i], coordpairs[j]], 0))
+                theMatrix[i].append(round(getpairdistance([coordpairs[i], coordpairs[j]], 0)))
         # output data
         return theMatrix
     
@@ -42,6 +42,9 @@ def getdistancematrix(coordinates, option=0):
         rstring += ";".join(coordsstring)
         r = requests.get(rstring)
         theMatrix = r.json()["durations"]
+        for r in range(len(theMatrix)):
+            for c in range(len(theMatrix[r])):
+                theMatrix[r][c] = round(theMatrix[r][c])
         return theMatrix
 
     if option == 0:
